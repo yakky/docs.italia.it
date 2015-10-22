@@ -24,7 +24,8 @@ from ..serializers import (BuildSerializerFull, BuildSerializer,
                            BuildCommandSerializer, ProjectSerializer,
                            VersionSerializer, DomainSerializer,
                            RemoteOrganizationSerializer,
-                           RemoteRepositorySerializer)
+                           RemoteRepositorySerializer,
+                           EmailHookSerializer)
 from .. import utils as api_utils
 
 log = logging.getLogger(__name__)
@@ -204,6 +205,7 @@ class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticated, RelatedProjectIsOwner)
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
     model = EmailHook
+    serializer_class = EmailHookSerializer
 
     def get_queryset(self):
         return self.model.objects.api(self.request.user)

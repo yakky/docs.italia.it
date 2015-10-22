@@ -47,6 +47,7 @@ api_urls = patterns(
     '',
     url(r'^api/', include(v1_api.urls)),
     url(r'^api/v2/', include('readthedocs.restapi.urls')),
+    url(r'^apidocs/', include('rest_framework_swagger.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^websupport/', include('readthedocs.comments.urls')),
 )

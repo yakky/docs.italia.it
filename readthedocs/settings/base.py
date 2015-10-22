@@ -189,6 +189,7 @@ INSTALLED_APPS = [
     'guardian',
     'django_gravatar',
     'rest_framework',
+    'rest_framework_swagger',
     'corsheaders',
     'copyright',
 

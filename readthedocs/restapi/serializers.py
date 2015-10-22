@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from readthedocs.builds.models import Build, BuildCommandResult, Version
-from readthedocs.projects.models import Project, Domain
+from readthedocs.projects.models import Project, Domain, EmailHook
 from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
 
 
@@ -105,3 +105,9 @@ class RemoteRepositorySerializer(serializers.ModelSerializer):
         request = self.context['request']
         if request.user is not None and request.user.is_authenticated():
             return obj.matches(request.user)
+
+
+class EmailHookSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = EmailHook
