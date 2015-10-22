@@ -102,6 +102,7 @@ Unauthenticated users will be able to:
 Authenticated users will be able to:
 
 * List private Builds they have access to
+* [Admin] Trigger a new build for a project
 
 .. note:: Build's are created by Read the Docs,
 		  and as such can't be deleted or edited via the API
