@@ -20,6 +20,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx_http_domain',
     'djangodocs',
+    'sphinxcontrib.programoutput',
 ]
 templates_path = ['_templates']
 
@@ -54,7 +55,7 @@ man_pages = [
 ]
 
 exclude_patterns = [
-    #'api' # needed for ``make gettext`` to not die.
+    'api' # needed for ``make gettext`` to not die.
 ]
 
 language = 'en'
@@ -63,6 +64,7 @@ locale_dirs = [
     'locale/',
 ]
 gettext_compact = False
+
 
 
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'

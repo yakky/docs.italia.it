@@ -108,3 +108,26 @@ Authenticated users will be able to:
 		  and as such can't be deleted or edited via the API
 
 
+
+API Reference
+=============
+
+Projects
+--------
+
+.. program-output:: curl -s "https://readthedocs.org/api/v2/project/?slug=django&page_size=2" | python -m json.tool
+   :shell:
+
+
+Versions
+--------
+
+.. program-output:: curl -s "https://readthedocs.org/api/v2/version/?project=django&page_size=2" | python -m json.tool
+   :shell:
+
+Builds
+--------
+
+.. program-output:: curl -s "https://readthedocs.org/api/v2/build/" | python -m json.tool
+   :shell:
+

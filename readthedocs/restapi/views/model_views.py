@@ -13,8 +13,7 @@ from readthedocs.builds.models import Build, BuildCommandResult, Version
 from readthedocs.core.utils import trigger_build
 from readthedocs.oauth import utils as oauth_utils
 from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
-from readthedocs.builds.constants import STABLE
-from readthedocs.projects.filters import ProjectFilter, DomainFilter
+from readthedocs.restapi.filters import ProjectFilter, DomainFilter
 from readthedocs.projects.models import Project, EmailHook, Domain
 from readthedocs.projects.version_handling import determine_stable_version
 
