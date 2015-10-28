@@ -17,6 +17,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             'documentation_type',
             'users',
         )
+        read_only_fields = ('users', 'slug')
 
 
 class VersionSerializer(serializers.ModelSerializer):
