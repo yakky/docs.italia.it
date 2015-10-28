@@ -15,7 +15,8 @@ from rest_framework.decorators import (
 )
 from rest_framework.exceptions import ParseError
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.renderers import JSONRenderer, JSONPRenderer, BrowsableAPIRenderer
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework_jsonp.renderers import JSONPRenderer
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework.viewsets import ModelViewSet

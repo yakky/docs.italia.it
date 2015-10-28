@@ -3,7 +3,8 @@ import logging
 from django.shortcuts import get_object_or_404
 from rest_framework import decorators, permissions, viewsets, status
 from rest_framework.decorators import detail_route
-from rest_framework.renderers import JSONPRenderer, JSONRenderer, BrowsableAPIRenderer
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework_jsonp.renderers import JSONPRenderer
 from rest_framework.response import Response
 
 from readthedocs.builds.constants import BRANCH

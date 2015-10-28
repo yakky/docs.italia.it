@@ -3,7 +3,8 @@ from django.template import RequestContext, loader as template_loader
 from django.conf import settings
 
 from rest_framework import decorators, permissions
-from rest_framework.renderers import JSONPRenderer, JSONRenderer, BrowsableAPIRenderer
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework_jsonp.renderers import JSONPRenderer
 from rest_framework.response import Response
 
 from readthedocs.builds.constants import LATEST
