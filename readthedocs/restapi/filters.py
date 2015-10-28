@@ -27,6 +27,7 @@ class ProjectFilter(django_filters.FilterSet):
 
     class Meta:
         model = Project
+        fields = ('slug', 'repo', 'repo_type')
 
 
 class DomainFilter(django_filters.FilterSet):
@@ -35,3 +36,4 @@ class DomainFilter(django_filters.FilterSet):
 
     class Meta:
         model = Domain
+        fields = ('project',)
