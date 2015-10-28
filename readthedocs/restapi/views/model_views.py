@@ -37,9 +37,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
     filter_class = ProjectFilter
     model = Project
-    paginate_by = 100
-    paginate_by_param = 'page_size'
-    max_paginate_by = 1000
 
     def get_queryset(self):
         return self.model.objects.api(self.request.user)
@@ -244,6 +241,3 @@ class RemoteRepositoryViewSet(viewsets.ReadOnlyModelViewSet):
         if org is not None:
             query = query.filter(organization__pk=org)
         return query
-
-    def get_paginate_by(self):
-        return self.request.query_params.get('page_size', 25)
