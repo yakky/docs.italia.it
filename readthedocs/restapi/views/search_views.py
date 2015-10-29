@@ -21,7 +21,7 @@ def index_search(request):
     """
     Add things to the search index.
     """
-    data = request.DATA['data']
+    data = request.data['data']
     version_pk = data['version_pk']
     commit = data.get('commit')
     version = Version.objects.get(pk=version_pk)

@@ -66,7 +66,6 @@ locale_dirs = [
 gettext_compact = False
 
 
-
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if not on_rtd:  # only import and set the theme if we're building docs locally
     import sphinx_rtd_theme
