@@ -103,6 +103,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'readthedocs.core.middleware.ProxyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -181,6 +182,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'django.contrib.messages',
+    'django.contrib.humanize',
 
     # third party apps
     'pagination',
@@ -216,6 +218,7 @@ INSTALLED_APPS = [
     'readthedocs.privacy',
     'readthedocs.gold',
     'readthedocs.donate',
+    'readthedocs.payments',
 
     # allauth
     'allauth',
