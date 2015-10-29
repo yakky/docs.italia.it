@@ -1,7 +1,4 @@
-import json
-
 from django.contrib.auth.decorators import login_required
-from django.http.response import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.decorators import method_decorator
@@ -14,20 +11,17 @@ from rest_framework.decorators import (
     detail_route
 )
 from rest_framework.exceptions import ParseError
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.renderers import JSONRenderer
 from rest_framework_jsonp.renderers import JSONPRenderer
 from rest_framework.response import Response
-from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework.viewsets import ModelViewSet
 from sphinx.websupport import WebSupport
 
 from readthedocs.comments.models import (
     DocumentComment, DocumentNode, NodeSnapshot, DocumentCommentSerializer,
     DocumentNodeSerializer, ModerationActionSerializer)
-from readthedocs.privacy.backend import AdminNotAuthorized
 from readthedocs.projects.models import Project
-from readthedocs.restapi.permissions import IsOwner, CommentModeratorOrReadOnly
+from readthedocs.restapi.permissions import CommentModeratorOrReadOnly
 
 from .backend import DjangoStorage
 from .session import UnsafeSessionAuthentication
@@ -48,7 +42,7 @@ support = WebSupport(
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticatedOrReadOnly])
-@renderer_classes((JSONRenderer, JSONPRenderer, BrowsableAPIRenderer))
+@renderer_classes((JSONRenderer, JSONPRenderer))
 def get_options(request):
     base_opts = support.base_comment_opts
     base_opts['addCommentURL'] = '/api/v2/comments/'
@@ -58,7 +52,7 @@ def get_options(request):
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticatedOrReadOnly])
-@renderer_classes((JSONRenderer, JSONPRenderer, BrowsableAPIRenderer))
+@renderer_classes((JSONRenderer, JSONPRenderer))
 def get_metadata(request):
     """
     Check for get_metadata

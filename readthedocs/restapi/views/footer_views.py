@@ -3,7 +3,7 @@ from django.template import RequestContext, loader as template_loader
 from django.conf import settings
 
 from rest_framework import decorators, permissions
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.renderers import JSONRenderer
 from rest_framework_jsonp.renderers import JSONPRenderer
 from rest_framework.response import Response
 
@@ -45,7 +45,7 @@ def get_version_compare_data(project, base_version=None):
 
 @decorators.api_view(['GET'])
 @decorators.permission_classes((permissions.AllowAny,))
-@decorators.renderer_classes((JSONRenderer, JSONPRenderer, BrowsableAPIRenderer))
+@decorators.renderer_classes((JSONRenderer, JSONPRenderer))
 def footer_html(request):
     project_slug = request.GET.get('project', None)
     version_slug = request.GET.get('version', None)

@@ -1,7 +1,7 @@
 import logging
 
 from rest_framework import decorators, permissions, status
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.renderers import JSONRenderer
 from rest_framework_jsonp.renderers import JSONPRenderer
 from rest_framework.response import Response
 
@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 @decorators.api_view(['POST'])
 @decorators.permission_classes((permissions.IsAdminUser,))
-@decorators.renderer_classes((JSONRenderer, JSONPRenderer, BrowsableAPIRenderer))
+@decorators.renderer_classes((JSONRenderer, JSONPRenderer))
 def index_search(request):
     """
     Add things to the search index.
@@ -38,7 +38,7 @@ def index_search(request):
 
 @decorators.api_view(['GET'])
 @decorators.permission_classes((permissions.AllowAny,))
-@decorators.renderer_classes((JSONRenderer, JSONPRenderer, BrowsableAPIRenderer))
+@decorators.renderer_classes((JSONRenderer, JSONPRenderer))
 def search(request):
     project_slug = request.GET.get('project', None)
     version_slug = request.GET.get('version', LATEST)
@@ -91,7 +91,7 @@ def search(request):
 
 @decorators.api_view(['GET'])
 @decorators.permission_classes((permissions.AllowAny,))
-@decorators.renderer_classes((JSONRenderer, JSONPRenderer, BrowsableAPIRenderer))
+@decorators.renderer_classes((JSONRenderer, JSONPRenderer))
 def project_search(request):
     query = request.GET.get('q', None)
     if query is None:
@@ -121,7 +121,7 @@ def project_search(request):
 
 @decorators.api_view(['GET'])
 @decorators.permission_classes((permissions.AllowAny,))
-@decorators.renderer_classes((JSONRenderer, JSONPRenderer, BrowsableAPIRenderer))
+@decorators.renderer_classes((JSONRenderer, JSONPRenderer))
 def section_search(request):
     """
     Search for a Section of content on Read the Docs.
