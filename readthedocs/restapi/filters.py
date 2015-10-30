@@ -5,6 +5,7 @@ import django_filters
 from readthedocs.projects import constants
 from readthedocs.projects.models import Project, Domain
 from readthedocs.projects.filters import sort_slug
+from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
 
 ANY_REPO = (
     ('', _('Any')),
@@ -37,3 +38,17 @@ class DomainFilter(django_filters.FilterSet):
     class Meta:
         model = Domain
         fields = ('project',)
+
+
+class RemoteRepositoryFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = RemoteRepository
+        fields = ('organization', 'name')
+
+
+class RemoteOrganizationFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = RemoteOrganization
+        fields = ('slug', 'active')
