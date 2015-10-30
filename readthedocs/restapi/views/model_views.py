@@ -18,7 +18,7 @@ from readthedocs.restapi.filters import ProjectFilter, DomainFilter
 from readthedocs.projects.models import Project, EmailHook, Domain
 from readthedocs.projects.version_handling import determine_stable_version
 
-from ..permissions import (APIPermission, APIRestrictedPermission,
+from ..permissions import (APIRestrictedPermission,
                            RelatedProjectIsOwner, IsOwner)
 from ..serializers import (BuildSerializerFull, BuildSerializer,
                            BuildCommandSerializer, ProjectSerializer,
@@ -32,7 +32,7 @@ log = logging.getLogger(__name__)
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
-    permission_classes = [APIPermission]
+    permission_classes = (APIRestrictedPermission,)
     renderer_classes = (JSONRenderer, JSONPRenderer)
     serializer_class = ProjectSerializer
     filter_class = ProjectFilter
@@ -208,19 +208,17 @@ class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
         return self.model.objects.api(self.request.user)
 
 
-class DomainViewSet(viewsets.ModelViewSet):
-    permission_classes = [APIRestrictedPermission]
+class DomainViewSet(viewsets.ReadOnlyModelViewSet):
     renderer_classes = (JSONRenderer,)
     serializer_class = DomainSerializer
     filter_class = DomainFilter
     model = Domain
 
     def get_queryset(self):
-        return self.model.objects.api(self.request.user)
+        return self.model.objects.filter(user=self.request.user)
 
 
 class RemoteOrganizationViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [IsOwner]
     renderer_classes = (JSONRenderer,)
     serializer_class = RemoteOrganizationSerializer
     model = RemoteOrganization
@@ -230,7 +228,6 @@ class RemoteOrganizationViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RemoteRepositoryViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [IsOwner]
     renderer_classes = (JSONRenderer,)
     serializer_class = RemoteRepositorySerializer
     model = RemoteRepository
