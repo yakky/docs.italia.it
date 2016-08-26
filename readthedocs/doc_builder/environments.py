@@ -281,6 +281,7 @@ class BuildEnvironment(object):
 
     def __exit__(self, exc_type, exc_value, tb):
         ret = self.handle_exception(exc_type, exc_value, tb)
+        self.build['state'] = BUILD_STATE_FINISHED
         log.info(LOG_TEMPLATE
                  .format(project=self.project.slug,
                          version=self.version.slug,
