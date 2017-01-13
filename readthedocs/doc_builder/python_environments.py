@@ -95,7 +95,6 @@ class Virtualenv(PythonEnvironment):
             self.config.python_interpreter,
             '-mvirtualenv',
             site_packages,
-            '--no-download',
             env_path,
             bin_path=None,  # Don't use virtualenv bin that doesn't exist yet
         )
