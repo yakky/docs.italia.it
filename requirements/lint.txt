@@ -1,7 +1,7 @@
 -r pip.txt
 maxcdn
 astroid<1.4
-pylint<1.5
+pylint
 prospector
-pylint-django<0.7
-pyflakes<1.2.0
+pylint-django
+pyflakes
