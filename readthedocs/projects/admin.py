@@ -14,7 +14,7 @@ from readthedocs.redirects.models import Redirect
 from readthedocs.notifications.views import SendNotificationView
 
 from .notifications import ResourceUsageNotification
-from .models import (Project, ImportedFile,
+from .models import (Project, ImportedFile, Feature,
                      ProjectRelationship, EmailHook, WebHook, Domain)
 from .tasks import remove_dir
 
@@ -180,8 +180,14 @@ class DomainAdmin(admin.ModelAdmin):
     model = Domain
 
 
+class FeatureAdmin(admin.ModelAdmin):
+    model = Feature
+    filter_horizontal = ('projects',)
+
+
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(ImportedFile, ImportedFileAdmin)
 admin.site.register(Domain, DomainAdmin)
+admin.site.register(Feature, FeatureAdmin)
 admin.site.register(EmailHook)
 admin.site.register(WebHook)

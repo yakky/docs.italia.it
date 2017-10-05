@@ -821,6 +821,35 @@ class Project(models.Model):
                                      hash=content_hash, commit=commit)
         return node.comments.create(user=user, text=text)
 
+    def has_feature(self, feature):
+        """Does project have existing feature flag"""
+        return self.features.filter(feature=feature).exists()
+
+
+class APIProject(Project):
+
+    """Project object from API data deserialization
+
+    This is to preserve the Project model methods for use in builder instances.
+    Properties can be read only here, as the builders don't need write access to
+    a number of attributes.
+    """
+
+    features = []
+
+    class Meta:
+        proxy = True
+
+    def __init__(self, *args, **kwargs):
+        self.features = kwargs.pop('features', [])
+        super(APIProject, self).__init__(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        return 0
+
+    def has_feature(self, feature):
+        return feature in self.features
+
 
 @python_2_unicode_compatible
 class ImportedFile(models.Model):
@@ -921,3 +950,30 @@ class Domain(models.Model):
         from readthedocs.projects import tasks
         broadcast(type='app', task=tasks.symlink_domain, args=[self.project.pk, self.pk, True])
         super(Domain, self).delete(*args, **kwargs)
+
+
+@python_2_unicode_compatible
+class Feature(models.Model):
+
+    """Project feature flags"""
+
+    # Feature constants - this is not a exhaustive list of features, features
+    # are arbitrary and maintained via data migrations.
+
+    #: Use latest Sphinx
+    USE_SPHINX_LATEST = 'use_sphinx_latest'
+
+    projects = models.ManyToManyField(
+        Project,
+        related_name='features',
+        blank=True,
+    )
+    feature = models.CharField(
+        _('Project feature tag'),
+        max_length=32,
+        unique=True,
+    )
+    description = models.TextField(_('Description'), blank=True, null=True)
+
+    def __str__(self):
+        return self.description or self.feature
