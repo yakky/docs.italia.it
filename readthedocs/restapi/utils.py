@@ -91,8 +91,8 @@ def index_search_request(version, page_list, commit, project_scale, page_scale,
     project = version.project
 
     log_msg = ' '.join([page['path'] for page in page_list])
-    log.info("Updating search index: project=%s pages=[%s]",
-             project.slug, log_msg)
+    log.info("Updating search index: project=%s version=%s commit=%s pages=[%s]",
+             project.slug, version.slug, commit, log_msg)
 
     project_obj = ProjectIndex()
     project_obj.index_document(data={
