@@ -102,7 +102,7 @@ if settings.DO_NOT_TRACK_ENABLED:
 
 if settings.USE_PROMOS:
     # Include donation URL's
-    groups.append([
+    groups.insert(0, [
         url(r'^sustainability/', include('readthedocsext.donate.urls')),
     ])
 
@@ -111,6 +111,12 @@ if 'readthedocsext.embed' in settings.INSTALLED_APPS:
         0,
         url(r'^api/v1/embed/', include('readthedocsext.embed.urls'))
     )
+
+if 'readthedocsext.search' in settings.INSTALLED_APPS:
+    for num, _url in enumerate(rtd_urls):
+        if _url and hasattr(_url, 'name') and _url.name == 'search':
+            rtd_urls[num] = \
+                url(r'^search/', 'readthedocsext.search.mainsearch.elastic_search', name='search'),
 
 if not getattr(settings, 'USE_SUBDOMAIN', False) or settings.DEBUG:
     groups.insert(0, docs_urls)
