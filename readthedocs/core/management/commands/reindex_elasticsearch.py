@@ -37,8 +37,8 @@ class Command(BaseCommand):
             queryset = queryset.filter(project__slug=project)
             if not queryset.exists():
                 raise CommandError(
-                    'No project with slug: {slug}'.format(slug=project))
-            log.info("Building all versions for %s", project)
+                    u'No project with slug: {slug}'.format(slug=project))
+            log.info(u"Building all versions for %s", project)
         if getattr(settings, 'INDEX_ONLY_LATEST', True):
             queryset = queryset.filter(slug=LATEST)
 
