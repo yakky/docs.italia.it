@@ -1,13 +1,14 @@
-"""Reindex Elastic Search indexes"""
+# -*- coding: utf-8 -*-
+"""Reindex Elastic Search indexes."""
 
-from __future__ import absolute_import
+from __future__ import (
+    absolute_import, division, print_function, unicode_literals)
+
 import logging
-from optparse import make_option
 import socket
+from optparse import make_option
 
-from django.core.management.base import BaseCommand
-from django.core.management.base import CommandError
-from django.conf import settings
+from django.core.management.base import BaseCommand, CommandError
 
 from readthedocs.builds.constants import LATEST
 from readthedocs.builds.models import Version
@@ -27,10 +28,18 @@ class Command(BaseCommand):
             default='',
             help='Project to index'
         )
+        parser.add_argument(
+            '-l',
+            dest='only_latest',
+            default=False,
+            action='store_true',
+            help='Only index latest'
+        )
 
     def handle(self, *args, **options):
-        """Build/index all versions or a single project's version"""
+        """Build/index all versions or a single project's version."""
         project = options['project']
+        only_latest = options['only_latest']
 
         queryset = Version.objects.filter(active=True)
 
@@ -39,8 +48,8 @@ class Command(BaseCommand):
             if not queryset.exists():
                 raise CommandError(
                     u'No project with slug: {slug}'.format(slug=project))
-            log.info(u"Building all versions for %s", project)
-        if getattr(settings, 'INDEX_ONLY_LATEST', True):
+            log.info(u'Building all versions for %s', project)
+        if only_latest:
             log.warning('Indexing only latest')
             queryset = queryset.filter(slug=LATEST)
 
