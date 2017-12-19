@@ -174,24 +174,16 @@ def index_search_request(
             'query': {
                 'bool': {
                     'must': [
-                        {
-                            'term': {
-                                'project': project.slug,
-                            },
-                        },
-                        {
-                            'term': {
-                                'version': version.slug,
-                            },
-                        },
+                        {'term': {'project': project.slug, }},
+                        {'term': {'version': version.slug, }},
                     ],
                     'must_not': {
                         'term': {
-                            'commit': commit,
-                        },
-                    },
-                },
-            },
+                            'commit': commit
+                        }
+                    }
+                }
+            }
         }
         page_obj.delete_document(body=delete_query)
 
