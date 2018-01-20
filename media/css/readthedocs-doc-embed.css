@@ -20,9 +20,9 @@
 }
 
 
-/* Fix RTD theme bottom margin */
+/* Fix RTD theme versions below 0.2.5 bottom margin */
 .rst-content .line-block {
-	margin-bottom: 24px
+	margin-bottom: 24px;
 }
 
 /* Fix for nav bottom padding with flyout */
