@@ -55,7 +55,8 @@ function Organization (instance, view) {
     self.filter_type = 'org';
     self.filtered = ko.computed(function () {
         var filter = view.filter_by();
-        return (filter.id && filter.id != self.filter_id()) || (filter.type && filter.type != self.filter_type);
+        return (filter.id && filter.id != self.filter_id()) ||
+            (filter.type && filter.type != self.filter_type);
     });
 }
 
@@ -77,7 +78,8 @@ function Account (instance, view) {
     self.filter_type = 'own';
     self.filtered = ko.computed(function () {
         var filter = view.filter_by();
-        return (filter.id && filter.id != self.filter_id()) || (filter.type && filter.type != self.filter_type);
+        return (filter.id && filter.id != self.filter_id()) ||
+            (filter.type && filter.type != self.filter_type);
     });
 }
 
