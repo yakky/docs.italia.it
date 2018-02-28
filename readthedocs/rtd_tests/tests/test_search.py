@@ -68,7 +68,8 @@ class TestSearch(TestCase):
             'bool': {
                 'should': [
                     {'match': {'name': {'query': 'pip', 'boost': 10}}},
-                    {'match': {'description': {'query': 'pip'}}}
+                    {'match': {'description': {'query': 'pip'}}},
+                    {'match': {'tags': {'query': 'pip'}}},
                 ]
             }
         }, query_dict['query'])
