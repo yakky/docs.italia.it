@@ -274,8 +274,6 @@ class PageIndex(Index):
             self._type: {
                 # Disable _all field to reduce index size.
                 '_all': {'enabled': False},
-                # Associate a page with a project.
-                # '_parent': {'type': self._parent},
                 'properties': {
                     'id': {'type': 'keyword'},
                     'sha': {'type': 'keyword'},
@@ -290,6 +288,13 @@ class PageIndex(Index):
                     'content': {'type': 'text', 'analyzer': 'default_icu'},
                     # Add a weight field to enhance relevancy scoring.
                     'weight': {'type': 'float'},
+                    # Associate a page with a project.
+                    self._parent: {
+                        'type': 'join',
+                        'relations': {
+                            self._parent: self._type
+                        }
+                    },
                 }
             }
         }
@@ -322,8 +327,6 @@ class SectionIndex(Index):
             self._type: {
                 # Disable _all field to reduce index size.
                 '_all': {'enabled': False},
-                # Associate a section with a page.
-                # '_parent': {'type': self._parent},
                 # Commenting this out until we need it.
                 # 'suggest': {
                 #     "type": "completion",
@@ -348,6 +351,13 @@ class SectionIndex(Index):
                     },
                     # Add a weight field to enhance relevancy scoring.
                     'weight': {'type': 'float'},
+                    # Associate a section with a page.
+                    self._parent: {
+                        'type': 'join',
+                        'relations': {
+                            self._parent: self._type
+                        }
+                    },
                 }
             }
         }
