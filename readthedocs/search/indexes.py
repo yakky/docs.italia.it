@@ -33,8 +33,8 @@ class Index(object):
     _index = 'readthedocs'
     _type = None
 
-    def __init__(self):
-        self.es = Elasticsearch(settings.ES_HOSTS)
+    def __init__(self, elasticsearch_class=Elasticsearch):
+        self.es = elasticsearch_class(settings.ES_HOSTS)
 
     def get_settings(self, settings_override=None):
         """
