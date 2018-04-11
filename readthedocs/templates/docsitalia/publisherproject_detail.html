@@ -1,0 +1,43 @@
+{% extends "projects/base_project.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2>{{ object }}</h2>
+{% trans 'Available documents' %}
+<div class="u-pullUp-l">
+    <div class="Grid Grid--withGutter">
+        {% for project in object.projects.all %}
+            <div class="Grid-cell u-sm-size1of3 u-md-size1of4 u-lg-size1of4 u-margin-r-bottom u-layout-matchHeight">
+                <div class="u-nbfc u-borderRadius-m u-borderShadow-m u-margin-all-xs u-margin-bottom-m">
+                    <div class="Card u-background-white u-flex u-flexCol">
+                        <div class="Card-header u-color-60 u-flexAlignSelfStart u-sizeFull">
+                            <div class="Grid u-padding-r-top">
+                                <div class="Grid-cell u-size7of12 u-color-grey-30 u-border-bottom-xxs">
+                                    <h3 class="u-padding-r-left u-padding-bottom-xs">
+                                        <span class="u-textWeight-600 u-text-r-xxs u-color-grey-50">
+                                        {{ object }}
+                                        </span>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Card-content u-color-grey-50 u-flex u-sizeFillAlt">
+                            <div class="u-flexAlignSelfEnd u-padding-all-xl">
+                                <div class="Card-title">
+                                    <h4 class="u-text-h4 u-padding-bottom-xxs">
+                                        <a class="u-textClean u-color-50 u-textWeight-600" href="{{ project.get_absolute_url }}">{{ project }}</a>
+                                    </h4>
+                                </div>
+                                <div class="Card-text u-textSecondary u-text-xxs">
+                                    {{ project.description }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

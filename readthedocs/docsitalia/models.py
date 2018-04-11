@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.postgres.fields import JSONField
+from django.core.urlresolvers import reverse
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils.text import slugify
@@ -97,6 +98,9 @@ class Publisher(models.Model):
             active=False
         )
 
+    def get_absolute_url(self):
+        return reverse('publisher_detail', args=[self.slug])
+
 
 class PublisherProject(models.Model):
     """
@@ -127,3 +131,6 @@ class PublisherProject(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('publisher_project_detail', args=[self.publisher.slug ,self.slug])

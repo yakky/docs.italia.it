@@ -1,0 +1,14 @@
+{% extends "projects/base_project.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2>{% trans 'Publishers' %}</h2>
+{% for publisher in object_list %}
+    <div>
+        <a href="{{ publisher.get_absolute_url }}">{{ publisher }}</a>
+    </div>
+{% endfor %}
+
+{% endblock %}
+
+

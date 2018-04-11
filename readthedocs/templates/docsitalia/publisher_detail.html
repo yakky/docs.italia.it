@@ -1,0 +1,29 @@
+{% extends "projects/base_project.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h2>{{ object }} </h2>
+    {% for pb in object.publisherproject_set.all %}
+        <div>
+            <a href="{{ pb.get_absolute_url }}">{{ pb }}</a>
+        </div>
+    {% endfor %}
+    <div class="publisher-metadata">
+        {% if object.metadata %}
+            {{ object.metadata.name }}
+            <a href="{{ object.metadata.website }}">{{ object.metadata.website }}</a>
+            {{ object.metadata.description }}
+            <img src="{{ object.metadata.assets.logo }}" />
+        {% endif %}
+    </div>
+    <div class="publisher-projects-metadata">
+        {% if object.projects_metada %}
+            {{ object.projects_metadata.title }}
+            {{ object.projects_metadata.description }}
+            {{ object.projects_metadata.website }}
+        {% endif %}
+    </div>
+{% endblock %}
+
+
+
