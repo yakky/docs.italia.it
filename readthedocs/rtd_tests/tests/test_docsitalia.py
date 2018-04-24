@@ -14,7 +14,9 @@ from readthedocs.projects.models import Project
 from readthedocs.projects.signals import project_import
 
 from readthedocs.docsitalia.oauth.services.github import DocsItaliaGithubService
-from readthedocs.docsitalia.models import Publisher, PublisherProject
+from readthedocs.docsitalia.models import (
+    Publisher, PublisherProject,
+    validate_publisher_metadata, validate_projects_metadata)
 
 
 PUBLISHER_METADATA = """publisher:
@@ -34,6 +36,10 @@ PUBLISHER_METADATA = """publisher:
     culpa qui officia deserunt mollit anim id 
     est laborum.
   website: https://www.ministerodocumentazione.gov.it
+  tags:
+    - documents
+    - public
+    - amazing publisher
   assets:
     logo: assets/images/logo.svg"""
 
@@ -55,6 +61,10 @@ PROJECTS_METADATA = """projects:
       culpa qui officia deserunt mollit anim id 
       est laborum.
     website: https://progetto.ministerodocumentazione.gov.it
+    tags:
+      - digital
+      - citizenship
+      - amazing project
     documents:
       - title: Documento del progetto
         repository: project-document-doc"""
@@ -246,3 +256,31 @@ class DocsItaliaTest(TestCase):
         project_import.send(sender=other_project, request=request)
 
         self.assertEqual(pub_project.projects.count(), 1)
+
+    def test_publisher_metadata_validation_parse_well_formed_metadata(self):
+        data = validate_publisher_metadata(None, PUBLISHER_METADATA)
+        self.assertTrue(data)
+
+    def test_publisher_metadata_raise_value_error_on_empty_document(self):
+        with self.assertRaises(ValueError):
+            validate_publisher_metadata(None, '')
+
+    def test_publisher_metadata_raise_value_error_without_publisher(self):
+        with self.assertRaises(ValueError):
+            validate_publisher_metadata(None, 'name: Ministero della Documentazione Pubblica')
+
+    def test_projects_metadata_validation_parse_well_formed_metadata(self):
+        org = RemoteOrganization(url='https://github.com/myorg')
+        data = validate_projects_metadata(org, PROJECTS_METADATA)
+        self.assertTrue(data)
+        project = data['projects'][0]
+        self.assertIn('repo_url', project)
+        self.assertIn('slug', project)
+
+    def test_projects_metadata_raise_value_error_on_empty_document(self):
+        with self.assertRaises(ValueError):
+            validate_projects_metadata(None, '')
+
+    def test_projects_metadata_raise_value_error_without_projects(self):
+        with self.assertRaises(ValueError):
+            validate_projects_metadata(None, 'name: Progetto')

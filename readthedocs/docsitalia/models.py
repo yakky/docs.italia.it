@@ -16,22 +16,29 @@ from readthedocs.oauth.models import RemoteOrganization
 from .utils import load_yaml
 
 
-# TODO: do the validation :)
 def validate_publisher_metadata(org, settings): # noqa
     """Validate the publisher metadata"""
-    return load_yaml(settings)
+    data = load_yaml(settings)
+    try:
+        data['publisher']
+    except (KeyError, TypeError):
+        raise ValueError
+    return data
 
 
-# TODO: do the validation :)
 def validate_projects_metadata(org, settings):
     """Validate the projects metadata"""
-    projects = load_yaml(settings)
-    for project in projects['projects']:
-        project['slug'] = slugify(project['title'])
-        # expand the repository to an url so it's easier to query at
-        # Project import time
-        project['repo_url'] = '{}/{}'.format(org.url, project['title'])
-    return projects
+    data = load_yaml(settings)
+    try:
+        projects = data['projects']
+        for project in projects:
+            project['slug'] = slugify(project['title'])
+            # expand the repository to an url so it's easier to query at
+            # Project import time
+            project['repo_url'] = '{}/{}'.format(org.url, project['title'])
+    except (KeyError, TypeError):
+        raise ValueError
+    return data
 
 
 @python_2_unicode_compatible
