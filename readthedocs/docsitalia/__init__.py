@@ -1,1 +1,1 @@
-default_app_config = 'readthedocs.docsitalia.apps.DocsItaliaConfig'
+default_app_config = 'readthedocs.docsitalia.apps.DocsItaliaConfig' # noqa

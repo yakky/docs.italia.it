@@ -13,7 +13,7 @@ from readthedocs.projects.signals import project_import
 from .models import PublisherProject
 
 
-log = logging.getLogger(__name__)
+log = logging.getLogger(__name__) # noqa
 
 
 @receiver(project_import)
