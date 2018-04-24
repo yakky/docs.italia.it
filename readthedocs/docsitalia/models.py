@@ -36,6 +36,7 @@ def validate_projects_metadata(org, settings):
 
 @python_2_unicode_compatible
 class Publisher(models.Model):
+
     """
     The Publisher is the organization that hosts projects (PublisherProject)
 
@@ -82,6 +83,7 @@ class Publisher(models.Model):
         return self.name
 
     def create_projects_from_metadata(self, org, settings):
+        """Create PublisherProjects from metadata"""
         slugs = []
         for project in settings['projects']:
             proj, _ = PublisherProject.objects.get_or_create(
