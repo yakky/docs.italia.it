@@ -89,7 +89,7 @@ class Publisher(models.Model):
     def __str__(self):
         return self.name
 
-    def create_projects_from_metadata(self, org, settings):
+    def create_projects_from_metadata(self, settings):
         """Create PublisherProjects from metadata"""
         slugs = []
         for project in settings['projects']:
