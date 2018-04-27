@@ -44,6 +44,7 @@ basic_urls = [
 ]
 
 rtd_urls = [
+    url(r'^docsitalia/', include('readthedocs.docsitalia.urls')), # to be moved
     url(r'^search/$', search_views.elastic_search, name='search'),
     url(r'^dashboard/', include('readthedocs.projects.urls.private')),
     url(r'^profiles/', include('readthedocs.profiles.urls.public')),

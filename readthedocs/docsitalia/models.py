@@ -9,6 +9,7 @@ from django.contrib.postgres.fields import JSONField
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils.text import slugify
+from django.core.urlresolvers import reverse
 
 from readthedocs.projects.models import Project
 from readthedocs.oauth.models import RemoteOrganization
@@ -113,6 +114,10 @@ class Publisher(models.Model):
             active=False
         )
 
+    def get_absolute_url(self):
+        """Get absolute url for publisher"""
+        return reverse('publisher_detail', args=[self.slug])
+
 
 @python_2_unicode_compatible
 class PublisherProject(models.Model):
@@ -146,3 +151,7 @@ class PublisherProject(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        """get absolute url for publisher project"""
+        return reverse('publisher_project_detail', args=[self.publisher.slug, self.slug])
