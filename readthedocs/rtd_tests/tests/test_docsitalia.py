@@ -7,7 +7,9 @@ from mock import patch
 
 from django.conf import settings
 from django.test import TestCase, RequestFactory
+from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from rest_framework.response import Response
 
 from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
 from readthedocs.projects.models import Project
@@ -15,7 +17,7 @@ from readthedocs.projects.signals import project_import
 
 from readthedocs.docsitalia.oauth.services.github import DocsItaliaGithubService
 from readthedocs.docsitalia.models import (
-    Publisher, PublisherProject,
+    Publisher, PublisherProject, PublisherIntegration,
     validate_publisher_metadata, validate_projects_metadata)
 
 
@@ -198,6 +200,7 @@ class DocsItaliaTest(TestCase):
                     text=PROJECTS_METADATA)
                 rm.get('https://api.github.com/orgs/testorg', json=org_json)
                 rm.get('https://api.github.com/orgs/testorg/repos', json=org_repos_json)
+                rm.post('https://api.github.com/repos/testorg/docs-italia-conf/hooks', json={})
                 self.service.sync_organizations()
 
         projects = PublisherProject.objects.filter(publisher=publisher)
@@ -289,3 +292,66 @@ class DocsItaliaTest(TestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'docsitalia/docsitalia_homepage.html')
+
+    def test_metadata_webhook_github_updates_publisher_metadata(self):
+        organization = RemoteOrganization.objects.create(
+            slug='testorg',
+            json='{}',
+        )
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            remote_organization=organization,
+            active=True,
+        )
+        PublisherIntegration.objects.create(
+            publisher=publisher,
+            integration_type=PublisherIntegration.GITHUB_WEBHOOK
+        )
+        url = reverse('metadata_webhook_github', args=[publisher.slug])
+        with requests_mock.Mocker() as rm:
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'docs-italia-conf/master/publisher_settings.yml',
+                text=PUBLISHER_METADATA)
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'docs-italia-conf/master/projects_settings.yml',
+                text=PROJECTS_METADATA)
+            response = self.client.post(url, {'ref': 'refs/heads/master'})
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(response.content.decode('utf-8'), {
+            'build_triggered': True,
+            'publisher': 'testorg',
+            'versions': ['master']
+        })
+
+        publisher.refresh_from_db()
+        self.assertNotEqual(publisher.metadata, {})
+        self.assertNotEqual(publisher.projects_metadata, {})
+
+    def test_metadata_webhook_calls_the_github_specific_one(self):
+        from readthedocs.docsitalia.views.integrations import MetadataGitHubWebhookView
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            active=True
+        )
+        integration = PublisherIntegration.objects.create(
+            publisher=publisher,
+            integration_type=PublisherIntegration.GITHUB_WEBHOOK
+        )
+        url = reverse('metadata_webhook', args=[publisher.slug, integration.pk])
+        with patch.object(MetadataGitHubWebhookView, 'as_view') as view:
+            view.return_value = lambda req, slug: Response()
+            self.client.post(url, {})
+        view.assert_called_once()
+
+    def test_metadata_webhook_returns_404_if_integration_does_not_exist(self):
+        url = reverse('metadata_webhook', args=['some-slug', 0])
+        response = self.client.post(url, {})
+        self.assertEqual(response.status_code, 404)

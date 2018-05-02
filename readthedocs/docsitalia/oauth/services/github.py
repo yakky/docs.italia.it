@@ -3,30 +3,27 @@ from builtins import str
 import logging
 import json
 
+from django.conf import settings
+from django.core.urlresolvers import reverse
+from requests.exceptions import RequestException
+
+from readthedocs.integrations.models import Integration
 from readthedocs.oauth.services.github import GitHubService
 from readthedocs.oauth.models import RemoteOrganization
 
+from readthedocs.docsitalia.github import (
+    get_metadata_for_publisher, InvalidMetadata)
 from readthedocs.docsitalia.models import (
-    Publisher, validate_publisher_metadata, validate_projects_metadata)
+    Publisher, PublisherIntegration,
+    PUBLISHER_SETTINGS, PROJECTS_SETTINGS)
 
 log = logging.getLogger(__name__)
-
-METADATA_BASE_URL = (
-    'https://raw.githubusercontent.com/{org}/{repo}/master/{settings}'
-)
 
 
 class DocsItaliaGithubService(GitHubService):
     def sync(self):
         """Sync organizations."""
         self.sync_organizations()
-
-    def get_metadata_for_organization(self, org, repo, settings):
-        # FIXME: error handling
-        url = METADATA_BASE_URL.format(
-            org=org, repo=repo, settings=settings)
-        response = self.get_session().get(url)
-        return response.text
 
     def sync_organizations(self):
         """Sync organizations from GitHub API."""
@@ -42,54 +39,27 @@ class DocsItaliaGithubService(GitHubService):
 
                 publisher = Publisher.objects.get(
                     remote_organization=org_obj, active=True)
-                publisher_settings = self.get_metadata_for_organization(
-                    org=org_obj.slug,
-                    repo=publisher.config_repo_name,
-                    settings='publisher_settings.yml')
 
-                if not publisher_settings:
-                    log.debug(
-                        'Syncing GitHub organizations: '
-                        'no publisher metadata for {}'.format(
-                            publisher))
-                    continue
-
+                session = self.get_session()
                 try:
-                    publisher_metadata = validate_publisher_metadata(
-                        org_obj, publisher_settings)
-                except ValueError:
-                    log.debug(
-                        'Syncing GitHub organizations: '
-                        'invalid publisher metadata for {}'.format(
-                            publisher))
-                    continue
-
-                projects_settings = self.get_metadata_for_organization(
-                    org=org_obj.slug,
-                    repo=publisher.config_repo_name,
-                    settings='projects_settings.yml')
-
-                if not projects_settings:
-                    log.debug(
-                        'Syncing GitHub organizations: '
-                        'no projects metadata for {}'.format(
-                            publisher))
-                    continue
-
-                try:
-                    projects_metadata = validate_projects_metadata(
-                        org_obj, projects_settings)
-                except ValueError:
-                    log.debug(
-                        'Syncing GitHub organizations: '
-                        'invalid projects metadata for {}'.format(
-                            publisher))
+                    publisher_metadata = get_metadata_for_publisher(
+                        org_obj, publisher, PUBLISHER_SETTINGS, session)
+                    projects_metadata = get_metadata_for_publisher(
+                        org_obj, publisher, PROJECTS_SETTINGS, session)
+                except InvalidMetadata as e:
+                    log.error(
+                        'Syncing GitHub organizations: %s', e)
                     continue
 
                 publisher.metadata = publisher_metadata
                 publisher.projects_metadata = projects_metadata
                 publisher.save()
                 publisher.create_projects_from_metadata(projects_metadata)
+
+                # FIXME: is this the right place?
+                success, _ = self.setup_metadata_webhook(publisher)
+                publisher.has_valid_webhook = success
+                publisher.save()
 
                 # Add repos
                 # TODO ?per_page=100
@@ -154,3 +124,71 @@ class DocsItaliaGithubService(GitHubService):
         organization.save()
 
         return organization
+
+    def get_metadata_webhook_data(self, publisher, integration):
+        """Get metadata webhook JSON data to post to the API."""
+        return json.dumps({
+            'name': 'web',
+            'active': True,
+            'config': {
+                'url': 'https://{domain}{path}'.format(
+                    domain=settings.PRODUCTION_DOMAIN,
+                    path=reverse(
+                        'metadata_webhook',
+                        kwargs={'publisher_slug': publisher.slug,
+                                'integration_pk': integration.pk}
+                    )
+                ),
+                'content_type': 'json',
+            },
+            'events': ['push'],
+        })
+
+    def setup_metadata_webhook(self, publisher):
+        """
+        Set up GitHub publisher configuration metadata webhook for configuration repo.
+
+        :param publisher: publisher to set up webhook for
+        :type publisher: Publisher
+        :returns: boolean based on webhook set up success, and requests Response object
+        :rtype: (Bool, Response)
+        """
+        session = self.get_session()
+        owner = publisher.remote_organization.slug
+        repo = publisher.config_repo_name
+        integration, _ = PublisherIntegration.objects.get_or_create(
+            publisher=publisher,
+            integration_type=PublisherIntegration.GITHUB_WEBHOOK,
+        )
+        data = self.get_metadata_webhook_data(publisher, integration)
+        resp = None
+        try:
+            resp = session.post(
+                ('https://api.github.com/repos/{owner}/{repo}/hooks'
+                 .format(owner=owner, repo=repo)),
+                data=data,
+                headers={'content-type': 'application/json'}
+            )
+            # GitHub will return 200 if already synced
+            if resp.status_code in [200, 201]:
+                recv_data = resp.json()
+                integration.provider_data = recv_data
+                integration.save()
+                log.info('GitHub metadata webhook creation successful for publisher: %s',
+                         publisher)
+                return (True, resp)
+        # Catch exceptions with request or deserializing JSON
+        except (RequestException, ValueError):
+            log.error('GitHub metadata webhook creation failed for publisher: %s',
+                      publisher, exc_info=True)
+        else:
+            log.error('GitHub metadata webhook creation failed for publisher: %s',
+                      publisher)
+            # Response data should always be JSON, still try to log if not though
+            try:
+                debug_data = resp.json()
+            except ValueError:
+                debug_data = resp.content
+            log.debug('GitHub metadata webhook creation failure response: %s',
+                      debug_data)
+            return (False, resp)

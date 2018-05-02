@@ -165,3 +165,33 @@ class PublisherProject(models.Model):
     def get_absolute_url(self):
         """get absolute url for publisher project"""
         return reverse('publisher_project_detail', args=[self.publisher.slug, self.slug])
+
+
+@python_2_unicode_compatible
+class PublisherIntegration(models.Model):
+
+    """Inbound webhook integration for publisher."""
+
+    GITHUB_WEBHOOK = 'github_webhook'
+
+    WEBHOOK_INTEGRATIONS = (
+        (GITHUB_WEBHOOK, _('GitHub incoming webhook')),
+    )
+
+    INTEGRATIONS = WEBHOOK_INTEGRATIONS
+
+    publisher = models.ForeignKey(Publisher, related_name='integrations')
+    integration_type = models.CharField(
+        _('Integration type'),
+        max_length=32,
+        choices=INTEGRATIONS
+    )
+    provider_data = JSONField(_('Provider data'), blank=True, default={})
+
+    # Integration attributes
+    has_sync = True
+
+    def __str__(self):
+        return (
+            _('{0} for {1}')
+            .format(self.get_integration_type_display(), self.publisher.name))
