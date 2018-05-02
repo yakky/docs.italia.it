@@ -21,7 +21,7 @@ def validate_publisher_metadata(org, settings): # noqa
     """Validate the publisher metadata"""
     data = load_yaml(settings)
     try:
-        publisher = data['publisher']
+        data['publisher']
     except (KeyError, TypeError):
         raise ValueError
     return data
