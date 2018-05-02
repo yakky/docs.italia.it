@@ -17,6 +17,10 @@ from readthedocs.oauth.models import RemoteOrganization
 from .utils import load_yaml
 
 
+PUBLISHER_SETTINGS = 'publisher_settings.yml'
+PROJECTS_SETTINGS = 'projects_settings.yml'
+
+
 def validate_publisher_metadata(org, settings): # noqa
     """Validate the publisher metadata"""
     data = load_yaml(settings)
@@ -40,6 +44,12 @@ def validate_projects_metadata(org, settings):
     except (KeyError, TypeError):
         raise ValueError
     return data
+
+
+SETTINGS_VALIDATORS = {
+    PUBLISHER_SETTINGS: validate_publisher_metadata,
+    PROJECTS_SETTINGS: validate_projects_metadata,
+}
 
 
 @python_2_unicode_compatible
