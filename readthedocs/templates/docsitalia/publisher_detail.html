@@ -1,4 +1,4 @@
-{% extends "projects/base_project.html" %}
+{% extends "docsitalia/base.html" %}
 {% load i18n %}
 
 {% block content %}
@@ -6,13 +6,22 @@
 Pagina di dettaglio del publisher con la lista
 dei publisher projects
 {% endcomment %}
-    <h2>{{ object }} </h2>
-    <button class="js-open-publisher-search">Search</button>
-    {% for pb in object.publisherproject_set.all %}
-        <div>
-            <a href="{{ pb.get_absolute_url }}">{{ pb }}</a>
+    <h1>{{ object }}</h1>
+    <div class="u-padding-r-bottom u-textLeft u-posRelative u-zindex-40">
+      <section class="u-layout-r-withGutter">
+        <div class="u-pullUp-l">
+          <div class="Grid Grid--withGutter">
+            {% for project in object.publisherproject_set.all %}
+              <div class="Grid-cell u-sm-size1of3 u-md-size1of4 u-lg-size1of4 u-margin-r-bottom u-layout-matchHeight">
+                  {% include 'docsitalia/includes/card.html' %}
+              </div>
+            {% endfor %}
+          </div>
         </div>
-    {% endfor %}
+        <button class="js-open-publisher-search">Search</button>
+      </section>
+    </div>
+
     <div class="publisher-metadata">
         {% if object.metadata %}
             {{ object.metadata.name }}

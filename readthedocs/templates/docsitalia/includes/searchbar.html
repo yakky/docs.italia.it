@@ -1,0 +1,17 @@
+{% load i18n %}
+
+<!-- BEGIN wide search bar -->
+<h1 class="u-text-r-l u-textWeight-300 u-color-white u-margin-top-xxl u-lineHeight-l">Search for more</h1>
+
+<div class="wide-search-bar">
+  <div class="wide-search-bar-wrapper clearfix">
+    <form action="{% url "search" %}" method="GET">
+      <div class="text-input-wrapper">
+        <input type="text" name="q" value="{{ term }}" id="id_site_search" placeholder="{% trans 'Search Read the Docs' %}">
+      </div>
+      <div class="submit-input-wrapper">
+        <input type="submit" value="{% trans "Let's do this." %}">
+      </div>
+    </form>
+  </div>
+</div>
