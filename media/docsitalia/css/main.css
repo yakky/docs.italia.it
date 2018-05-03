@@ -1,0 +1,169 @@
+/** Header
+  ================ */
+.Header {
+  position: relative;
+  z-index: 40; }
+
+.Header-title {
+  line-height: 0.1 !important;
+  width: 50% !important;
+  min-height: 4.8rem; }
+
+.Header-titleLink a {
+  font-weight: 600 !important; }
+.Header-titleLink small {
+  display: inline !important; }
+
+.Header-owner > a {
+  font-weight: initial !important; }
+
+.Header-link a {
+  font-size: 2rem !important;
+  font-weight: 300 !important; }
+
+@media screen and (max-width: 767px) {
+  .Header-title {
+    width: 80% !important; }
+
+  .Header-titleLink small {
+    font-size: 1rem !important; }
+
+  .Header-link a {
+    font-size: 1.5rem !important; } }
+/** Slim Header
+   ================ */
+.Header-owner {
+  border-bottom: 1px solid #127ae2; }
+
+@media screen and (min-width: 992px) {
+  .Header-institutional a {
+    padding: 1.5rem 1rem !important; } }
+
+.Header-slim {
+  color: #127ae2 !important; }
+
+.Header-slim a {
+  font-weight: 400;
+  text-decoration: none;
+  padding-bottom: 1.5rem;
+  padding-top: 1.5rem;
+  padding-right: 1rem !important;
+  padding-left: 1rem !important; }
+
+.Header-slim a:hover {
+  text-decoration: none !important;
+  border-bottom: .1rem solid currentColor; }
+
+.Header-slim li.current a {
+  border-bottom: .1rem solid currentColor;
+  font-weight: 400; }
+
+.Header-slim li {
+  padding-right: 1rem !important;
+  padding-left: 1rem !important;
+  display: inline-block !important; }
+
+.Header-slim li.delimiter {
+  border-right: .1rem solid currentColor; }
+
+.Header-titleLink a:hover, .Header-titleLink small:hover {
+  text-decoration: none !important; }
+
+.Network .current a {
+  font-size: 1.5em;
+  border-left: 1rem solid #0066cc !important; }
+
+/* Footer
+  ========== */
+.Footer .Footer-logo {
+  height: 2.2em;
+  padding: 0 !important; }
+@media screen and (min-width: 992px) {
+  .Footer .Footer-logo-container--owner {
+    padding-top: 2.3em; } }
+.Footer .Footer-logo-separator {
+  border-left: 0.1em solid #fff;
+  margin: 0 0.3em;
+  font-size: 1.2em;
+  vertical-align: middle; }
+.Footer .Footer-logo-separator--partner {
+  border-left: 0.05em solid #fff;
+  margin: 0 0.3em;
+  font-size: 1.4em;
+  vertical-align: middle; }
+.Footer .Owner-name {
+  display: inline-block;
+  width: 7em;
+  vertical-align: middle; }
+.Footer .Partner-name {
+  display: inline-block;
+  width: 10em;
+  font-size: 0.7em;
+  vertical-align: middle;
+  text-transform: uppercase; }
+.Footer .Footer-notes li {
+  margin-right: 0 !important;
+  display: inline-block !important;
+  max-width: 100%;
+  font-size: small;
+  margin-top: 1rem; }
+  @media screen and (min-width: 992px) {
+    .Footer .Footer-notes li {
+      margin-top: 0;
+      margin-left: 3.2rem !important;
+      margin-right: 0 !important; } }
+.Footer .Footer-links li {
+  margin-right: 1.5rem !important;
+  margin-left: 1.5rem !important; }
+  @media screen and (min-width: 992px) {
+    .Footer .Footer-links li {
+      margin-right: 3.2rem !important; } }
+.Footer .Social > ul,
+.Footer .Footer-links > ul {
+  width: 100%; }
+  @media screen and (min-width: 992px) {
+    .Footer .Social > ul,
+    .Footer .Footer-links > ul {
+      width: auto; } }
+.Footer .Footer-notes li a {
+  color: #5a6772 !important;
+  font-weight: 200 !important;
+  text-decoration: underline !important;
+  font-size: small !important; }
+.Footer .Social,
+.Footer .Footer-links {
+  text-align: center !important; }
+  @media screen and (min-width: 992px) {
+    .Footer .Social,
+    .Footer .Footer-links {
+      text-align: left; } }
+
+/* Card
+  ======= */
+@media screen and (min-width: 768px) {
+  .Card {
+    min-height: 22em;
+    height: 22em; } }
+
+.Card-header {
+  border-left: .75rem solid currentColor; }
+
+.Card-content {
+  border-left: .75rem solid currentColor; }
+
+/* Utilities
+  ========== */
+.hide-focus :focus,
+.hide-focus :focus:focus {
+  outline: none !important;
+  box-shadow: none !important; }
+
+:focus {
+  box-shadow: none !important;
+  outline: 3px solid #ff8c00 !important; }
+
+.u-pullUp-l {
+  margin-top: -16rem; }
+
+.u-pullUp-s {
+  margin-top: -12rem; }

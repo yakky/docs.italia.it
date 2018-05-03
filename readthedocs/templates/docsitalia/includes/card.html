@@ -1,0 +1,32 @@
+<div class="u-nbfc u-borderRadius-m u-borderShadow-m u-margin-all-xs u-margin-bottom-m">
+  <div class="Card u-background-white u-flex u-flexCol">
+    <div class="Card-header u-color-60 u-flexAlignSelfStart u-sizeFull">
+      <div class="Grid u-padding-r-top">
+        <div class="Grid-cell u-size7of12 u-color-grey-30 u-border-bottom-xxs">
+            <h3 class="u-padding-r-left u-padding-bottom-xs">
+              <a class="u-textWeight-600 u-text-r-xxs u-color-grey-50" href="{{ publisher.get_absolute_url }}">
+                {% with project.publisherproject_set.all.first as publisher %}
+                    {{ publisher }}
+                {% endwith %}
+              </a>
+            </h3>
+        </div>
+        {% if project.version %}
+        <div class="Grid-cell u-size5of12 u-padding-r-right u-textRight">
+          <span class="u-padding-right-xs u-padding-left-xs u-color-white u-text-xxs u-borderRadius-m u-background-teal-30 u-textNoWrap">{{ project.version }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="Card-content u-color-grey-50 u-flex u-sizeFillAlt">
+      <div class="u-flexAlignSelfEnd u-padding-all-xl">
+        <div class="Card-title">
+          <h4 class="u-text-h4 u-padding-bottom-xxs">
+            <a class="u-textClean u-color-50 u-textWeight-600" href="{{ project.get_absolute_url }}">{{ project }}</a>
+          </h4>
+        </div>
+        <div class="Card-text u-textSecondary u-text-xxs">{{ project.description|safe }}</div>
+      </div>
+    </div>
+  </div>
+</div>
