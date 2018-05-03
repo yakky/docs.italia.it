@@ -1,37 +1,63 @@
-{% extends "projects/base_project.html" %}
+{% extends "docsitalia/base.html" %}
 {% load i18n %}
 
 {% block content %}
 {% comment %}
     Home page di docs italia, al momento contiene la lista dei documenti (Project di RTD) più recenti
 {% endcomment %}
-<div>
-    {% for project in object_list %}
-        <div class="project">
-            {% with project.publisherproject_set.all.first as publisher %}
-                <a href="{{ publisher.get_absolute_url }}">{{ publisher }}</a>
-            {% endwith %}
-            {{ project }}
-            {{ project.version }}
-            <a class="" href="{{ project.get_absolute_url }}">{{ project }}</a>
-            {{ project.description|safe }}
+
+<div class="u-padding-r-bottom u-textLeft u-posRelative u-zindex-40">
+  <section class="u-layout-r-withGutter">
+    <div class="u-pullUp-l">
+      <div class="Grid Grid--withGutter">
+        {% for project in object_list %}
+          <div class="Grid-cell u-sm-size1of3 u-md-size1of4 u-lg-size1of4 u-margin-r-bottom u-layout-matchHeight">
+              {% include 'docsitalia/includes/card.html' %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="u-background-50 u-padding-r-bottom u-pullUp-l u-textCenter">
+  <hr class="Separator-room u-background-grey-15">
+  <hr class="Separator Separator--down u-background-50">
+      <section class="u-layout-r-withGutter u-posRelative u-zindex-40">
+            {% include 'docsitalia/includes/searchbar.html' %}
+      </section>
+  <hr class="Separator-room">
+  <hr class="Separator Separator--up u-background-50">
+</div>
+
+<div class="u-flex u-flexJustifyCenter u-pullUp-s">
+    <div class="u-margin-top-xxl u-posRelative u-zindex-40 u-size1of2 u-sm-size1of4 u-md-size1of5 u-lg-size1of5">
+        {% include 'docsitalia/includes/docbook.svg' %}
+    </div>
+</div>
+
+<div class="u-background-grey-15 u-padding-r-top">
+    <div class="u-layoutCenter u-layout-r-withGutter u-layout-small u-posRelative u-zindex-30">
+        <h1 class="u-text-r-l u-textWeight-300 u-color-50 u-margin-top-xxl u-lineHeight-l u-margin-bottom-l u-textCenter">Cos'è Docs Italia?</h1>
+        <div class="Prose">
+            <p>
+            Docs Italia è un servizio a disposizione delle Pubbliche Amministrazioni per pubblicare documenti tecnici e amministrativi, e offre ai cittadini la possibilità di leggere e commentare documenti pubblici ed essere informati sull’andamento dei progetti. Su Docs Italia trovi:
+            </p>
+            <ul>
+                <li>documentazione tecnica relativa ai progetti pubblici</li>
+                <li>Per esempio, su Docs Italia è possibile accedere alla documentazione relativa al progetto per costruire l’Anagrafe nazionale della popolazione residente in Italia</li>
+                <li>documenti amministrativi, circolari, linee guida, regole tecniche, direttive</li>
+                <li>Per esempio, su Docs Italia è disponibile il Codice dell’Amministrazione Digitale, la legge che definisce il ruolo del digitale nella Pubblica Amministrazione</li>
+            </ul>
+                
+                <p>
+                  <a href="" class="u-textClean u-text-xxs">Per approfondire
+                    <span class="Icon Icon-arrow-right u-margin-left-xs u-alignMiddle"></span>
+                  </a>
+                </p>
         </div>
-        <hr>
-    {% endfor %}
+      </div>
+    <hr class="Separator-room">
 </div>
-<div>
-    {% include "core/widesearchbar.html" %}
-</div>
-<div>
-    <h1>Cos'è Docs Italia?</h1>
-    <p>
-    Docs Italia è un servizio a disposizione delle Pubbliche Amministrazioni per pubblicare documenti tecnici e amministrativi, e offre ai cittadini la possibilità di leggere e commentare documenti pubblici ed essere informati sull’andamento dei progetti. Su Docs Italia trovi:
-    </p>
-    <ul>
-        <li>documentazione tecnica relativa ai progetti pubblici</li>
-        <li>Per esempio, su Docs Italia è possibile accedere alla documentazione relativa al progetto per costruire l’Anagrafe nazionale della popolazione residente in Italia</li>
-        <li>documenti amministrativi, circolari, linee guida, regole tecniche, direttive</li>
-        <li>Per esempio, su Docs Italia è disponibile il Codice dell’Amministrazione Digitale, la legge che definisce il ruolo del digitale nella Pubblica Amministrazione</li>
-    </ul>
-</div>
+
 {% endblock %}
