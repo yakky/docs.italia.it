@@ -1,4 +1,4 @@
-{% extends "projects/base_project.html" %}
+{% extends "docsitalia/base.html" %}
 {% load i18n %}
 
 {% block content %}
@@ -7,20 +7,19 @@ Questa è la pagina di dettaglio del publisher
 project con la lista dei progetti (documenti)
 associati
 {% endcomment %}
-<h2>{{ object }}</h2>
+<h1>{{ object }}</h1>
 {% trans 'Available documents' %}
-<div>
-    <div>
+<div class="u-padding-r-bottom u-textLeft u-posRelative u-zindex-40">
+  <section class="u-layout-r-withGutter">
+    <div class="u-pullUp-l">
+      <div class="Grid Grid--withGutter">
         {% for project in object.projects.all %}
-            <div>
-                {{ object }}
-                {{ project }}
-                {{ project.version }}
-                <a class="" href="{{ project.get_absolute_url }}">{{ project }}</a>
-                {{ project.description|safe }}
-            </div>
-            <hr>
+          <div class="Grid-cell u-sm-size1of3 u-md-size1of4 u-lg-size1of4 u-margin-r-bottom u-layout-matchHeight">
+              {% include 'docsitalia/includes/card.html' %}
+          </div>
         {% endfor %}
+      </div>
     </div>
+  </section>
 </div>
 {% endblock %}
