@@ -31,7 +31,7 @@ handler404 = server_error_404
 handler500 = server_error_500
 
 basic_urls = [
-    url(r'^$', HomepageView.as_view(), name='homepage'),
+    # url(r'^$', HomepageView.as_view(), name='homepage'),
     url(r'^support/', SupportView.as_view(), name='support'),
     url(r'^security/', TemplateView.as_view(template_name='security.html')),
     url(r'^.well-known/security.txt',
@@ -39,7 +39,6 @@ basic_urls = [
 ]
 
 rtd_urls = [
-    url(r'^docsitalia/', include('readthedocs.docsitalia.urls')), # to be moved
     url(r'^search/$', search_views.elastic_search, name='search'),
     url(r'^dashboard/', include('readthedocs.projects.urls.private')),
     url(r'^profiles/', include('readthedocs.profiles.urls.public')),
@@ -53,6 +52,7 @@ rtd_urls = [
     url(r'^404/$', handler404),
     # For testing the 500's with DEBUG on.
     url(r'^500/$', handler500),
+    url(r'^', include('readthedocs.docsitalia.urls')), # to be moved
 ]
 
 project_urls = [
@@ -82,7 +82,7 @@ debug_urls = add(
 )
 
 # Export URLs
-groups = [basic_urls, rtd_urls, project_urls, api_urls, core_urls, i18n_urls,
+groups = [basic_urls, project_urls, rtd_urls, api_urls, core_urls, i18n_urls,
           deprecated_urls]
 
 if settings.USE_PROMOS:
@@ -106,7 +106,7 @@ if 'readthedocsext.search' in settings.INSTALLED_APPS:
 if not getattr(settings, 'USE_SUBDOMAIN', False) or settings.DEBUG:
     groups.insert(0, docs_urls)
 if getattr(settings, 'ALLOW_ADMIN', True):
-    groups.append(admin_urls)
+    groups.insert(0, admin_urls)
 if getattr(settings, 'DEBUG', False):
     groups.append(debug_urls)
 
