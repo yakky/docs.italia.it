@@ -4,11 +4,11 @@
       <div class="Grid u-padding-r-top">
         <div class="Grid-cell u-size7of12 u-color-grey-30 u-border-bottom-xxs">
             <h3 class="u-padding-r-left u-padding-bottom-xs">
+              {% with project.publisherproject_set.all.first as publisher %}
               <a class="u-textWeight-600 u-text-r-xxs u-color-grey-50" href="{{ publisher.get_absolute_url }}">
-                {% with project.publisherproject_set.all.first as publisher %}
-                    {{ publisher }}
-                {% endwith %}
+                {{ publisher }}
               </a>
+              {% endwith %}
             </h3>
         </div>
         {% if project.version %}
@@ -22,7 +22,7 @@
       <div class="u-flexAlignSelfEnd u-padding-all-xl">
         <div class="Card-title">
           <h4 class="u-text-h4 u-padding-bottom-xxs">
-            <a class="u-textClean u-color-50 u-textWeight-600" href="{{ project.get_absolute_url }}">{{ project }}</a>
+            <a class="u-textClean u-color-50 u-textWeight-600" href="{{ project.get_docs_url }}">{{ project }}</a>
           </h4>
         </div>
         <div class="Card-text u-textSecondary u-text-xxs">{{ project.description|safe }}</div>
