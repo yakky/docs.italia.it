@@ -217,6 +217,8 @@ def index_search_request(
             'taxonomy': None,
             'commit': commit,
             'weight': page_scale + project_scale,
+            'progetto': publisher_project_slug,
+            'publisher': publisher_slug,
         })
         if section:
             for sect in page['sections']:

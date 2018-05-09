@@ -298,6 +298,8 @@ class PageIndex(Index):
                             self._parent: self._type
                         }
                     },
+                    'progetto': {'type': 'keyword'},
+                    'publisher': {'type': 'keyword'},
                 }
             }
         }
@@ -308,7 +310,7 @@ class PageIndex(Index):
         doc = {}
 
         attrs = ('project', 'title', 'headers', 'version', 'path',
-                 'content', 'taxonomy', 'commit')
+                 'content', 'taxonomy', 'commit', 'progetto', 'publisher')
         for attr in attrs:
             doc[attr] = data.get(attr, '')
 
