@@ -284,3 +284,8 @@ class DocsItaliaTest(TestCase):
     def test_projects_metadata_raise_value_error_without_projects(self):
         with self.assertRaises(ValueError):
             validate_projects_metadata(None, 'name: Progetto')
+
+    def test_project_root_is_served_by_docsitalia(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'docsitalia/docsitalia_homepage.html')
