@@ -235,6 +235,8 @@ class ProjectIndex(Index):
                     'url': {'type': 'keyword'},
                     # Add a weight field to enhance relevancy scoring.
                     'weight': {'type': 'float'},
+                    'progetto': {'type': 'keyword'},
+                    'publisher': {'type': 'keyword'},
                 }
             }
         }
@@ -244,7 +246,8 @@ class ProjectIndex(Index):
     def extract_document(self, data):
         doc = {}
 
-        attrs = ('id', 'name', 'slug', 'description', 'lang', 'tags', 'author', 'url')
+        attrs = ('id', 'name', 'slug', 'description', 'lang', 'tags', 'author', 'url',
+                 'progetto', 'publisher',)
         for attr in attrs:
             doc[attr] = data.get(attr, '')
 
