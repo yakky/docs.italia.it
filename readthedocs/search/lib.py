@@ -61,7 +61,8 @@ def search_project(request, query, language=None, publisher=None, progetto=None)
     return ProjectIndex().search(body)
 
 
-def search_file(request, query, project_slug=None, version_slug=LATEST, taxonomy=None):
+def search_file(request, query, project_slug=None, version_slug=LATEST, taxonomy=None,
+                publisher=None, progetto=None):
     """
     Search index for files matching query.
 
@@ -111,6 +112,12 @@ def search_file(request, query, project_slug=None, version_slug=LATEST, taxonomy
             "version": {
                 "terms": {"field": "version.keyword"},
             },
+            "publisher": {
+                "terms": {"field": "publisher.keyword"},
+            },
+            "progetto": {
+                "terms": {"field": "progetto.keyword"},
+            },
         },
         "highlight": {
             "fields": {
@@ -119,11 +126,11 @@ def search_file(request, query, project_slug=None, version_slug=LATEST, taxonomy
                 "content": {},
             }
         },
-        "_source": ["title", "project", "version", "path"],
+        "_source": ["title", "project", "version", "path", "publisher", "progetto"],
         "size": 50  # TODO: Support pagination.
     }
 
-    if project_slug or version_slug or taxonomy:
+    if any([project_slug, version_slug, taxonomy, publisher, progetto]):
         final_filter = []
 
         if project_slug:
@@ -157,6 +164,10 @@ def search_file(request, query, project_slug=None, version_slug=LATEST, taxonomy
 
         if taxonomy:
             final_filter.append({'term': {'taxonomy': taxonomy}})
+        if publisher:
+            final_filter.append({"term": {"publisher": publisher}})
+        if progetto:
+            final_filter.append({"term": {"progetto": progetto}})
 
         body['query']['bool']['filter'] = final_filter
 

@@ -12,6 +12,7 @@ from readthedocs.restapi.utils import index_search_request
 from readthedocs.rtd_tests.mocks.search_mock_responses import (
     search_project_response
 )
+from readthedocs.search.indexes import PageIndex
 from readthedocs.docsitalia.models import Publisher, PublisherProject
 
 
@@ -42,7 +43,7 @@ class TestSearch(TestCase):
         page_list = []
         index_search_request(
             version=self.version, page_list=page_list, commit=None,
-        project_scale=1, page_scale=None, section=False, delete=False)
+            project_scale=1, page_scale=None, section=False, delete=False)
         response = perform_request_mock.call_args_list[0][0][3]
         self.assertJSONEqual(response, {
             'slug': 'pip',
@@ -57,7 +58,6 @@ class TestSearch(TestCase):
             'progetto': None,
             'description': ''
         })
-
 
     @patch(
         'elasticsearch.connection.http_urllib3.Urllib3HttpConnection.perform_request',
@@ -85,10 +85,11 @@ class TestSearch(TestCase):
         )
         pub_project.projects.add(self.pip)
 
-        page_list = []
-        index_search_request(
-            version=self.version, page_list=page_list, commit=None,
-        project_scale=1, page_scale=None, section=False, delete=False)
+        page_list = [{'path': 'path', 'title': 'title', 'content': 'content', 'headers': 'headers'}]
+        with patch.object(PageIndex, 'bulk_index') as bulk_mock:
+            index_search_request(
+                version=self.version, page_list=page_list, commit=None,
+                project_scale=1, page_scale=1, section=False, delete=False)
         response = perform_request_mock.call_args_list[0][0][3]
         self.assertJSONEqual(response, {
             'slug': 'pip',
@@ -103,3 +104,10 @@ class TestSearch(TestCase):
             'progetto': 'testproject',
             'description': ''
         })
+        bulk_mock.assert_called_with(
+            [{'publisher': 'publisher', 'taxonomy': None, 'project': 'pip',
+              'commit': None, 'progetto': 'testproject', 'path': 'path',
+              'weight': 2, 'version': 'verbose-name', 'headers': 'headers',
+              'id': 'b3129830187e487e332bb2eab1b7a9c3', 'title': 'title',
+              'content': 'content'}], routing='pip'
+        )
