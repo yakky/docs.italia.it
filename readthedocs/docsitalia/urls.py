@@ -8,7 +8,7 @@ urlpatterns = [
     url(
         r'^$',
         DocsItaliaHomePage.as_view(),
-        name='docsitalia_homepage'
+        name='homepage'
     ),
     url(
         r'^(?P<slug>[-\w]+)/$',
