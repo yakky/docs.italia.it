@@ -66,6 +66,7 @@ class TestSearch(TestCase):
         self.assertIn('query', query_dict)
         self.assertDictEqual({
             'bool': {
+                'filter': [],
                 'should': [
                     {'match': {'name': {'query': 'pip', 'boost': 10}}},
                     {'match': {'description': {'query': 'pip'}}},

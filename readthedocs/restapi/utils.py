@@ -166,6 +166,12 @@ def index_search_request(
     # TODO refactor this function
     # pylint: disable=too-many-locals
     project = version.project
+    publisher_project = project.publisherproject_set.select_related('publisher').first()
+    if publisher_project:
+        publisher_slug = publisher_project.publisher.slug
+        publisher_project_slug = publisher_project.slug
+    else:
+        publisher_slug, publisher_project_slug = None, None
 
     log_msg = ' '.join([page['path'] for page in page_list])
     log.info(
@@ -186,6 +192,8 @@ def index_search_request(
             'url': project.get_absolute_url(),
             'tags': list(project.tags.slugs()) or None,
             'weight': project_scale,
+            'progetto': publisher_project_slug,
+            'publisher': publisher_slug,
         })
 
     page_obj = PageIndex()

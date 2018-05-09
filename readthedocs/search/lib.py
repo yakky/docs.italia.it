@@ -14,7 +14,7 @@ from readthedocs.search.signals import (before_project_search,
                                         before_section_search)
 
 
-def search_project(request, query, language=None):
+def search_project(request, query, language=None, publisher=None, progetto=None):
     """Search index for projects matching query."""
     body = {
         "query": {
@@ -30,6 +30,12 @@ def search_project(request, query, language=None):
             "language": {
                 "terms": {"field": "lang.keyword"},
             },
+            "publisher": {
+                "terms": {"field": "publisher.keyword"},
+            },
+            "progetto": {
+                "terms": {"field": "progetto.keyword"},
+            },
         },
         "highlight": {
             "fields": {
@@ -37,12 +43,18 @@ def search_project(request, query, language=None):
                 "description": {},
             }
         },
-        "_source": ["name", "slug", "description", "lang", "url"],
+        "_source": ["name", "slug", "description", "lang", "url", "publisher", "progetto"],
         "size": 50  # TODO: Support pagination.
     }
 
+    final_filter = []
     if language:
-        body['query']['bool']['filter'] = {"term": {"lang": language}}
+        final_filter.append({"term": {"lang": language}})
+    if publisher:
+        final_filter.append({"term": {"publisher": publisher}})
+    if progetto:
+        final_filter.append({"term": {"progetto": progetto}})
+    body['query']['bool']['filter'] = final_filter
 
     before_project_search.send(request=request, sender=ProjectIndex, body=body)
 
