@@ -14,7 +14,7 @@ from tastypie.api import Api
 from readthedocs.api.base import (ProjectResource, UserResource,
                                   VersionResource, FileResource)
 from readthedocs.core.urls import docs_urls, core_urls, deprecated_urls
-from readthedocs.core.views import (HomepageView, SupportView,
+from readthedocs.core.views import (SupportView,
                                     server_error_404, server_error_500)
 from readthedocs.search import views as search_views
 
@@ -31,7 +31,6 @@ handler404 = server_error_404
 handler500 = server_error_500
 
 basic_urls = [
-    url(r'^$', HomepageView.as_view(), name='homepage'),
     url(r'^support/', SupportView.as_view(), name='support'),
     url(r'^security/', TemplateView.as_view(template_name='security.html')),
     url(r'^.well-known/security.txt',
@@ -39,7 +38,6 @@ basic_urls = [
 ]
 
 rtd_urls = [
-    url(r'^docsitalia/', include('readthedocs.docsitalia.urls')), # to be moved
     url(r'^search/$', search_views.elastic_search, name='search'),
     url(r'^dashboard/', include('readthedocs.projects.urls.private')),
     url(r'^profiles/', include('readthedocs.profiles.urls.public')),
@@ -109,5 +107,10 @@ if getattr(settings, 'ALLOW_ADMIN', True):
     groups.append(admin_urls)
 if getattr(settings, 'DEBUG', False):
     groups.append(debug_urls)
+
+docsitalia_urls = [
+    url(r'', include('readthedocs.docsitalia.urls')),
+]
+groups.append(docsitalia_urls)
 
 urlpatterns = reduce(add, groups)
