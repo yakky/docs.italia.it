@@ -157,6 +157,7 @@ class PublisherProject(models.Model):
     # projects are the documents :)
     projects = models.ManyToManyField(Project, verbose_name=_('Projects'))
 
+    featured = models.BooleanField(_('Featured'), default=False)
     active = models.BooleanField(_('Active'), default=False)
 
     def __str__(self):
