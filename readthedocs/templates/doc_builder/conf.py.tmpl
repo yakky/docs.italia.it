@@ -1,0 +1,24 @@
+{% extends TEMPLATE_ROOT|add:"doc_builder/conf.py.tmpl" %}
+
+{% block extra_context %}
+import yaml
+context['subproject_data'] = [
+    {% for subproject in subprojects %}
+    {
+        'id': {{ subproject.id }},
+        'name': '{{ subproject.name }}',
+        'slug': '{{ subproject.slug }}',
+        'url': '{{ subproject.canonical_url }}',
+        'description': '{{ subproject.description }}',
+        'version': '{{ subproject.default_version }}',
+    },
+    {% endfor %}
+]
+try:
+    with open('document_settings.yml') as rtd:
+        data = rtd.read()
+        data = yaml.safe_load(data)
+except:
+    data = {}
+context['docsitalia_data'] = data
+{% endblock %}
