@@ -2,6 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 import requests
 import requests_mock
+from django.test.utils import override_settings
 
 from mock import patch
 
@@ -12,6 +13,8 @@ from django.contrib.auth.models import User
 from django.template.loader import get_template
 from rest_framework.response import Response
 
+from readthedocs.builds.constants import LATEST
+from readthedocs.docsitalia.resolver import ItaliaResolver
 from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
 from readthedocs.projects.models import Project
 from readthedocs.projects.signals import project_import
@@ -300,6 +303,98 @@ class DocsItaliaTest(TestCase):
         self.assertEqual(project.description, 'Lorem ipsum dolor sit amet, consectetur\n')
         self.assertEqual(project.tags.count(), 1)
         self.assertIn('amazing-document', project.tags.slugs())
+
+    @patch('django.contrib.messages.api.add_message')
+    @override_settings(PUBLIC_PROTO='http', PUBLIC_DOMAIN='readthedocs.org')
+    def test_project_custom_resolver(self, add_message):
+
+        with patch('readthedocs.projects.models.resolve') as resolve_func:
+            publisher = Publisher.objects.create(
+                name='Test Org',
+                slug='testorg',
+                metadata={},
+                projects_metadata={},
+                active=True
+            )
+
+            pub_project = PublisherProject.objects.create(
+                name='Test Project',
+                slug='testproject',
+                metadata={
+                    'documents': [
+                        'https://github.com/testorg/myrepourl',
+                        'https://github.com/testorg/anotherrepourl',
+                    ]
+                },
+                publisher=publisher,
+                active=True
+            )
+
+            project = Project.objects.create(
+                name='my project',
+                slug='myprojectslug',
+                repo='https://github.com/testorg/myrepourl.git'
+            )
+            pub_project.projects.add(project)
+
+            resolve_func.return_value = ItaliaResolver().resolve(
+                project=project, version_slug=LATEST, language='en', private=False
+            )
+            self.assertEqual(project.get_docs_url(), '%s://%s/%s/%s/%s/en/%s/' % (
+                settings.PUBLIC_PROTO, settings.PUBLIC_DOMAIN, publisher.slug,
+                pub_project.slug, project.slug, LATEST
+            ))
+
+    @patch('django.contrib.messages.api.add_message')
+    @patch('readthedocs.docsitalia.utils.get_subprojects')
+    def test_project_sphinx_context_signal_works(self, get_subprojects, add_message):
+        from readthedocs.doc_builder.signals import finalize_sphinx_context_data
+
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            active=True
+        )
+
+        pub_project = PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            metadata={
+                'documents': [
+                    'https://github.com/testorg/myrepourl',
+                    'https://github.com/testorg/anotherrepourl',
+                ]
+            },
+            publisher=publisher,
+            active=True
+        )
+
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        pub_project.projects.add(project)
+        remote = RemoteRepository.objects.create(
+            full_name='remote repo name',
+            html_url='https://github.com/testorg/myrepourl',
+            project=project,
+        )
+        request = self.factory.get('/')
+        request.user = self.user
+
+        data = {}
+        build_env = remote
+
+        get_subprojects.return_value = ['sub1']
+        finalize_sphinx_context_data.send(
+            sender=self.__class__,
+            build_env=build_env,
+            data=data,
+        )
+        self.assertEqual(data, {'subprojects': [u'sub1']})
 
     def test_publisher_metadata_validation_parse_well_formed_metadata(self):
         data = validate_publisher_metadata(None, PUBLISHER_METADATA)
