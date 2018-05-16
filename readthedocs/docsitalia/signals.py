@@ -7,6 +7,7 @@ import logging
 
 from django.dispatch import receiver
 
+from readthedocs.doc_builder.signals import finalize_sphinx_context_data
 from readthedocs.oauth.models import RemoteRepository
 from readthedocs.projects.signals import project_import
 
@@ -30,6 +31,7 @@ def on_project_import(sender, **kwargs): # noqa
     document_settings.yml. We don't care much about what it's in the model
     and we consider the config file as source of truth.
     """
+
     project = sender
 
     try:
@@ -55,3 +57,21 @@ def on_project_import(sender, **kwargs): # noqa
         project.description = document['description']
         project.tags.set(*document['tags'], clear=True)
         project.save()
+
+
+@receiver(finalize_sphinx_context_data)
+def add_sphinx_context_data(sender, data, build_env, **kwargs):  # pylint: disable=unused-argument
+    """
+    Provides additional data to the sphinx context
+
+    Data are injected in the provided context
+
+    :param sender: sender class
+    :param data: sphinx context
+    :param build_env: BuildEnvironment instance
+    :return: None
+    """
+    from readthedocs.docsitalia.utils import get_subprojects
+
+    subprojects = get_subprojects(build_env.project.pk)
+    data['subprojects'] = subprojects
