@@ -9,6 +9,7 @@ from django.conf import settings
 from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.template.loader import get_template
 from rest_framework.response import Response
 
 from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
@@ -355,3 +356,7 @@ class DocsItaliaTest(TestCase):
         url = reverse('metadata_webhook', args=['some-slug', 0])
         response = self.client.post(url, {})
         self.assertEqual(response.status_code, 404)
+
+    def test_we_use_docsitalia_builder_conf_template(self):
+        template = get_template('doc_builder/conf.py.tmpl')
+        self.assertIn('readthedocs/templates/doc_builder/conf.py.tmpl', template.origin.name)
