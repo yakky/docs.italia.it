@@ -19,7 +19,8 @@ from readthedocs.projects.signals import project_import
 from readthedocs.docsitalia.oauth.services.github import DocsItaliaGithubService
 from readthedocs.docsitalia.models import (
     Publisher, PublisherProject, PublisherIntegration,
-    validate_publisher_metadata, validate_projects_metadata)
+    validate_publisher_metadata, validate_projects_metadata,
+    validate_document_metadata)
 
 
 PUBLISHER_METADATA = """publisher:
@@ -71,6 +72,27 @@ PROJECTS_METADATA = """projects:
     documents:
       - title: Documento del progetto
         repository: project-document-doc"""
+
+
+DOCUMENT_METADATA = """document:
+  name: Documento Documentato Pubblicamente
+  description: |
+    Lorem ipsum dolor sit amet, consectetur
+    adipisicing elit, sed do eiusmod tempor
+    incididunt ut labore et dolore magna aliqua.
+    Ut enim ad minim veniam, quis nostrud
+    exercitation ullamco laboris nisi ut
+    aliquip ex ea commodo consequat.
+    Duis aute irure dolor in reprehenderit in
+    voluptate velit esse cillum dolore eu
+    fugiat nulla pariatur. Excepteur sint
+    occaecat cupidatat non proident, sunt in
+    culpa qui officia deserunt mollit anim id
+    est laborum.
+  tags:
+    - digital
+    - citizenship
+    - amazing document"""
 
 
 class DocsItaliaTest(TestCase):
@@ -288,6 +310,18 @@ class DocsItaliaTest(TestCase):
     def test_projects_metadata_raise_value_error_without_projects(self):
         with self.assertRaises(ValueError):
             validate_projects_metadata(None, 'name: Progetto')
+
+    def test_document_metadata_validation_parse_well_formed_metadata(self):
+        data = validate_document_metadata(None, DOCUMENT_METADATA)
+        self.assertTrue(data)
+
+    def test_document_metadata_raise_value_error_on_empty_document(self):
+        with self.assertRaises(ValueError):
+            validate_document_metadata(None, '')
+
+    def test_document_metadata_raise_value_error_without_document(self):
+        with self.assertRaises(ValueError):
+            validate_document_metadata(None, 'name: Documento')
 
     def test_project_root_is_served_by_docsitalia(self):
         response = self.client.get('/')
