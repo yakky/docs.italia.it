@@ -78,20 +78,7 @@ DOCUMENT_METADATA = """document:
   name: Documento Documentato Pubblicamente
   description: |
     Lorem ipsum dolor sit amet, consectetur
-    adipisicing elit, sed do eiusmod tempor
-    incididunt ut labore et dolore magna aliqua.
-    Ut enim ad minim veniam, quis nostrud
-    exercitation ullamco laboris nisi ut
-    aliquip ex ea commodo consequat.
-    Duis aute irure dolor in reprehenderit in
-    voluptate velit esse cillum dolore eu
-    fugiat nulla pariatur. Excepteur sint
-    occaecat cupidatat non proident, sunt in
-    culpa qui officia deserunt mollit anim id
-    est laborum.
   tags:
-    - digital
-    - citizenship
     - amazing document"""
 
 
@@ -267,7 +254,12 @@ class DocsItaliaTest(TestCase):
         )
         request = self.factory.get('/')
         request.user = self.user
-        project_import.send(sender=project, request=request)
+        with requests_mock.Mocker() as rm:
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'myrepourl/master/document_settings.yml',
+                text='')
+            project_import.send(sender=project, request=request)
 
         project_for_pub_project = pub_project.projects.filter(pk=project.pk)
         self.assertTrue(project_for_pub_project.exists())
@@ -278,10 +270,36 @@ class DocsItaliaTest(TestCase):
             slug='myotherprojectslug',
             repo='https://github.com/testorg/myotherproject.git'
         )
-
+        with requests_mock.Mocker() as rm:
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'myotherproject/master/document_settings.yml',
+                text='')
         project_import.send(sender=other_project, request=request)
 
         self.assertEqual(pub_project.projects.count(), 1)
+
+    @patch('django.contrib.messages.api.add_message')
+    def test_project_import_parse_document_metadata_correctly(self, add_message):
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            description='mydescription',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        request = self.factory.get('/')
+        request.user = self.user
+        with requests_mock.Mocker() as rm:
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'myrepourl/master/document_settings.yml',
+                text=DOCUMENT_METADATA)
+            project_import.send(sender=project, request=request)
+        project.refresh_from_db()
+        self.assertEqual(project.name, 'Documento Documentato Pubblicamente')
+        self.assertEqual(project.description, 'Lorem ipsum dolor sit amet, consectetur\n')
+        self.assertEqual(project.tags.count(), 1)
+        self.assertIn('amazing-document', project.tags.slugs())
 
     def test_publisher_metadata_validation_parse_well_formed_metadata(self):
         data = validate_publisher_metadata(None, PUBLISHER_METADATA)
