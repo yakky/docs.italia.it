@@ -19,6 +19,7 @@ from .utils import load_yaml
 
 PUBLISHER_SETTINGS = 'publisher_settings.yml'
 PROJECTS_SETTINGS = 'projects_settings.yml'
+DOCUMENT_SETTINGS = 'document_settings.yml'
 
 
 def validate_publisher_metadata(org, settings): # noqa
@@ -46,9 +47,23 @@ def validate_projects_metadata(org, settings):
     return data
 
 
+def validate_document_metadata(org, settings): # noqa
+    """Validate the document metadata"""
+    data = load_yaml(settings)
+    try:
+        document = data['document']
+        document['name'] # noqa
+        document['description'] # noqa
+        document['tags'] # noqa
+    except (KeyError, TypeError):
+        raise ValueError
+    return data
+
+
 SETTINGS_VALIDATORS = {
     PUBLISHER_SETTINGS: validate_publisher_metadata,
     PROJECTS_SETTINGS: validate_projects_metadata,
+    DOCUMENT_SETTINGS: validate_document_metadata,
 }
 
 
