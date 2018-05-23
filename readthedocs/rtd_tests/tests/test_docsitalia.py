@@ -14,6 +14,7 @@ from django.template.loader import get_template
 from rest_framework.response import Response
 
 from readthedocs.builds.constants import LATEST
+from readthedocs.core.signals import webhook_github
 from readthedocs.docsitalia.resolver import ItaliaResolver
 from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
 from readthedocs.projects.models import Project
@@ -503,6 +504,35 @@ class DocsItaliaTest(TestCase):
         url = reverse('metadata_webhook', args=['some-slug', 0])
         response = self.client.post(url, {})
         self.assertEqual(response.status_code, 404)
+
+    def test_on_webhook_github_signal_works(self):
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        data = {
+            'ref': 'master'
+        }
+        with requests_mock.Mocker() as rm:
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'myrepourl/master/document_settings.yml',
+                text=DOCUMENT_METADATA)
+            webhook_github.send(Project, project=project, data=data, event='push')
+        project.refresh_from_db()
+        self.assertEqual(project.name, 'Documento Documentato Pubblicamente')
+        self.assertEqual(project.description, 'Lorem ipsum dolor sit amet, consectetur\n')
+        self.assertEqual(project.tags.count(), 1)
+        self.assertIn('amazing-document', project.tags.slugs())
+
+    def test_on_webhook_github_signal_ignores_not_push_events(self):
+        webhook_github.send(Project, project=None, data=None, event='notpush')
+
+    def test_on_webhook_github_signal_ignores_invalid_branches(self):
+        webhook_github.send(Project, project=None, data={}, event='push')
+
+        webhook_github.send(Project, project=None, data={'ref': 'notmaster'}, event='push')
 
     def test_we_use_docsitalia_builder_conf_template(self):
         template = get_template('doc_builder/conf.py.tmpl')

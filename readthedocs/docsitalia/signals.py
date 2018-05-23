@@ -7,6 +7,7 @@ import logging
 
 from django.dispatch import receiver
 
+from readthedocs.core.signals import webhook_github
 from readthedocs.doc_builder.signals import finalize_sphinx_context_data
 from readthedocs.oauth.models import RemoteRepository
 from readthedocs.projects.signals import project_import
@@ -47,6 +48,33 @@ def on_project_import(sender, **kwargs): # noqa
 
     try:
         # we take the file via http because we don't have a checkout
+        metadata = get_metadata_for_document(project)
+    except Exception as e: # noqa
+        log.error(
+            'Failed to import document metadata: %s', e)
+    else:
+        update_project_from_metadata(project, metadata)
+
+
+@receiver(webhook_github)
+def on_webhook_github(sender, project, data, event, **kwargs): # noqa
+    # no push no party
+    if event != 'push':
+        return
+
+    try:
+        branch = data['ref'].replace('refs/heads/', '')
+    except KeyError:
+        log.error(
+            'metadata github hook: Parameter "ref" is required')
+        return
+
+    if branch != 'master':
+        log.info('Skipping metadata update for project: project=%s branch=%s',
+                 project, branch)
+        return
+
+    try:
         metadata = get_metadata_for_document(project)
     except Exception as e: # noqa
         log.error(
