@@ -1,7 +1,13 @@
 -r pip.txt
+maxcdn
 astroid==1.6.4
-pylint==1.9.1
-pylint-django==0.11.1
-pylint-celery==0.3
 prospector==0.12.10
+pycodestyle==2.0.0
+pydocstyle==2.1.1
 pyflakes==2.0.0
+pylint==1.9.1
+pylint-celery==0.3
+pylint-common==0.2.5
+pylint-django==0.11.1
+pylint-flask==0.5
+pylint-plugin-utils==0.2.6
