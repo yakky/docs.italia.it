@@ -12,7 +12,7 @@ from readthedocs.oauth.models import RemoteRepository
 from readthedocs.projects.signals import project_import
 
 from .github import get_metadata_for_document
-from .models import PublisherProject
+from .models import PublisherProject, update_project_from_metadata
 
 
 log = logging.getLogger(__name__) # noqa
@@ -52,11 +52,7 @@ def on_project_import(sender, **kwargs): # noqa
         log.error(
             'Failed to import document metadata: %s', e)
     else:
-        document = metadata['document']
-        project.name = document['name']
-        project.description = document['description']
-        project.tags.set(*document['tags'], clear=True)
-        project.save()
+        update_project_from_metadata(project, metadata)
 
 
 @receiver(finalize_sphinx_context_data)
