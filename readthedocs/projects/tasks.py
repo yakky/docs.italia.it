@@ -475,6 +475,9 @@ class UpdateDocsTaskStep(SyncRepositoryMixin):
     def get_project(project_pk):
         """Get project from API."""
         project_data = api_v2.project(project_pk).get()
+        # workaround for getting bytes instead of deserialized json
+        if isinstance(project_data, bytes):
+            project_data = json.loads(project_data.decode())
         return APIProject(**project_data)
 
     @staticmethod
