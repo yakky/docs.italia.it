@@ -87,3 +87,24 @@ class ItaliaResolver(ResolverBase):
         """
         protocol = getattr(settings, 'PUBLIC_PROTO', 'https')
         return super(ItaliaResolver, self).resolve(project, protocol, filename, private, **kwargs)
+
+    @staticmethod
+    def resolve_docsitalia(publisher_slug, pb_project_slug=None, protocol='http'):
+        """
+        Resolve the complete URL for a publisher or a publisher project
+
+        :param publisher_slug: the publisher slug
+        :param pb_project_slug: the publisher project slug
+        :param protocol: http / https protocol
+        """
+        domain = getattr(settings, 'PRODUCTION_DOMAIN')
+        protocol = getattr(settings, 'PUBLIC_PROTO', 'https')
+        if pb_project_slug:
+            path = u'{}/{}'.format(publisher_slug, pb_project_slug)
+        else:
+            path = publisher_slug
+        return u'{}://{}/{}'.format(
+            protocol,
+            domain,
+            path
+        )
