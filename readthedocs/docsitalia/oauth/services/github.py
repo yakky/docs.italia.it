@@ -89,11 +89,13 @@ class DocsItaliaGithubService(GitHubService):
         :rtype: Publisher
         """
         login = fields.get('login')
+        log.info('Syncing organization %s', login)
         try:
             publisher = Publisher.objects.get(
                 slug=login,
                 active=True)
         except Publisher.DoesNotExist:
+            log.info('No active publisher for slug %s', login)
             return None
 
         try:
