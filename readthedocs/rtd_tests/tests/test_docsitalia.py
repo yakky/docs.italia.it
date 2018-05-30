@@ -537,3 +537,36 @@ class DocsItaliaTest(TestCase):
     def test_we_use_docsitalia_builder_conf_template(self):
         template = get_template('doc_builder/conf.py.tmpl')
         self.assertIn('readthedocs/templates/doc_builder/conf.py.tmpl', template.origin.name)
+
+    def test_projects_by_tag_api_filter_tags(self):
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        project.tags.add('lorem', 'ipsum')
+        response = self.client.get(reverse('projects-by-tag-list'), {'tags': 'lorem, sicut'})
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.status_code, 200)
+
+    def test_projects_by_tag_api_not_tags_provided(self):
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        project.tags.add('lorem', 'ipsum')
+        response = self.client.get(reverse('projects-by-tag-list'))
+        self.assertEqual(len(response.data['results']), 0)
+        self.assertEqual(response.status_code, 200)
+
+    def test_projects_by_tag_returns_only_data_that_matches_tags(self):
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        project.tags.add('lorem', 'ipsum')
+        response = self.client.get(reverse('projects-by-tag-list'), {'tags': 'sicut, amet'})
+        self.assertEqual(len(response.data['results']), 0)
+        self.assertEqual(response.status_code, 200)
