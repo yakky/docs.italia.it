@@ -67,6 +67,15 @@ SETTINGS_VALIDATORS = {
 }
 
 
+def update_project_from_metadata(project, metadata):
+    """Update a project instance with the validated  project metadata"""
+    document = metadata['document']
+    project.name = document['name']
+    project.description = document['description']
+    project.tags.set(*document['tags'], clear=True)
+    project.save()
+
+
 @python_2_unicode_compatible
 class Publisher(models.Model):
 
