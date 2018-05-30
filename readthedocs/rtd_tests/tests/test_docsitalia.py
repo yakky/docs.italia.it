@@ -5,6 +5,7 @@ import requests_mock
 from django.test.utils import override_settings
 
 from mock import patch
+import pytest
 
 from django.conf import settings
 from django.test import TestCase, RequestFactory
@@ -85,6 +86,8 @@ DOCUMENT_METADATA = """document:
   tags:
     - amazing document"""
 
+IT_RESOLVER_IN_SETTINGS = 'readthedocs.docsitalia.resolver.ItaliaResolver'\
+in getattr(settings, 'CLASS_OVERRIDES', {}).values()
 
 class DocsItaliaTest(TestCase):
     fixtures = ['eric', 'test_data']
@@ -537,3 +540,83 @@ class DocsItaliaTest(TestCase):
     def test_we_use_docsitalia_builder_conf_template(self):
         template = get_template('doc_builder/conf.py.tmpl')
         self.assertIn('readthedocs/templates/doc_builder/conf.py.tmpl', template.origin.name)
+
+    @pytest.mark.skipif(not IT_RESOLVER_IN_SETTINGS, reason='Require CLASS_OVERRIEDS in the settings file to work')
+    @pytest.mark.itresolver
+    @override_settings(PUBLIC_PROTO='http', PUBLIC_DOMAIN='readthedocs.org')
+    def test_projects_by_tag_api_filter_tags(self):
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        project.tags.add('lorem', 'ipsum')
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            active=True
+        )
+        pub_project = PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            metadata={
+                'documents': [
+                    'https://github.com/testorg/myrepourl',
+                    'https://github.com/testorg/anotherrepourl',
+                ]
+            },
+            publisher=publisher,
+            active=True
+        )
+        pub_project.projects.add(project)
+        response = self.client.get(reverse('projects-by-tag-list'), {'tags': 'lorem, sicut'})
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertJSONEqual(
+            response.content.decode('utf-8'), {
+              "count": 1,
+              "next": None,
+              "previous": None,
+              "results": [
+                {
+                  "id": project.pk,
+                  "name": "my project",
+                  "slug": "myprojectslug",
+                  "description": "",
+                  "canonical_url": "http://readthedocs.org/testorg/testproject/myprojectslug/en/latest/",
+                  "publisher": {
+                    "canonical_url": "http://readthedocs.org/testorg",
+                    "name": ""
+                  },
+                  "publisher_project": {
+                    "canonical_url": "http://readthedocs.org/testorg/testproject",
+                    "name": ""
+                  }
+                }
+              ]
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_projects_by_tag_api_not_tags_provided(self):
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        project.tags.add('lorem', 'ipsum')
+        response = self.client.get(reverse('projects-by-tag-list'))
+        self.assertEqual(len(response.data['results']), 0)
+        self.assertEqual(response.status_code, 200)
+
+    def test_projects_by_tag_returns_only_data_that_matches_tags(self):
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        project.tags.add('lorem', 'ipsum')
+        response = self.client.get(reverse('projects-by-tag-list'), {'tags': 'sicut, amet'})
+        self.assertEqual(len(response.data['results']), 0)
+        self.assertEqual(response.status_code, 200)

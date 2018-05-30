@@ -14,6 +14,7 @@ from django.core.urlresolvers import reverse
 from readthedocs.projects.models import Project
 from readthedocs.oauth.models import RemoteOrganization
 
+from readthedocs.core.resolver import resolver
 from .utils import load_yaml
 
 
@@ -152,6 +153,10 @@ class Publisher(models.Model):
         """Get absolute url for publisher"""
         return reverse('publisher_detail', args=[self.slug])
 
+    def get_canonical_url(self):
+        """Get canonical url for publisher"""
+        return resolver.resolve_docsitalia(self.slug)
+
 
 @python_2_unicode_compatible
 class PublisherProject(models.Model):
@@ -190,6 +195,10 @@ class PublisherProject(models.Model):
     def get_absolute_url(self):
         """get absolute url for publisher project"""
         return reverse('publisher_project_detail', args=[self.publisher.slug, self.slug])
+
+    def get_canonical_url(self):
+        """get canonical url for publisher project"""
+        return resolver.resolve_docsitalia(self.publisher.slug, self.slug)
 
 
 @python_2_unicode_compatible
