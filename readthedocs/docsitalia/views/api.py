@@ -10,6 +10,7 @@ from readthedocs.projects.models import Project
 from ..serializers import ProjectsByTagSerializer
 
 
+
 class ProjectsByTagViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet

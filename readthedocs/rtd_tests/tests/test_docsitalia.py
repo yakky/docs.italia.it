@@ -612,3 +612,4 @@ class DocsItaliaTest(TestCase):
         response = self.client.get(reverse('projects-by-tag-list'), {'tags': 'sicut, amet'})
         self.assertEqual(len(response.data['results']), 0)
         self.assertEqual(response.status_code, 200)
+
