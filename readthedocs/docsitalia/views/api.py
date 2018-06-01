@@ -2,13 +2,15 @@
 """Docs italia api"""
 from __future__ import absolute_import
 
+from django.shortcuts import get_object_or_404
+
 from rest_framework import viewsets
 from rest_framework import mixins
+from rest_framework.response import Response
 
 from readthedocs.projects.models import Project
 
-from ..serializers import ProjectsByTagSerializer
-
+from ..serializers import ProjectsByTagSerializer, ProjectTagsSerializer
 
 
 class ProjectsByTagViewSet(
@@ -35,3 +37,20 @@ class ProjectsByTagViewSet(
         else:
             queryset = Project.objects.none()
         return queryset
+
+
+class ProjectTagsViewSet(viewsets.ViewSet):
+
+    """Return project tags"""
+
+    serializer_class = ProjectTagsSerializer
+    allowed_methods = ('GET',)
+    lookup_field = 'slug'
+
+    @classmethod
+    def retrieve(cls, _, slug=None):
+        """Get the project by slug"""
+        queryset = Project.objects.all()
+        user = get_object_or_404(queryset, slug=slug)
+        serializer = ProjectTagsSerializer(user)
+        return Response(serializer.data)

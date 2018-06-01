@@ -613,3 +613,22 @@ class DocsItaliaTest(TestCase):
         self.assertEqual(len(response.data['results']), 0)
         self.assertEqual(response.status_code, 200)
 
+    def test_project_tags_api(self):
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        data = {
+            'ref': 'master'
+        }
+        with requests_mock.Mocker() as rm:
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'myrepourl/master/document_settings.yml',
+                text=DOCUMENT_METADATA)
+            webhook_github.send(Project, project=project, data=data, event='push')
+        project.refresh_from_db()
+        response = self.client.get(reverse('project-tags-detail', kwargs={'slug': project.slug}))
+        self.assertIn('amazing document', response.data['tags'])
+        self.assertEqual(response.status_code, 200)
