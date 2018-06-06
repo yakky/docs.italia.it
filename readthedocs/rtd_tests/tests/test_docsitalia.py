@@ -545,8 +545,50 @@ class DocsItaliaTest(TestCase):
             repo='https://github.com/testorg/myrepourl.git'
         )
         project.tags.add('lorem', 'ipsum')
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            active=True
+        )
+        pub_project = PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            metadata={
+                'documents': [
+                    'https://github.com/testorg/myrepourl',
+                    'https://github.com/testorg/anotherrepourl',
+                ]
+            },
+            publisher=publisher,
+            active=True
+        )
+        pub_project.projects.add(project)
         response = self.client.get(reverse('projects-by-tag-list'), {'tags': 'lorem, sicut'})
         self.assertEqual(len(response.data['results']), 1)
+        self.assertJSONEqual(
+            response.content.decode('utf-8'), {
+                "count":1,
+                "next": None,
+                "previous": None,
+                "results":[{
+                    "id":project.pk,
+                    "name":"my project",
+                    "slug":"myprojectslug",
+                    "description":"",
+                    "canonical_url":"http://readthedocs.org/docs/myprojectslug/en/latest/",
+                    "publisher":{
+                        "name":"Test Org",
+                        "canonical_url":"http://readthedocs.org/testorg/"
+                    },
+                    "publisher_project":{
+                        "name":"Test Project",
+                        "canonical_url":"http://readthedocs.org/testorg/testproject/"
+                    }
+                }]
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
     def test_projects_by_tag_api_not_tags_provided(self):

@@ -10,6 +10,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils.text import slugify
 from django.core.urlresolvers import reverse
+from django.conf import settings as dj_settings
 
 from readthedocs.projects.models import Project
 from readthedocs.oauth.models import RemoteOrganization
@@ -152,6 +153,11 @@ class Publisher(models.Model):
         """Get absolute url for publisher"""
         return reverse('publisher_detail', args=[self.slug])
 
+    def get_canonical_url(self):
+        """Get canonical url for publisher"""
+        production_domain = getattr(dj_settings, 'PRODUCTION_DOMAIN', None)
+        return 'http://{}{}'.format(production_domain, self.get_absolute_url())
+
 
 @python_2_unicode_compatible
 class PublisherProject(models.Model):
@@ -190,6 +196,11 @@ class PublisherProject(models.Model):
     def get_absolute_url(self):
         """get absolute url for publisher project"""
         return reverse('publisher_project_detail', args=[self.publisher.slug, self.slug])
+
+    def get_canonical_url(self):
+        """get canonical url for publisher project"""
+        production_domain = getattr(dj_settings, 'PRODUCTION_DOMAIN', None)
+        return 'http://{}{}'.format(production_domain, self.get_absolute_url())
 
 
 @python_2_unicode_compatible
