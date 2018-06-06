@@ -100,8 +100,14 @@ class Publisher(models.Model):
     modified_date = models.DateTimeField(_('Modified date'), auto_now=True)
 
     # we need something unique
-    name = models.CharField(_('Name'), max_length=255, unique=True)
-    slug = models.SlugField(_('slug'), max_length=255, unique=True)
+    name = models.CharField(_('Name'), max_length=255, unique=True, help_text=_(
+        'Publisher\'s name in full. You can refer to the "name" field from '
+        '"publisher_settings.yml", e.g. Ministero della Documentazione.'
+    ))
+    slug = models.SlugField(_('slug'), max_length=255, unique=True, help_text=_(
+        'Pick the URL fragment following "https://github.com" in the organization '
+        'URL, e.g ministero-della-documentazione.'
+    ))
 
     # TODO: is this enough to hold the publisher metadata?
     # https://github.com/italia/docs-italia-starter-kit/tree/master/repo-configurazione
@@ -119,7 +125,9 @@ class Publisher(models.Model):
                                             null=True,
                                             blank=True)
 
-    active = models.BooleanField(_('Active'), default=False)
+    active = models.BooleanField(_('Active'), default=False, help_text=_(
+        'Enables the import of documents.'
+    ))
 
     def __str__(self):
         return self.name
