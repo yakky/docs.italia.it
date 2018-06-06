@@ -6,6 +6,7 @@ from rest_framework import viewsets
 from rest_framework import mixins
 
 from readthedocs.projects.models import Project
+from readthedocs.restapi.views.model_views import ProjectViewSet
 
 from ..serializers import DocsItaliaProjectSerializer
 
@@ -34,3 +35,11 @@ class ProjectsByTagViewSet(
         else:
             queryset = Project.objects.none()
         return queryset
+
+
+class DocsItaliaProjectViewSet(ProjectViewSet):
+
+    """Like :py:class:`ProjectViewSet` but using slug as lookup key."""
+
+    lookup_field = 'slug'
+    serializer_class = DocsItaliaProjectSerializer
