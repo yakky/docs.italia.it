@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-06 16:30+0200\n"
+"POT-Creation-Date: 2018-06-06 17:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,7 +100,7 @@ msgstr ""
 msgid "Supported"
 msgstr ""
 
-#: builds/models.py:81 docsitalia/models.py:122 docsitalia/models.py:185
+#: builds/models.py:81 docsitalia/models.py:128 docsitalia/models.py:193
 #: oauth/models.py:44 oauth/models.py:92 redirects/models.py:26
 #: templates/projects/project_versions.html:46
 msgid "Active"
@@ -375,50 +375,71 @@ msgstr ""
 msgid "Build environment creation failed"
 msgstr ""
 
-#: docsitalia/models.py:99 docsitalia/models.py:169 gold/models.py:33
+#: docsitalia/admin.py:19 templates/projects/project_advanced.html:12
+#: templates/projects/project_edit_base.html:18
+msgid "Advanced Settings"
+msgstr ""
+
+#: docsitalia/models.py:99 docsitalia/models.py:177 gold/models.py:33
 #: oauth/models.py:36 oauth/models.py:80 projects/models.py:77
 msgid "Publication date"
 msgstr ""
 
-#: docsitalia/models.py:100 docsitalia/models.py:170 gold/models.py:34
+#: docsitalia/models.py:100 docsitalia/models.py:178 gold/models.py:34
 #: oauth/models.py:37 oauth/models.py:81 projects/models.py:78
 msgid "Modified date"
 msgstr ""
 
-#: docsitalia/models.py:103 docsitalia/models.py:173 oauth/models.py:47
+#: docsitalia/models.py:103 docsitalia/models.py:181 oauth/models.py:47
 #: oauth/models.py:101 projects/models.py:83 projects/models.py:896
 msgid "Name"
 msgstr ""
 
-#: docsitalia/models.py:104 docsitalia/models.py:174
+#: docsitalia/models.py:104
+msgid ""
+"Publisher's name in full. You can refer to the \"name\" field from "
+"\"publisher_settings.yml\", e.g. Ministero della Documentazione."
+msgstr ""
+
+#: docsitalia/models.py:107 docsitalia/models.py:182
 msgid "slug"
 msgstr ""
 
 #: docsitalia/models.py:108
+msgid ""
+"Pick the URL fragment following \"https://github.com\" in the organization "
+"URL, e.g ministero-della-documentazione."
+msgstr ""
+
+#: docsitalia/models.py:114
 msgid "Publisher Metadata"
 msgstr ""
 
-#: docsitalia/models.py:109
+#: docsitalia/models.py:115
 msgid "Projects Metadata"
 msgstr ""
 
-#: docsitalia/models.py:112
+#: docsitalia/models.py:118
 msgid "Docs italia config repo"
 msgstr ""
 
-#: docsitalia/models.py:118
+#: docsitalia/models.py:124
 msgid "Remote organization"
 msgstr ""
 
-#: docsitalia/models.py:177
+#: docsitalia/models.py:129
+msgid "Enables the import of documents."
+msgstr ""
+
+#: docsitalia/models.py:185
 msgid "Metadata"
 msgstr ""
 
-#: docsitalia/models.py:180
+#: docsitalia/models.py:188
 msgid "Publisher"
 msgstr ""
 
-#: docsitalia/models.py:182 gold/models.py:39
+#: docsitalia/models.py:190 gold/models.py:39
 #: gold/templates/gold/subscription_detail.html:57
 #: templates/core/project_bar.html:7 templates/core/project_bar_base.html:20
 #: templates/projects/project_dashboard_base.html:56
@@ -427,23 +448,23 @@ msgstr ""
 msgid "Projects"
 msgstr ""
 
-#: docsitalia/models.py:184 projects/models.py:184
+#: docsitalia/models.py:192 projects/models.py:184
 msgid "Featured"
 msgstr ""
 
-#: docsitalia/models.py:203 integrations/models.py:246
+#: docsitalia/models.py:211 integrations/models.py:246
 msgid "GitHub incoming webhook"
 msgstr ""
 
-#: docsitalia/models.py:210 integrations/models.py:256
+#: docsitalia/models.py:218 integrations/models.py:256
 msgid "Integration type"
 msgstr ""
 
-#: docsitalia/models.py:214 integrations/models.py:260
+#: docsitalia/models.py:222 integrations/models.py:260
 msgid "Provider data"
 msgstr ""
 
-#: docsitalia/models.py:221 integrations/models.py:273
+#: docsitalia/models.py:229 integrations/models.py:273
 #, python-brace-format
 msgid "{0} for {1}"
 msgstr ""
@@ -2875,11 +2896,6 @@ msgstr ""
 
 #: templates/projects/project_advanced.html:7
 msgid "Edit Advanced Project Settings"
-msgstr ""
-
-#: templates/projects/project_advanced.html:12
-#: templates/projects/project_edit_base.html:18
-msgid "Advanced Settings"
 msgstr ""
 
 #: templates/projects/project_advanced.html:18
