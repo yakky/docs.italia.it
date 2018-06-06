@@ -125,7 +125,7 @@ class Publisher(models.Model):
                                             null=True,
                                             blank=True)
 
-    active = models.BooleanField(_('Active'), default=False, help_text=_(
+    active = models.BooleanField(_('Active'), default=True, help_text=_(
         'Enables the import of documents.'
     ))
 
