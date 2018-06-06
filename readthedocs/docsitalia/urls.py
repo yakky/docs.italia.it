@@ -9,6 +9,7 @@ from .views.core_views import DocsItaliaHomePage, PublisherIndex, PublisherProje
 from .views import integrations, api
 
 router = routers.DefaultRouter()
+router.register(r'project', api.DocsItaliaProjectViewSet, base_name='project')
 router.register(r'projects-by-tag', api.ProjectsByTagViewSet, base_name='projects-by-tag')
 
 docsitalia_urls = [
