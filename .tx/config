@@ -1,4 +1,4 @@
-[readthedocs.readthedocs]
+[italia.docsitaliait]
 file_filter = readthedocs/locale/<lang>/LC_MESSAGES/django.po
 source_file = readthedocs/locale/en/LC_MESSAGES/django.po
 source_lang = en
