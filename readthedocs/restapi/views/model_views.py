@@ -93,11 +93,16 @@ class ProjectViewSet(UserSelectViewSet):
     pagination_class = api_utils.ProjectPagination
     filter_fields = ('slug',)
 
+    def get_project_for_user_or_404(self, lookup_value):
+        lookup_query = {self.lookup_field: lookup_value}
+        qs = self.get_queryset()
+        return get_object_or_404(qs, **lookup_query)
+
     @decorators.detail_route()
     def valid_versions(self, request, **kwargs):
         """Maintain state of versions that are wanted."""
-        project = get_object_or_404(
-            Project.objects.api(request.user), pk=kwargs['pk'])
+        project = self.get_project_for_user_or_404(
+            kwargs[self.lookup_field])
         if (not project.num_major or not project.num_minor or
                 not project.num_point):
             return Response(
@@ -125,8 +130,8 @@ class ProjectViewSet(UserSelectViewSet):
 
     @detail_route()
     def subprojects(self, request, **kwargs):
-        project = get_object_or_404(
-            Project.objects.api(request.user), pk=kwargs['pk'])
+        project = self.get_project_for_user_or_404(
+            kwargs[self.lookup_field])
         rels = project.subprojects.all()
         children = [rel.child for rel in rels]
         return Response({
@@ -135,8 +140,8 @@ class ProjectViewSet(UserSelectViewSet):
 
     @detail_route()
     def active_versions(self, request, **kwargs):
-        project = get_object_or_404(
-            Project.objects.api(request.user), pk=kwargs['pk'])
+        project = self.get_project_for_user_or_404(
+            kwargs[self.lookup_field])
         versions = project.versions.filter(active=True)
         return Response({
             'versions': VersionSerializer(versions, many=True).data,
@@ -144,8 +149,8 @@ class ProjectViewSet(UserSelectViewSet):
 
     @decorators.detail_route(permission_classes=[permissions.IsAdminUser])
     def token(self, request, **kwargs):
-        project = get_object_or_404(
-            Project.objects.api(request.user), pk=kwargs['pk'])
+        project = self.get_project_for_user_or_404(
+            kwargs[self.lookup_field])
         token = GitHubService.get_token_for_project(project, force_local=True)
         return Response({
             'token': token,
@@ -153,8 +158,8 @@ class ProjectViewSet(UserSelectViewSet):
 
     @decorators.detail_route()
     def canonical_url(self, request, **kwargs):
-        project = get_object_or_404(
-            Project.objects.api(request.user), pk=kwargs['pk'])
+        project = self.get_project_for_user_or_404(
+            kwargs[self.lookup_field])
         return Response({
             'url': project.get_docs_url(),
         })
@@ -169,8 +174,8 @@ class ProjectViewSet(UserSelectViewSet):
 
         :returns: the identifiers for the versions that have been deleted.
         """
-        project = get_object_or_404(
-            Project.objects.api(request.user), pk=kwargs['pk'])
+        project = self.get_project_for_user_or_404(
+            kwargs[self.lookup_field])
 
         # If the currently highest non-prerelease version is active, then make
         # the new latest version active as well.
