@@ -1,3 +1,5 @@
+{% load static %}
+{% comment %}
 <script src="{{ MEDIA_URL }}docsitalia/toolkit/IWT.min.js"></script>
 <script src="{{ MEDIA_URL }}docsitalia/scripts/main.js"></script>
 <script src="{{ MEDIA_URL }}docsitalia/scripts/clamp.min.js"></script>
@@ -53,3 +55,18 @@
 </script>
 <noscript><p><img src="//italia.piwikpro.com/piwik.php?idsite={{ site.piwik }}" style="border:0;" alt="" /></p></noscript>
 <!-- End Piwik Code -->
+{% endcomment %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha256-98vAGjEDGN79TjHkYWVD4s87rvWkdWLHPs5MC3FvFX4=" crossorigin="anonymous"></script>
+
+<script src="{% static 'vendor/bootstrap-italia/js/bootstrap-italia.min.js' %}"></script>
+
+<!-- necessari solo per il backoffice -->
+<script src="{{ MEDIA_URL }}javascript/instantsearch.js"></script>
+<script src="{{ MEDIA_URL }}javascript/base.js"></script>
+<script src="{% static 'core/js/site.js' %}"></script>
+<script>
+    var site = require('core/site');
+    site.handle_notification_dismiss();
+</script>

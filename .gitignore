@@ -11,6 +11,7 @@
 .vscode
 .tox
 .env
+.sass-cache
 .rope_project/
 .ropeproject/
 _build

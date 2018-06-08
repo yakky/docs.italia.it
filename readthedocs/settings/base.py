@@ -156,6 +156,7 @@ class CommunityBaseSettings(Settings):
     SITE_ROOT = os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     TEMPLATE_ROOT = os.path.join(SITE_ROOT, 'readthedocs', 'templates')
+    TEMPLATE_OVERRIDES = os.path.join(TEMPLATE_ROOT, 'docsitalia', 'overrides')
     DOCROOT = os.path.join(SITE_ROOT, 'user_builds')
     UPLOAD_ROOT = os.path.join(SITE_ROOT, 'user_uploads')
     CNAME_ROOT = os.path.join(SITE_ROOT, 'cnames')
@@ -174,7 +175,7 @@ class CommunityBaseSettings(Settings):
     TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [TEMPLATE_ROOT],
+            'DIRS': [TEMPLATE_OVERRIDES, TEMPLATE_ROOT],
             'OPTIONS': {
                 'debug': DEBUG,
                 'context_processors': [

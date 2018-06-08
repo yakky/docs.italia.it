@@ -1,0 +1,156 @@
+{% load i18n %}
+{% load core_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  {% include 'docsitalia/includes/head.html' %}
+  {% block extra_links %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+{% include 'docsitalia/includes/header.html' %}
+
+    {% block subnav-bar %}{% endblock %}
+
+    {% block project_editing %}{% endblock %}
+
+    <!-- BEGIN content-->
+    <div id="content" class="container">
+      <div class="wrapper">
+
+        {% if messages %}
+          <ul class="notifications">
+            {% for message in messages %}
+              <li class="notification notification-{{ message.level }}" {% if message.pk %}data-dismiss-url="{% url 'message_mark_read' message.pk %}{% endif %}">
+                {{ message }}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% block content-header %}
+        {% endblock %}
+
+        {% block content %}
+        {% endblock %}
+
+      </div>
+    </div>
+    <!-- END content-->
+{%comment %}
+    <!-- BEGIN footer-->
+    <div id="footer">
+      <div class="wrapper">
+
+        <hr>
+
+
+        {% block footer-content %}
+
+        <div class="column-logo">
+          <div class="footerlogo"></div>
+
+          <ul class="social">
+            <li><a href="https://github.com/rtfd/readthedocs.org" rel="noopener noreferrer"><span class="icon github"></span></a></li>
+            <li><a href="https://twitter.com/readthedocs" rel="noopener noreferrer"><span class="icon twitter"></span></a></li>
+          </ul>
+        </div>
+
+        <div class="column-about">
+          <h4>{%  trans "About Us" %}</h4>
+
+          <ul>
+            <li>
+              <a href="https://docs.readthedocs.io/en/latest/team.html">{%  trans "Team" %}</a>
+            </li>
+            <li>
+              <a href="https://docs.readthedocs.io/en/latest/open-source-philosophy.html">{% trans "Open Source Philosophy" %}</a>
+            </li>
+            <li>
+              <a href="http://blog.readthedocs.com/">{% trans "Blog" %}</a>
+            </li>
+            <li>
+              <a href="https://docs.readthedocs.io/en/latest/sponsors.html">{% trans "Our Sponsors" %}</a>
+            </li>
+            <li>
+              <a href="https://docs.readthedocs.io/en/latest/privacy-policy.html">{% trans "Privacy Policy" %}</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="column-rtd">
+          <h4>{%  trans "Read the Docs" %}</h4>
+
+          <ul>
+            <li>
+              <a href="https://docs.readthedocs.io/en/latest/getting_started.html">{% trans "Getting Started Guide" %}</a>
+            </li>
+            <li>
+              <a href="https://docs.readthedocs.io">{% trans "Documentation" %}</a>
+            </li>
+            <li>
+              <a href="https://docs.readthedocs.io/en/latest/contribute.html">{% trans "Contributing" %}</a>
+            </li>
+            <li>
+              {% url "advertising" as advertising_url %}
+              <a href="{{ advertising_url | default:'https://readthedocs.org/sustainability/advertising/' }}">{%  trans "Advertise with Us" %}</a>
+            </li>
+            <li>
+              <a href="https://readthedocs.com">{%  trans "Commercial Support" %}</a>
+            </li>
+            <li>
+              {% url "gold_detail" as gold_detail %}
+              <a href="{{ gold_detail }}">{%  trans "Read the Docs Gold" %}</a>
+            </li>
+            <li>
+              {% url "donate" as donate_url %}
+              <a href='{{ donate_url }}'>{% trans "Donate" %}</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="footer-bottom">
+          <div class="column-copyright">
+            <p>
+              <small>
+                &copy; Copyright {% now "Y" %}, {% trans "Read the Docs, Inc & contributors" %} -
+                {% trans "Version" %} {% readthedocs_version %}
+              </small>
+            </p>
+          </div>
+
+          <div class="column-setlang">
+            {% get_current_language as current_lang %}
+            <form action="/i18n/setlang/" method="post" style="float: right">
+              <input name="next" type="hidden" value="/" />
+              {% csrf_token %}
+              <select name="language">
+                {% for lang in LANGUAGES %}
+                  {% if lang.0 == current_lang %}
+                  <option selected="selected" value="{{ lang.0 }}">{{ lang.0|language_name_local }} [{{ lang.1 }}]</option>
+                  {% else %}
+                  <option value="{{ lang.0 }}">{{ lang.0|language_name_local }} [{{ lang.1 }}]</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+              <input type="submit" value="{% trans 'Change Language' %}" name="submit">
+            </form>
+          </div>
+        </div>
+
+        {% endblock %}
+
+      </div>
+    </div>
+    <!-- END footer-->
+{% endcomment %}
+
+{% include 'docsitalia/includes/footer.html' %}
+{% include 'docsitalia/includes/scripts.html' %}
+
+{% block extra_scripts %}{% endblock %}
+
+</body>
+</html>
