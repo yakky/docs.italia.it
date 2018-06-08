@@ -1,0 +1,24 @@
+{% load static %}
+
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+{% include 'docsitalia/includes/meta.html' %}
+
+<link rel="alternate" type="application/rss+xml" title="" href="feed.xml">
+
+<link media="all" rel="stylesheet" href="{% static 'vendor/bootstrap-italia/css/bootstrap-italia.min.css' %}">
+<link media="all" rel="stylesheet" href="{% static 'vendor/bootstrap-italia/css/italia-icon-font.css' %}">
+<link media="all" rel="stylesheet" href="{% static 'projects/css/main.css' %}">
+
+<!-- css solo per backoffice - to do: ripulire -->
+<link media="all" rel="stylesheet" href="{{ MEDIA_URL }}docsitalia/css/core.css">
+
+<!-- js solo per backoffice - to do: ripulire -->
+<!--<script src="{% static 'vendor/jquery.js' %}"></script>
+<script src="{% static 'vendor/jquery-migrate.js' %}"></script>
+<script src="{% static 'vendor/jquery-ui.js' %}"></script>
+<script>
+  require('jquery');
+</script>-->

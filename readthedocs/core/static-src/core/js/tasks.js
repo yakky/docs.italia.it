@@ -1,15 +1,13 @@
 /* Public task tracking */
 
-var jquery = require('jquery');
-
 function poll_task(data) {
-    var defer = jquery.Deferred();
+    var defer = $.Deferred();
     var tries = 5;
 
     function poll_task_loop() {
-        jquery
-            .getJSON(data.url)
-            .success(function (task) {
+        $.ajax(data.url, {
+            dataType: "json",
+            success: function (task) {
                 if (task.finished) {
                     if (task.success) {
                         defer.resolve();
@@ -21,8 +19,8 @@ function poll_task(data) {
                 else {
                     setTimeout(poll_task_loop, 2000);
                 }
-            })
-            .error(function (error) {
+            },
+            error: function (error) {
                 console.error('Error polling task:', error);
                 tries -= 1;
                 if (tries > 0) {
@@ -32,7 +30,8 @@ function poll_task(data) {
                     var error_msg = error.responseJSON.detail || error.statusText;
                     defer.reject({message: error_msg});
                 }
-            });
+            }
+        });
     }
 
     setTimeout(poll_task_loop, 2000);
@@ -41,7 +40,7 @@ function poll_task(data) {
 }
 
 function trigger_task(config) {
-    var defer = jquery.Deferred();
+    var defer = $.Deferred();
     var url = config.url;
     var token = config.token;
     var data = {csrfmiddlewaretoken: token};

@@ -1,1 +1,1899 @@
-!function o(s,a,l){function d(t,e){if(!a[t]){if(!s[t]){var i="function"==typeof require&&require;if(!e&&i)return i(t,!0);if(c)return c(t,!0);var r=new Error("Cannot find module '"+t+"'");throw r.code="MODULE_NOT_FOUND",r}var n=a[t]={exports:{}};s[t][0].call(n.exports,function(e){return d(s[t][1][e]||e)},n,n.exports,o,s,a,l)}return a[t].exports}for(var c="function"==typeof require&&require,e=0;e<l.length;e++)d(l[e]);return d}({1:[function(e,t,i){var r="undefined"!=typeof window?window.jQuery:e("jquery");t.exports.ThemeNav={navBar:null,win:null,winScroll:!1,winResize:!1,linkScroll:!1,winPosition:0,winHeight:null,docHeight:null,isRunning:!1,enable:function(t){var i=this;"undefined"==typeof withStickNav&&(t=!0),i.isRunning||(i.isRunning=!0,r(function(e){i.init(e),i.reset(),i.win.on("hashchange",i.reset),t&&i.win.on("scroll",function(){i.linkScroll||i.winScroll||(i.winScroll=!0,requestAnimationFrame(function(){i.onScroll()}))}),i.win.on("resize",function(){i.winResize||(i.winResize=!0,requestAnimationFrame(function(){i.onResize()}))}),i.onResize()}))},enableSticky:function(){this.enable(!0)},init:function(i){i(document);var r=this;this.navBar=i("div.wy-side-scroll:first"),this.win=i(window),i(document).on("click","[data-toggle='wy-nav-top']",function(){i("[data-toggle='wy-nav-shift']").toggleClass("shift"),i("[data-toggle='rst-versions']").toggleClass("shift")}).on("click",".wy-menu-vertical .current ul li a",function(){var e=i(this);i("[data-toggle='wy-nav-shift']").removeClass("shift"),i("[data-toggle='rst-versions']").toggleClass("shift"),r.toggleCurrent(e),r.hashChange()}).on("click","[data-toggle='rst-current-version']",function(){i("[data-toggle='rst-versions']").toggleClass("shift-up")}),i("table.docutils:not(.field-list,.footnote,.citation)").wrap("<div class='wy-table-responsive'></div>"),i("table.docutils.footnote").wrap("<div class='wy-table-responsive footnote'></div>"),i("table.docutils.citation").wrap("<div class='wy-table-responsive citation'></div>"),i(".wy-menu-vertical ul").not(".simple").siblings("a").each(function(){var t=i(this);expand=i('<span class="toctree-expand"></span>'),expand.on("click",function(e){return r.toggleCurrent(t),e.stopPropagation(),!1}),t.prepend(expand)})},reset:function(){var e=encodeURI(window.location.hash)||"#";try{var t=$(".wy-menu-vertical"),i=t.find('[href="'+e+'"]');if(0===i.length){var r=$('.document [id="'+e.substring(1)+'"]').closest("div.section");0===(i=t.find('[href="#'+r.attr("id")+'"]')).length&&(i=t.find('[href="#"]'))}0<i.length&&($(".wy-menu-vertical .current").removeClass("current"),i.addClass("current"),i.closest("li.toctree-l1").addClass("current"),i.closest("li.toctree-l1").parent().addClass("current"),i.closest("li.toctree-l1").addClass("current"),i.closest("li.toctree-l2").addClass("current"),i.closest("li.toctree-l3").addClass("current"),i.closest("li.toctree-l4").addClass("current"))}catch(e){console.log("Error expanding nav for anchor",e)}},onScroll:function(){this.winScroll=!1;var e=this.win.scrollTop(),t=e+this.winHeight,i=this.navBar.scrollTop()+(e-this.winPosition);e<0||t>this.docHeight||(this.navBar.scrollTop(i),this.winPosition=e)},onResize:function(){this.winResize=!1,this.winHeight=this.win.height(),this.docHeight=$(document).height()},hashChange:function(){this.linkScroll=!0,this.win.one("hashchange",function(){this.linkScroll=!1})},toggleCurrent:function(e){var t=e.closest("li");t.siblings("li.current").removeClass("current"),t.siblings().find("li.current").removeClass("current"),t.find("> ul li.current").removeClass("current"),t.toggleClass("current")}},"undefined"!=typeof window&&(window.SphinxRtdTheme={Navigation:t.exports.ThemeNav,StickyNav:t.exports.ThemeNav}),function(){for(var o=0,e=["ms","moz","webkit","o"],t=0;t<e.length&&!window.requestAnimationFrame;++t)window.requestAnimationFrame=window[e[t]+"RequestAnimationFrame"],window.cancelAnimationFrame=window[e[t]+"CancelAnimationFrame"]||window[e[t]+"CancelRequestAnimationFrame"];window.requestAnimationFrame||(window.requestAnimationFrame=function(e,t){var i=(new Date).getTime(),r=Math.max(0,16-(i-o)),n=window.setTimeout(function(){e(i+r)},r);return o=i+r,n}),window.cancelAnimationFrame||(window.cancelAnimationFrame=function(e){clearTimeout(e)})}()},{jquery:"jquery"}],2:[function(e,t,i){var r=e("cssfilter").FilterCSS,n=e("cssfilter").getDefaultWhiteList,u=e("./util");function o(){return{a:["target","href","title"],abbr:["title"],address:[],area:["shape","coords","href","alt"],article:[],aside:[],audio:["autoplay","controls","loop","preload","src"],b:[],bdi:["dir"],bdo:["dir"],big:[],blockquote:["cite"],br:[],caption:[],center:[],cite:[],code:[],col:["align","valign","span","width"],colgroup:["align","valign","span","width"],dd:[],del:["datetime"],details:["open"],div:[],dl:[],dt:[],em:[],font:["color","size","face"],footer:[],h1:[],h2:[],h3:[],h4:[],h5:[],h6:[],header:[],hr:[],i:[],img:["src","alt","title","width","height"],ins:["datetime"],li:[],mark:[],nav:[],ol:[],p:[],pre:[],s:[],section:[],small:[],span:[],sub:[],sup:[],strong:[],table:["width","border","align","valign"],tbody:["align","valign"],td:["width","rowspan","colspan","align","valign"],tfoot:["align","valign"],th:["width","rowspan","colspan","align","valign"],thead:["align","valign"],tr:["rowspan","align","valign"],tt:[],u:[],ul:[],video:["autoplay","controls","loop","preload","src","height","width"]}}var s=new r;function a(e){return e.replace(l,"&lt;").replace(d,"&gt;")}var l=/</g,d=/>/g,c=/"/g,p=/&quot;/g,f=/&#([a-zA-Z0-9]*);?/gim,h=/&colon;?/gim,m=/&newline;?/gim,g=/((j\s*a\s*v\s*a|v\s*b|l\s*i\s*v\s*e)\s*s\s*c\s*r\s*i\s*p\s*t\s*|m\s*o\s*c\s*h\s*a)\:/gi,v=/e\s*x\s*p\s*r\s*e\s*s\s*s\s*i\s*o\s*n\s*\(.*/gi,w=/u\s*r\s*l\s*\(.*/gi;function b(e){return e.replace(c,"&quot;")}function y(e){return e.replace(p,'"')}function x(e){return e.replace(f,function(e,t){return"x"===t[0]||"X"===t[0]?String.fromCharCode(parseInt(t.substr(1),16)):String.fromCharCode(parseInt(t,10))})}function _(e){return e.replace(h,":").replace(m," ")}function k(e){for(var t="",i=0,r=e.length;i<r;i++)t+=e.charCodeAt(i)<32?" ":e.charAt(i);return u.trim(t)}function T(e){return e=k(e=_(e=x(e=y(e))))}function S(e){return e=a(e=b(e))}var O=/<!--[\s\S]*?-->/g;i.whiteList={a:["target","href","title"],abbr:["title"],address:[],area:["shape","coords","href","alt"],article:[],aside:[],audio:["autoplay","controls","loop","preload","src"],b:[],bdi:["dir"],bdo:["dir"],big:[],blockquote:["cite"],br:[],caption:[],center:[],cite:[],code:[],col:["align","valign","span","width"],colgroup:["align","valign","span","width"],dd:[],del:["datetime"],details:["open"],div:[],dl:[],dt:[],em:[],font:["color","size","face"],footer:[],h1:[],h2:[],h3:[],h4:[],h5:[],h6:[],header:[],hr:[],i:[],img:["src","alt","title","width","height"],ins:["datetime"],li:[],mark:[],nav:[],ol:[],p:[],pre:[],s:[],section:[],small:[],span:[],sub:[],sup:[],strong:[],table:["width","border","align","valign"],tbody:["align","valign"],td:["width","rowspan","colspan","align","valign"],tfoot:["align","valign"],th:["width","rowspan","colspan","align","valign"],thead:["align","valign"],tr:["rowspan","align","valign"],tt:[],u:[],ul:[],video:["autoplay","controls","loop","preload","src","height","width"]},i.getDefaultWhiteList=o,i.onTag=function(e,t,i){},i.onIgnoreTag=function(e,t,i){},i.onTagAttr=function(e,t,i){},i.onIgnoreTagAttr=function(e,t,i){},i.safeAttrValue=function(e,t,i,r){if(i=T(i),"href"===t||"src"===t){if("#"===(i=u.trim(i)))return"#";if("http://"!==i.substr(0,7)&&"https://"!==i.substr(0,8)&&"mailto:"!==i.substr(0,7)&&"tel:"!==i.substr(0,4)&&"#"!==i[0]&&"/"!==i[0])return""}else if("background"===t){if(g.lastIndex=0,g.test(i))return""}else if("style"===t){if(v.lastIndex=0,v.test(i))return"";if(w.lastIndex=0,w.test(i)&&(g.lastIndex=0,g.test(i)))return"";!1!==r&&(i=(r=r||s).process(i))}return i=S(i)},i.escapeHtml=a,i.escapeQuote=b,i.unescapeQuote=y,i.escapeHtmlEntities=x,i.escapeDangerHtml5Entities=_,i.clearNonPrintableCharacter=k,i.friendlyAttrValue=T,i.escapeAttrValue=S,i.onIgnoreTagStripAll=function(){return""},i.StripTagBody=function(s,a){"function"!=typeof a&&(a=function(){});var l=!Array.isArray(s),d=[],c=!1;return{onIgnoreTag:function(e,t,i){if(o=e,l||-1!==u.indexOf(s,o)){if(i.isClosing){var r="[/removed]",n=i.position+r.length;return d.push([!1!==c?c:i.position,n]),c=!1,r}return c||(c=i.position),"[removed]"}return a(e,t,i);var o},remove:function(t){var i="",r=0;return u.forEach(d,function(e){i+=t.slice(r,e[0]),r=e[1]}),i+=t.slice(r)}}},i.stripCommentTag=function(e){return e.replace(O,"")},i.stripBlankChar=function(e){var t=e.split("");return(t=t.filter(function(e){var t=e.charCodeAt(0);return!(127===t||t<=31&&10!==t&&13!==t)})).join("")},i.cssFilter=s,i.getDefaultCSSWhiteList=n},{"./util":5,cssfilter:10}],3:[function(e,t,i){var r=e("./default"),n=e("./parser"),o=e("./xss");for(var s in(i=t.exports=function(e,t){return new o(t).process(e)}).FilterXSS=o,r)i[s]=r[s];for(var s in n)i[s]=n[s];"undefined"!=typeof window&&(window.filterXSS=t.exports)},{"./default":2,"./parser":4,"./xss":6}],4:[function(e,t,i){var c=e("./util");function p(e){var t=c.spaceIndex(e);if(-1===t)var i=e.slice(1,-1);else i=e.slice(1,t+1);return"/"===(i=c.trim(i).toLowerCase()).slice(0,1)&&(i=i.slice(1)),"/"===i.slice(-1)&&(i=i.slice(0,-1)),i}var u=/[^a-zA-Z0-9_:\.\-]/gim;function f(e,t){for(;t<e.length;t++){var i=e[t];if(" "!==i)return"="===i?t:-1}}function h(e,t){for(;0<t;t--){var i=e[t];if(" "!==i)return"="===i?t:-1}}function m(e){return'"'===(t=e)[0]&&'"'===t[t.length-1]||"'"===t[0]&&"'"===t[t.length-1]?e.substr(1,e.length-2):e;var t}i.parseTag=function(e,t,i){"user strict";var r="",n=0,o=!1,s=!1,a=0,l=e.length,d="",c="";for(a=0;a<l;a++){var u=e.charAt(a);if(!1===o){if("<"===u){o=a;continue}}else if(!1===s){if("<"===u){r+=i(e.slice(n,a)),n=o=a;continue}if(">"===u){r+=i(e.slice(n,o)),c=p(d=e.slice(o,a+1)),r+=t(o,r.length,c,d,"</"===d.slice(0,2)),n=a+1,o=!1;continue}if(('"'===u||"'"===u)&&"="===e.charAt(a-1)){s=u;continue}}else if(u===s){s=!1;continue}}return n<e.length&&(r+=i(e.substr(n))),r},i.parseAttr=function(e,r){"user strict";var t=0,n=[],i=!1,o=e.length;function s(e,t){if(!((e=(e=c.trim(e)).replace(u,"").toLowerCase()).length<1)){var i=r(e,t||"");i&&n.push(i)}}for(var a=0;a<o;a++){var l,d=e.charAt(a);if(!1!==i||"="!==d)if(!1===i||a!==t||'"'!==d&&"'"!==d||"="!==e.charAt(a-1)){if(/\s|\n|\t/.test(d)){if(e=e.replace(/\s|\n|\t/g," "),!1===i){if(-1===(l=f(e,a))){s(c.trim(e.slice(t,a))),i=!1,t=a+1;continue}a=l-1;continue}if(-1===(l=h(e,a-1))){s(i,m(c.trim(e.slice(t,a)))),i=!1,t=a+1;continue}}}else{if(-1===(l=e.indexOf(d,a+1)))break;s(i,c.trim(e.slice(t+1,l))),i=!1,t=(a=l)+1}else i=e.slice(t,a),t=a+1}return t<e.length&&(!1===i?s(e.slice(t)):s(i,m(c.trim(e.slice(t))))),c.trim(n.join(" "))}},{"./util":5}],5:[function(e,t,i){t.exports={indexOf:function(e,t){var i,r;if(Array.prototype.indexOf)return e.indexOf(t);for(i=0,r=e.length;i<r;i++)if(e[i]===t)return i;return-1},forEach:function(e,t,i){var r,n;if(Array.prototype.forEach)return e.forEach(t,i);for(r=0,n=e.length;r<n;r++)t.call(i,e[r],r,e)},trim:function(e){return String.prototype.trim?e.trim():e.replace(/(^\s*)|(\s*$)/g,"")},spaceIndex:function(e){var t=/\s|\n|\t/.exec(e);return t?t.index:-1}}},{}],6:[function(e,t,i){var r=e("cssfilter").FilterCSS,n=e("./default"),o=e("./parser"),s=o.parseTag,w=o.parseAttr,b=e("./util");function y(e){return null==e}function a(e){(e=function(e){var t={};for(var i in e)t[i]=e[i];return t}(e||{})).stripIgnoreTag&&(e.onIgnoreTag&&console.error('Notes: cannot use these two options "stripIgnoreTag" and "onIgnoreTag" at the same time'),e.onIgnoreTag=n.onIgnoreTagStripAll),e.whiteList=e.whiteList||n.whiteList,e.onTag=e.onTag||n.onTag,e.onTagAttr=e.onTagAttr||n.onTagAttr,e.onIgnoreTag=e.onIgnoreTag||n.onIgnoreTag,e.onIgnoreTagAttr=e.onIgnoreTagAttr||n.onIgnoreTagAttr,e.safeAttrValue=e.safeAttrValue||n.safeAttrValue,e.escapeHtml=e.escapeHtml||n.escapeHtml,!1===(this.options=e).css?this.cssFilter=!1:(e.css=e.css||{},this.cssFilter=new r(e.css))}a.prototype.process=function(e){if(!(e=(e=e||"").toString()))return"";var t=this.options,c=t.whiteList,u=t.onTag,p=t.onIgnoreTag,f=t.onTagAttr,h=t.onIgnoreTagAttr,m=t.safeAttrValue,g=t.escapeHtml,v=this.cssFilter;t.stripBlankChar&&(e=n.stripBlankChar(e)),t.allowCommentTag||(e=n.stripCommentTag(e));var i=!1;if(t.stripIgnoreTagBody){i=n.StripTagBody(t.stripIgnoreTagBody,p);p=i.onIgnoreTag}var r=s(e,function(e,t,n,i,r){var o,s={sourcePosition:e,position:t,isClosing:r,isWhite:n in c};if(!y(o=u(n,i,s)))return o;if(s.isWhite){if(s.isClosing)return"</"+n+">";var a=function(e){var t=b.spaceIndex(e);if(-1===t)return{html:"",closing:"/"===e[e.length-2]};var i="/"===(e=b.trim(e.slice(t+1,-1)))[e.length-1];return i&&(e=b.trim(e.slice(0,-1))),{html:e,closing:i}}(i),l=c[n],d=w(a.html,function(e,t){var i,r=-1!==b.indexOf(l,e);return y(i=f(n,e,t,r))?r?(t=m(n,e,t,v))?e+'="'+t+'"':e:y(i=h(n,e,t,r))?void 0:i:i});i="<"+n;return d&&(i+=" "+d),a.closing&&(i+=" /"),i+=">"}return y(o=p(n,i,s))?g(i):o},g);return i&&(r=i.remove(r)),r},t.exports=a},{"./default":2,"./parser":4,"./util":5,cssfilter:10}],7:[function(e,t,i){var r,n;r=this,n=function(){var T=!0;function s(i){function e(e){var t=i.match(e);return t&&1<t.length&&t[1]||""}function t(e){var t=i.match(e);return t&&1<t.length&&t[2]||""}var r,n=e(/(ipod|iphone|ipad)/i).toLowerCase(),o=!/like android/i.test(i)&&/android/i.test(i),s=/nexus\s*[0-6]\s*/i.test(i),a=!s&&/nexus\s*[0-9]+/i.test(i),l=/CrOS/.test(i),d=/silk/i.test(i),c=/sailfish/i.test(i),u=/tizen/i.test(i),p=/(web|hpw)os/i.test(i),f=/windows phone/i.test(i),h=(/SamsungBrowser/i.test(i),!f&&/windows/i.test(i)),m=!n&&!d&&/macintosh/i.test(i),g=!o&&!c&&!u&&!p&&/linux/i.test(i),v=t(/edg([ea]|ios)\/(\d+(\.\d+)?)/i),w=e(/version\/(\d+(\.\d+)?)/i),b=/tablet/i.test(i)&&!/tablet pc/i.test(i),y=!b&&/[^-]mobi/i.test(i),x=/xbox/i.test(i);/opera/i.test(i)?r={name:"Opera",opera:T,version:w||e(/(?:opera|opr|opios)[\s\/](\d+(\.\d+)?)/i)}:/opr\/|opios/i.test(i)?r={name:"Opera",opera:T,version:e(/(?:opr|opios)[\s\/](\d+(\.\d+)?)/i)||w}:/SamsungBrowser/i.test(i)?r={name:"Samsung Internet for Android",samsungBrowser:T,version:w||e(/(?:SamsungBrowser)[\s\/](\d+(\.\d+)?)/i)}:/coast/i.test(i)?r={name:"Opera Coast",coast:T,version:w||e(/(?:coast)[\s\/](\d+(\.\d+)?)/i)}:/yabrowser/i.test(i)?r={name:"Yandex Browser",yandexbrowser:T,version:w||e(/(?:yabrowser)[\s\/](\d+(\.\d+)?)/i)}:/ucbrowser/i.test(i)?r={name:"UC Browser",ucbrowser:T,version:e(/(?:ucbrowser)[\s\/](\d+(?:\.\d+)+)/i)}:/mxios/i.test(i)?r={name:"Maxthon",maxthon:T,version:e(/(?:mxios)[\s\/](\d+(?:\.\d+)+)/i)}:/epiphany/i.test(i)?r={name:"Epiphany",epiphany:T,version:e(/(?:epiphany)[\s\/](\d+(?:\.\d+)+)/i)}:/puffin/i.test(i)?r={name:"Puffin",puffin:T,version:e(/(?:puffin)[\s\/](\d+(?:\.\d+)?)/i)}:/sleipnir/i.test(i)?r={name:"Sleipnir",sleipnir:T,version:e(/(?:sleipnir)[\s\/](\d+(?:\.\d+)+)/i)}:/k-meleon/i.test(i)?r={name:"K-Meleon",kMeleon:T,version:e(/(?:k-meleon)[\s\/](\d+(?:\.\d+)+)/i)}:f?(r={name:"Windows Phone",osname:"Windows Phone",windowsphone:T},v?(r.msedge=T,r.version=v):(r.msie=T,r.version=e(/iemobile\/(\d+(\.\d+)?)/i))):/msie|trident/i.test(i)?r={name:"Internet Explorer",msie:T,version:e(/(?:msie |rv:)(\d+(\.\d+)?)/i)}:l?r={name:"Chrome",osname:"Chrome OS",chromeos:T,chromeBook:T,chrome:T,version:e(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)}:/edg([ea]|ios)/i.test(i)?r={name:"Microsoft Edge",msedge:T,version:v}:/vivaldi/i.test(i)?r={name:"Vivaldi",vivaldi:T,version:e(/vivaldi\/(\d+(\.\d+)?)/i)||w}:c?r={name:"Sailfish",osname:"Sailfish OS",sailfish:T,version:e(/sailfish\s?browser\/(\d+(\.\d+)?)/i)}:/seamonkey\//i.test(i)?r={name:"SeaMonkey",seamonkey:T,version:e(/seamonkey\/(\d+(\.\d+)?)/i)}:/firefox|iceweasel|fxios/i.test(i)?(r={name:"Firefox",firefox:T,version:e(/(?:firefox|iceweasel|fxios)[ \/](\d+(\.\d+)?)/i)},/\((mobile|tablet);[^\)]*rv:[\d\.]+\)/i.test(i)&&(r.firefoxos=T,r.osname="Firefox OS")):d?r={name:"Amazon Silk",silk:T,version:e(/silk\/(\d+(\.\d+)?)/i)}:/phantom/i.test(i)?r={name:"PhantomJS",phantom:T,version:e(/phantomjs\/(\d+(\.\d+)?)/i)}:/slimerjs/i.test(i)?r={name:"SlimerJS",slimer:T,version:e(/slimerjs\/(\d+(\.\d+)?)/i)}:/blackberry|\bbb\d+/i.test(i)||/rim\stablet/i.test(i)?r={name:"BlackBerry",osname:"BlackBerry OS",blackberry:T,version:w||e(/blackberry[\d]+\/(\d+(\.\d+)?)/i)}:p?(r={name:"WebOS",osname:"WebOS",webos:T,version:w||e(/w(?:eb)?osbrowser\/(\d+(\.\d+)?)/i)},/touchpad\//i.test(i)&&(r.touchpad=T)):/bada/i.test(i)?r={name:"Bada",osname:"Bada",bada:T,version:e(/dolfin\/(\d+(\.\d+)?)/i)}:u?r={name:"Tizen",osname:"Tizen",tizen:T,version:e(/(?:tizen\s?)?browser\/(\d+(\.\d+)?)/i)||w}:/qupzilla/i.test(i)?r={name:"QupZilla",qupzilla:T,version:e(/(?:qupzilla)[\s\/](\d+(?:\.\d+)+)/i)||w}:/chromium/i.test(i)?r={name:"Chromium",chromium:T,version:e(/(?:chromium)[\s\/](\d+(?:\.\d+)?)/i)||w}:/chrome|crios|crmo/i.test(i)?r={name:"Chrome",chrome:T,version:e(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)}:o?r={name:"Android",version:w}:/safari|applewebkit/i.test(i)?(r={name:"Safari",safari:T},w&&(r.version=w)):n?(r={name:"iphone"==n?"iPhone":"ipad"==n?"iPad":"iPod"},w&&(r.version=w)):r=/googlebot/i.test(i)?{name:"Googlebot",googlebot:T,version:e(/googlebot\/(\d+(\.\d+))/i)||w}:{name:e(/^(.*)\/(.*) /),version:t(/^(.*)\/(.*) /)},!r.msedge&&/(apple)?webkit/i.test(i)?(/(apple)?webkit\/537\.36/i.test(i)?(r.name=r.name||"Blink",r.blink=T):(r.name=r.name||"Webkit",r.webkit=T),!r.version&&w&&(r.version=w)):!r.opera&&/gecko\//i.test(i)&&(r.name=r.name||"Gecko",r.gecko=T,r.version=r.version||e(/gecko\/(\d+(\.\d+)?)/i)),r.windowsphone||!o&&!r.silk?!r.windowsphone&&n?(r[n]=T,r.ios=T,r.osname="iOS"):m?(r.mac=T,r.osname="macOS"):x?(r.xbox=T,r.osname="Xbox"):h?(r.windows=T,r.osname="Windows"):g&&(r.linux=T,r.osname="Linux"):(r.android=T,r.osname="Android");var _="";r.windows?_=function(e){switch(e){case"NT":return"NT";case"XP":return"XP";case"NT 5.0":return"2000";case"NT 5.1":return"XP";case"NT 5.2":return"2003";case"NT 6.0":return"Vista";case"NT 6.1":return"7";case"NT 6.2":return"8";case"NT 6.3":return"8.1";case"NT 10.0":return"10";default:return}}(e(/Windows ((NT|XP)( \d\d?.\d)?)/i)):r.windowsphone?_=e(/windows phone (?:os)?\s?(\d+(\.\d+)*)/i):r.mac?_=(_=e(/Mac OS X (\d+([_\.\s]\d+)*)/i)).replace(/[_\s]/g,"."):n?_=(_=e(/os (\d+([_\s]\d+)*) like mac os x/i)).replace(/[_\s]/g,"."):o?_=e(/android[ \/-](\d+(\.\d+)*)/i):r.webos?_=e(/(?:web|hpw)os\/(\d+(\.\d+)*)/i):r.blackberry?_=e(/rim\stablet\sos\s(\d+(\.\d+)*)/i):r.bada?_=e(/bada\/(\d+(\.\d+)*)/i):r.tizen&&(_=e(/tizen[\/\s](\d+(\.\d+)*)/i)),_&&(r.osversion=_);var k=!r.windows&&_.split(".")[0];return b||a||"ipad"==n||o&&(3==k||4<=k&&!y)||r.silk?r.tablet=T:(y||"iphone"==n||"ipod"==n||o||s||r.blackberry||r.webos||r.bada)&&(r.mobile=T),r.msedge||r.msie&&10<=r.version||r.yandexbrowser&&15<=r.version||r.vivaldi&&1<=r.version||r.chrome&&20<=r.version||r.samsungBrowser&&4<=r.version||r.firefox&&20<=r.version||r.safari&&6<=r.version||r.opera&&10<=r.version||r.ios&&r.osversion&&6<=r.osversion.split(".")[0]||r.blackberry&&10.1<=r.version||r.chromium&&20<=r.version?r.a=T:r.msie&&r.version<10||r.chrome&&r.version<20||r.firefox&&r.version<20||r.safari&&r.version<6||r.opera&&r.version<10||r.ios&&r.osversion&&r.osversion.split(".")[0]<6||r.chromium&&r.version<20?r.c=T:r.x=T,r}var a=s("undefined"!=typeof navigator&&navigator.userAgent||"");function r(e){return e.split(".").length}function n(e,t){var i,r=[];if(Array.prototype.map)return Array.prototype.map.call(e,t);for(i=0;i<e.length;i++)r.push(t(e[i]));return r}function l(e){for(var i=Math.max(r(e[0]),r(e[1])),t=n(e,function(e){var t=i-r(e);return n((e+=new Array(t+1).join(".0")).split("."),function(e){return new Array(20-e.length).join("0")+e}).reverse()});0<=--i;){if(t[0][i]>t[1][i])return 1;if(t[0][i]!==t[1][i])return-1;if(0===i)return 0}}function o(e,t,i){var r=a;"string"==typeof t&&(i=t,t=void 0),void 0===t&&(t=!1),i&&(r=s(i));var n=""+r.version;for(var o in e)if(e.hasOwnProperty(o)&&r[o]){if("string"!=typeof e[o])throw new Error("Browser version in the minVersion map should be a string: "+o+": "+String(e));return l([n,e[o]])<0}return t}return a.test=function(e){for(var t=0;t<e.length;++t){var i=e[t];if("string"==typeof i&&i in a)return!0}return!1},a.isUnsupportedBrowser=o,a.compareVersions=l,a.check=function(e,t,i){return!o(e,t,i)},a._detect=s,a.detect=s,a},void 0!==t&&t.exports?t.exports=n():"function"==typeof define&&define.amd?define("bowser",n):r.bowser=n()},{}],8:[function(e,t,i){var r=e("./default"),n=e("./parser");e("./util");function p(e){return null==e}function o(e){(e=e||{}).whiteList=e.whiteList||r.whiteList,e.onAttr=e.onAttr||r.onAttr,e.onIgnoreAttr=e.onIgnoreAttr||r.onIgnoreAttr,this.options=e}o.prototype.process=function(e){if(!(e=(e=e||"").toString()))return"";var t=this.options,d=t.whiteList,c=t.onAttr,u=t.onIgnoreAttr;return n(e,function(e,t,i,r,n){var o=d[i],s=!1;!0===o?s=o:"function"==typeof o?s=o(r):o instanceof RegExp&&(s=o.test(r)),!0!==s&&(s=!1);var a,l={position:t,sourcePosition:e,source:n,isWhite:s};return s?p(a=c(i,r,l))?i+":"+r:a:p(a=u(i,r,l))?void 0:a})},t.exports=o},{"./default":9,"./parser":11,"./util":12}],9:[function(e,t,i){function r(){var e={"align-content":!1,"align-items":!1,"align-self":!1,"alignment-adjust":!1,"alignment-baseline":!1,all:!1,"anchor-point":!1,animation:!1,"animation-delay":!1,"animation-direction":!1,"animation-duration":!1,"animation-fill-mode":!1,"animation-iteration-count":!1,"animation-name":!1,"animation-play-state":!1,"animation-timing-function":!1,azimuth:!1,"backface-visibility":!1,background:!0,"background-attachment":!0,"background-clip":!0,"background-color":!0,"background-image":!0,"background-origin":!0,"background-position":!0,"background-repeat":!0,"background-size":!0,"baseline-shift":!1,binding:!1,bleed:!1,"bookmark-label":!1,"bookmark-level":!1,"bookmark-state":!1,border:!0,"border-bottom":!0,"border-bottom-color":!0,"border-bottom-left-radius":!0,"border-bottom-right-radius":!0,"border-bottom-style":!0,"border-bottom-width":!0,"border-collapse":!0,"border-color":!0,"border-image":!0,"border-image-outset":!0,"border-image-repeat":!0,"border-image-slice":!0,"border-image-source":!0,"border-image-width":!0,"border-left":!0,"border-left-color":!0,"border-left-style":!0,"border-left-width":!0,"border-radius":!0,"border-right":!0,"border-right-color":!0,"border-right-style":!0,"border-right-width":!0,"border-spacing":!0,"border-style":!0,"border-top":!0,"border-top-color":!0,"border-top-left-radius":!0,"border-top-right-radius":!0,"border-top-style":!0,"border-top-width":!0,"border-width":!0,bottom:!1,"box-decoration-break":!0,"box-shadow":!0,"box-sizing":!0,"box-snap":!0,"box-suppress":!0,"break-after":!0,"break-before":!0,"break-inside":!0,"caption-side":!1,chains:!1,clear:!0,clip:!1,"clip-path":!1,"clip-rule":!1,color:!0,"color-interpolation-filters":!0,"column-count":!1,"column-fill":!1,"column-gap":!1,"column-rule":!1,"column-rule-color":!1,"column-rule-style":!1,"column-rule-width":!1,"column-span":!1,"column-width":!1,columns:!1,contain:!1,content:!1,"counter-increment":!1,"counter-reset":!1,"counter-set":!1,crop:!1,cue:!1,"cue-after":!1,"cue-before":!1,cursor:!1,direction:!1,display:!0,"display-inside":!0,"display-list":!0,"display-outside":!0,"dominant-baseline":!1,elevation:!1,"empty-cells":!1,filter:!1,flex:!1,"flex-basis":!1,"flex-direction":!1,"flex-flow":!1,"flex-grow":!1,"flex-shrink":!1,"flex-wrap":!1,float:!1,"float-offset":!1,"flood-color":!1,"flood-opacity":!1,"flow-from":!1,"flow-into":!1,font:!0,"font-family":!0,"font-feature-settings":!0,"font-kerning":!0,"font-language-override":!0,"font-size":!0,"font-size-adjust":!0,"font-stretch":!0,"font-style":!0,"font-synthesis":!0,"font-variant":!0,"font-variant-alternates":!0,"font-variant-caps":!0,"font-variant-east-asian":!0,"font-variant-ligatures":!0,"font-variant-numeric":!0,"font-variant-position":!0,"font-weight":!0,grid:!1,"grid-area":!1,"grid-auto-columns":!1,"grid-auto-flow":!1,"grid-auto-rows":!1,"grid-column":!1,"grid-column-end":!1,"grid-column-start":!1,"grid-row":!1,"grid-row-end":!1,"grid-row-start":!1,"grid-template":!1,"grid-template-areas":!1,"grid-template-columns":!1,"grid-template-rows":!1,"hanging-punctuation":!1,height:!0,hyphens:!1,icon:!1,"image-orientation":!1,"image-resolution":!1,"ime-mode":!1,"initial-letters":!1,"inline-box-align":!1,"justify-content":!1,"justify-items":!1,"justify-self":!1,left:!1,"letter-spacing":!0,"lighting-color":!0,"line-box-contain":!1,"line-break":!1,"line-grid":!1,"line-height":!1,"line-snap":!1,"line-stacking":!1,"line-stacking-ruby":!1,"line-stacking-shift":!1,"line-stacking-strategy":!1,"list-style":!0,"list-style-image":!0,"list-style-position":!0,"list-style-type":!0,margin:!0,"margin-bottom":!0,"margin-left":!0,"margin-right":!0,"margin-top":!0,"marker-offset":!1,"marker-side":!1,marks:!1,mask:!1,"mask-box":!1,"mask-box-outset":!1,"mask-box-repeat":!1,"mask-box-slice":!1,"mask-box-source":!1,"mask-box-width":!1,"mask-clip":!1,"mask-image":!1,"mask-origin":!1,"mask-position":!1,"mask-repeat":!1,"mask-size":!1,"mask-source-type":!1,"mask-type":!1,"max-height":!0,"max-lines":!1,"max-width":!0,"min-height":!0,"min-width":!0,"move-to":!1,"nav-down":!1,"nav-index":!1,"nav-left":!1,"nav-right":!1,"nav-up":!1,"object-fit":!1,"object-position":!1,opacity:!1,order:!1,orphans:!1,outline:!1,"outline-color":!1,"outline-offset":!1,"outline-style":!1,"outline-width":!1,overflow:!1,"overflow-wrap":!1,"overflow-x":!1,"overflow-y":!1,padding:!0,"padding-bottom":!0,"padding-left":!0,"padding-right":!0,"padding-top":!0,page:!1,"page-break-after":!1,"page-break-before":!1,"page-break-inside":!1,"page-policy":!1,pause:!1,"pause-after":!1,"pause-before":!1,perspective:!1,"perspective-origin":!1,pitch:!1,"pitch-range":!1,"play-during":!1,position:!1,"presentation-level":!1,quotes:!1,"region-fragment":!1,resize:!1,rest:!1,"rest-after":!1,"rest-before":!1,richness:!1,right:!1,rotation:!1,"rotation-point":!1,"ruby-align":!1,"ruby-merge":!1,"ruby-position":!1,"shape-image-threshold":!1,"shape-outside":!1,"shape-margin":!1,size:!1,speak:!1,"speak-as":!1,"speak-header":!1,"speak-numeral":!1,"speak-punctuation":!1,"speech-rate":!1,stress:!1,"string-set":!1,"tab-size":!1,"table-layout":!1,"text-align":!0,"text-align-last":!0,"text-combine-upright":!0,"text-decoration":!0,"text-decoration-color":!0,"text-decoration-line":!0,"text-decoration-skip":!0,"text-decoration-style":!0,"text-emphasis":!0,"text-emphasis-color":!0,"text-emphasis-position":!0,"text-emphasis-style":!0,"text-height":!0,"text-indent":!0,"text-justify":!0,"text-orientation":!0,"text-overflow":!0,"text-shadow":!0,"text-space-collapse":!0,"text-transform":!0,"text-underline-position":!0,"text-wrap":!0,top:!1,transform:!1,"transform-origin":!1,"transform-style":!1,transition:!1,"transition-delay":!1,"transition-duration":!1,"transition-property":!1,"transition-timing-function":!1,"unicode-bidi":!1,"vertical-align":!1,visibility:!1,"voice-balance":!1,"voice-duration":!1,"voice-family":!1,"voice-pitch":!1,"voice-range":!1,"voice-rate":!1,"voice-stress":!1,"voice-volume":!1,volume:!1,"white-space":!1,widows:!1,width:!0,"will-change":!1,"word-break":!0,"word-spacing":!0,"word-wrap":!0,"wrap-flow":!1,"wrap-through":!1,"writing-mode":!1,"z-index":!1};return e}i.whiteList=r(),i.getDefaultWhiteList=r,i.onAttr=function(e,t,i){},i.onIgnoreAttr=function(e,t,i){}},{}],10:[function(e,t,i){var r=e("./default"),n=e("./css");for(var o in(i=t.exports=function(e,t){return new n(t).process(e)}).FilterCSS=n,r)i[o]=r[o];"undefined"!=typeof window&&(window.filterCSS=t.exports)},{"./css":8,"./default":9}],11:[function(e,t,i){var u=e("./util");t.exports=function(o,s){";"!==(o=u.trimRight(o))[o.length-1]&&(o+=";");var e=o.length,a=!1,l=0,d=0,c="";function t(){if(!a){var e=u.trim(o.slice(l,d)),t=e.indexOf(":");if(-1!==t){var i=u.trim(e.slice(0,t)),r=u.trim(e.slice(t+1));if(i){var n=s(l,c.length,i,r,e);n&&(c+=n+"; ")}}}l=d+1}for(;d<e;d++){var i=o[d];if("/"===i&&"*"===o[d+1]){var r=o.indexOf("*/",d+2);if(-1===r)break;l=(d=r+1)+1,a=!1}else"("===i?a=!0:")"===i?a=!1:";"===i?a||t():"\n"===i&&t()}return u.trim(c)}},{"./util":12}],12:[function(e,t,i){t.exports={indexOf:function(e,t){var i,r;if(Array.prototype.indexOf)return e.indexOf(t);for(i=0,r=e.length;i<r;i++)if(e[i]===t)return i;return-1},forEach:function(e,t,i){var r,n;if(Array.prototype.forEach)return e.forEach(t,i);for(r=0,n=e.length;r<n;r++)t.call(i,e[r],r,e)},trim:function(e){return String.prototype.trim?e.trim():e.replace(/(^\s*)|(\s*$)/g,"")},trimRight:function(e){return String.prototype.trimRight?e.trimRight():e.replace(/(\s*$)/g,"")}}},{}],13:[function(e,t,i){(i={THEME_RTD:"sphinx_rtd_theme",THEME_ALABASTER:"alabaster",THEME_CELERY:"sphinx_celery",THEME_MKDOCS_RTD:"readthedocs",DEFAULT_PROMO_PRIORITY:5,MINIMUM_PROMO_PRIORITY:10,MAXIMUM_PROMO_PRIORITY:1,LOW_PROMO_PRIORITY:10}).PROMO_SUPPORTED_THEMES=[i.THEME_RTD,i.THEME_ALABASTER,i.THEME_CELERY],i.PROMO_TYPES={LEFTNAV:"doc",FOOTER:"site-footer",FIXED_FOOTER:"fixed-footer"},t.exports=i},{}],14:[function(e,t,i){var r=e("./rtd-data"),n=e("./version-compare");t.exports={init:function(){var e=r.get(),t={project:e.project,version:e.version,page:e.page,theme:e.get_theme_name(),format:"jsonp"};"docroot"in e&&(t.docroot=e.docroot),"source_suffix"in e&&(t.source_suffix=e.source_suffix),0===window.location.pathname.indexOf("/projects/")&&(t.subproject=!0),$.ajax({url:e.api_host+"/api/v2/footer_html/",crossDomain:!0,xhrFields:{withCredentials:!0},dataType:"jsonp",data:t,success:function(e){var t;e.show_version_warning&&n.init(e.version_compare),t=e,r.get().is_rtd_theme()?$("div.rst-other-versions").html(t.html):$("body").append(t.html),t.version_active?t.version_supported:$(".rst-current-version").addClass("rst-out-of-date"),$.ajaxSetup({beforeSend:function(e,t){var i;i=t.type,/^(GET|HEAD|OPTIONS|TRACE)$/.test(i)||e.setRequestHeader("X-CSRFToken",$("a.bookmark[token]").attr("token"))}})},error:function(){console.error("Error loading Read the Docs footer")}})}}},{"./rtd-data":15,"./version-compare":19}],15:[function(e,t,i){var r=e("./constants"),n={is_rtd_theme:function(){return this.get_theme_name()===r.THEME_RTD},theme_supports_promo:function(){return-1<r.PROMO_SUPPORTED_THEMES.indexOf(this.get_theme_name())},is_sphinx_builder:function(){return!("builder"in this)||"mkdocs"!==this.builder},is_mkdocs_builder:function(){return!("builder"in this)||"mkdocs"===this.builder},get_theme_name:function(){if(this.theme!==r.THEME_RTD){if(this.theme===r.THEME_MKDOCS_RTD)return r.THEME_RTD;if(1===$("div.rst-other-versions").length)return r.THEME_RTD}return this.theme},show_promo:function(){return"https://readthedocs.com"!==this.api_host&&this.theme_supports_promo()}};t.exports={get:function(){var e=Object.create(n);return $.extend(e,{api_host:"https://readthedocs.org"},window.READTHEDOCS_DATA),e}}},{"./constants":13}],16:[function(e,t,i){var r=e("./rtd-data"),u=e("./../../../../../../bower_components/xss/lib/index");t.exports={init:function(){!function(e){var c=e.project,t=e.version,i=e.language||"en",n=e.api_host;if("undefined"!=typeof Search&&c&&t){var r=Search.query;Search.query_fallback=r,Search.query=function(d){var r=$.Deferred(),e=document.createElement("a");e.href=n,e.pathname="/api/v2/docsearch/",e.search="?q="+$.urlencode(d)+"&project="+c+"&version="+t+"&language="+i,r.then(function(e){var t=(e.hits||{}).hits||[];if(t.length)for(var i in t){var r=t[i],n=r.fields||{},o=$('<li style="display: none;"></li>'),s=document.createElement("a"),a=r.highlight;if(s.href+=n.link+DOCUMENTATION_OPTIONS.FILE_SUFFIX,s.search="?highlight="+$.urlencode(d),o.append($("<a />").attr("href",s).html(n.title)),-1===n.project.indexOf(c)&&o.append($("<span>").text(" (from project "+n.project+")")),a.content.length){var l=$('<div class="context">').html(u(a.content[0]));l.find("em").addClass("highlighted"),o.append(l)}Search.output.append(o),o.slideDown(5)}t.length?Search.status.text(_("Search finished, found %s page(s) matching the search query.").replace("%s",t.length)):Search.query_fallback(d)}).fail(function(e){Search.query_fallback(d)}).always(function(){$("#search-progress").empty(),Search.stopPulse(),Search.title.text(_("Search Results")),Search.status.fadeIn(500)}),$.ajax({url:e.href,crossDomain:!0,xhrFields:{withCredentials:!0},complete:function(e,t){return void 0===e.responseJSON||void 0===e.responseJSON.results?r.reject():r.resolve(e.responseJSON.results)}}).error(function(e,t,i){return r.reject()})}}$(document).ready(function(){"undefined"!=typeof Search&&Search.init()})}(r.get())}}},{"./../../../../../../bower_components/xss/lib/index":3,"./rtd-data":15}],17:[function(n,e,t){var o=n("./rtd-data");e.exports={init:function(){var e=o.get();if($(document).on("click","[data-toggle='rst-current-version']",function(){var e=$("[data-toggle='rst-versions']").hasClass("shift-up")?"was_open":"was_closed";"undefined"!=typeof ga?ga("rtfd.send","event","Flyout","Click",e):"undefined"!=typeof _gaq&&_gaq.push(["rtfd._setAccount","UA-17997319-1"],["rtfd._trackEvent","Flyout","Click",e])}),(void 0===e.builder||"sphinx"===e.builder)&&void 0===window.SphinxRtdTheme){var t=n("./../../../../../../bower_components/sphinx-rtd-theme/js/theme.js").ThemeNav;if($(document).ready(function(){setTimeout(function(){t.navBar||t.enable()},1e3)}),e.is_rtd_theme()&&!jquery("div.wy-side-scroll:first").length){console.log("Applying theme sidebar fix...");var i=jquery("nav.wy-nav-side:first"),r=$("<div />").addClass("wy-side-scroll");i.children().detach().appendTo(r),r.prependTo(i),t.navBar=r}}}}},{"./../../../../../../bower_components/sphinx-rtd-theme/js/theme.js":1,"./rtd-data":15}],18:[function(e,t,i){var l,d=e("./constants"),c=e("./rtd-data"),r=e("bowser");function u(){var e,t,i="rtd-"+(Math.random()+1).toString(36).substring(4),r=d.PROMO_TYPES.LEFTNAV,n=d.DEFAULT_PROMO_PRIORITY,o=null;return l.is_mkdocs_builder()&&l.is_rtd_theme()?(o="nav.wy-nav-side",e="ethical-rtd"):l.is_rtd_theme()?(o="nav.wy-nav-side > div.wy-side-scroll",e="ethical-rtd"):l.get_theme_name()!==d.THEME_ALABASTER&&l.get_theme_name()!==d.THEME_CELERY||(o="div.sphinxsidebar > div.sphinxsidebarwrapper",e="ethical-alabaster"),o?($("<div />").attr("id",i).addClass(e).appendTo(o),(!(t=$("#"+i).offset())||t.top>$(window).height())&&(n=d.LOW_PROMO_PRIORITY),{div_id:i,display_type:r,priority:n}):null}function p(){var e,t,i="rtd-"+(Math.random()+1).toString(36).substring(4),r=d.PROMO_TYPES.FOOTER,n=d.DEFAULT_PROMO_PRIORITY,o=null;return l.is_rtd_theme()?(o=$("<div />").insertAfter("footer hr"),e="ethical-rtd"):l.get_theme_name()!==d.THEME_ALABASTER&&l.get_theme_name()!==d.THEME_CELERY||(o="div.bodywrapper .body",e="ethical-alabaster"),o?($("<div />").attr("id",i).addClass(e).appendTo(o),(!(t=$("#"+i).offset())||t.top<$(window).height())&&(n=d.LOW_PROMO_PRIORITY),{div_id:i,display_type:r,priority:n}):null}function f(){var e="rtd-"+(Math.random()+1).toString(36).substring(4),t=d.PROMO_TYPES.FIXED_FOOTER;return r&&r.mobile?($("<div />").attr("id",e).appendTo("body"),{div_id:e,display_type:t,priority:d.MAXIMUM_PROMO_PRIORITY}):null}function h(e){this.id=e.id,this.div_id=e.div_id||"",this.html=e.html||"",this.display_type=e.display_type||"",this.click_handler=function(){"undefined"!=typeof ga?ga("rtfd.send","event","Promo","Click",e.id):"undefined"!=typeof _gaq&&_gaq.push(["rtfd._setAccount","UA-17997319-1"],["rtfd._trackEvent","Promo","Click",e.id])}}h.prototype.display=function(){$("#"+this.div_id).html(this.html),$("#"+this.div_id).find('a[href*="/sustainability/click/"]').on("click",this.click_handler),this.post_promo_display()},h.prototype.disable=function(){$("#"+this.div_id).hide()},h.prototype.post_promo_display=function(){this.display_type===d.PROMO_TYPES.FOOTER&&($("<hr />").insertAfter("#"+this.div_id),$("<hr />").insertBefore("#"+this.div_id+".ethical-alabaster .ethical-footer"))},t.exports={Promo:h,init:function(){var e,t,i={format:"jsonp"},r=[],n=[],o=[],s=[p,u,f];if((l=c.get()).show_promo()){for(var a=0;a<s.length;a+=1)(t=s[a]())&&(r.push(t.div_id),n.push(t.display_type),o.push(t.priority||d.DEFAULT_PROMO_PRIORITY));i.div_ids=r.join("|"),i.display_types=n.join("|"),i.priorities=o.join("|"),i.project=l.project,"undefined"!=typeof URL&&"undefined"!=typeof URLSearchParams&&((e=new URL(window.location).searchParams).get("force_promo")&&(i.force_promo=e.get("force_promo")),e.get("force_campaign")&&(i.force_campaign=e.get("force_campaign"))),$.ajax({url:l.api_host+"/api/v2/sustainability/",crossDomain:!0,xhrFields:{withCredentials:!0},dataType:"jsonp",data:i,success:function(e){e&&e.div_id&&e.html&&new h(e).display()},error:function(e,t,i){var r,n;console.error("Error loading Read the Docs promo"),e&&404===e.status&&"https://readthedocs.org"===l.api_host&&(console.log("---------------------------------------------------------------------------------------"),console.log("Read the Docs hosts documentation for tens of thousands of open source projects."),console.log("We fund our development (we are open source) and operations through advertising."),console.log("We promise to:"),console.log(" - never let advertisers run 3rd party JavaScript"),console.log(" - never sell user data to advertisers or other 3rd parties"),console.log(" - only show advertisements of interest to developers"),console.log("Read more about our approach to advertising here: https://docs.readthedocs.io/en/latest/ethical-advertising.html"),console.log("%cPlease allow our Ethical Ads or go ad-free:","font-size: 2em"),console.log("https://docs.readthedocs.io/en/latest/advertising/ad-blocking.html"),console.log("--------------------------------------------------------------------------------------"),r=u(),n=null,r&&r.div_id&&(n=$("#"+r.div_id).attr("class","keep-us-sustainable"),$("<p />").text("Support Read the Docs!").appendTo(n),$("<p />").html('Please help keep us sustainable by <a href="https://docs.readthedocs.io/en/latest/advertising/ad-blocking.html#allowing-ethical-ads">allowing our Ethical Ads in your ad blocker</a> or <a href="https://readthedocs.org/sustainability/">go ad-free</a> by subscribing.').appendTo(n),$("<p />").text("Thank you! ❤️").appendTo(n)))}})}}}},{"./constants":13,"./rtd-data":15,bowser:7}],19:[function(e,t,i){var o=e("./rtd-data");t.exports={init:function(e){var t=o.get();if(!e.is_highest){var i=window.location.pathname.replace(t.version,e.slug),r=$('<div class="admonition warning"> <p class="first admonition-title">Note</p> <p class="last"> You are not using the most up to date version of the library. <a href="#"></a> is the newest version.</p></div>');r.find("a").attr("href",i).text(e.slug);var n=$("div.body");n.length||(n=$("div.document")),n.prepend(r)}}}},{"./rtd-data":15}],20:[function(e,t,i){var r=e("./doc-embed/sponsorship"),n=e("./doc-embed/footer.js"),o=(e("./doc-embed/rtd-data"),e("./doc-embed/sphinx")),s=e("./doc-embed/search");$(document).ready(function(){n.init(),o.init(),s.init(),r.init()})},{"./doc-embed/footer.js":14,"./doc-embed/rtd-data":15,"./doc-embed/search":16,"./doc-embed/sphinx":17,"./doc-embed/sponsorship":18}]},{},[20]);
+require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+var jQuery = (typeof(window) != 'undefined') ? window.jQuery : require('jquery');
+
+// Sphinx theme nav state
+function ThemeNav () {
+
+    var nav = {
+        navBar: null,
+        win: null,
+        winScroll: false,
+        winResize: false,
+        linkScroll: false,
+        winPosition: 0,
+        winHeight: null,
+        docHeight: null,
+        isRunning: false
+    };
+
+    nav.enable = function (withStickyNav) {
+        var self = this;
+
+        // TODO this can likely be removed once the theme javascript is broken
+        // out from the RTD assets. This just ensures old projects that are
+        // calling `enable()` get the sticky menu on by default. All other cals
+        // to `enable` should include an argument for enabling the sticky menu.
+        if (typeof(withStickNav) == 'undefined') {
+            withStickyNav = true;
+        }
+
+        if (self.isRunning) {
+            // Only allow enabling nav logic once
+            return;
+        }
+
+        self.isRunning = true;
+        jQuery(function ($) {
+            self.init($);
+
+            self.reset();
+            self.win.on('hashchange', self.reset);
+
+            if (withStickyNav) {
+                // Set scroll monitor
+                self.win.on('scroll', function () {
+                    if (!self.linkScroll) {
+                        if (!self.winScroll) {
+                            self.winScroll = true;
+                            requestAnimationFrame(function() { self.onScroll(); });
+                        }
+                    }
+                });
+            }
+
+            // Set resize monitor
+            self.win.on('resize', function () {
+                if (!self.winResize) {
+                    self.winResize = true;
+                    requestAnimationFrame(function() { self.onResize(); });
+                }
+            });
+
+            self.onResize();
+        });
+
+    };
+
+    // TODO remove this with a split in theme and Read the Docs JS logic as
+    // well, it's only here to support 0.3.0 installs of our theme.
+    nav.enableSticky = function() {
+        this.enable(true);
+    };
+
+    nav.init = function ($) {
+        var doc = $(document),
+            self = this;
+
+        this.navBar = $('div.wy-side-scroll:first');
+        this.win = $(window);
+
+        // Set up javascript UX bits
+        $(document)
+            // Shift nav in mobile when clicking the menu.
+            .on('click', "[data-toggle='wy-nav-top']", function() {
+                $("[data-toggle='wy-nav-shift']").toggleClass("shift");
+                $("[data-toggle='rst-versions']").toggleClass("shift");
+            })
+
+            // Nav menu link click operations
+            .on('click', ".wy-menu-vertical .current ul li a", function() {
+                var target = $(this);
+                // Close menu when you click a link.
+                $("[data-toggle='wy-nav-shift']").removeClass("shift");
+                $("[data-toggle='rst-versions']").toggleClass("shift");
+                // Handle dynamic display of l3 and l4 nav lists
+                self.toggleCurrent(target);
+                self.hashChange();
+            })
+            .on('click', "[data-toggle='rst-current-version']", function() {
+                $("[data-toggle='rst-versions']").toggleClass("shift-up");
+            })
+
+        // Make tables responsive
+        $("table.docutils:not(.field-list,.footnote,.citation)")
+            .wrap("<div class='wy-table-responsive'></div>");
+
+        // Add extra class to responsive tables that contain
+        // footnotes or citations so that we can target them for styling
+        $("table.docutils.footnote")
+            .wrap("<div class='wy-table-responsive footnote'></div>");
+        $("table.docutils.citation")
+            .wrap("<div class='wy-table-responsive citation'></div>");
+
+        // Add expand links to all parents of nested ul
+        $('.wy-menu-vertical ul').not('.simple').siblings('a').each(function () {
+            var link = $(this);
+                expand = $('<span class="toctree-expand"></span>');
+            expand.on('click', function (ev) {
+                self.toggleCurrent(link);
+                ev.stopPropagation();
+                return false;
+            });
+            link.prepend(expand);
+        });
+    };
+
+    nav.reset = function () {
+        // Get anchor from URL and open up nested nav
+        var anchor = encodeURI(window.location.hash) || '#';
+
+        try {
+            var vmenu = $('.wy-menu-vertical');
+            var link = vmenu.find('[href="' + anchor + '"]');
+            if (link.length === 0) {
+                // this link was not found in the sidebar.
+                // Find associated id element, then its closest section
+                // in the document and try with that one.
+                var id_elt = $('.document [id="' + anchor.substring(1) + '"]');
+                var closest_section = id_elt.closest('div.section');
+                link = vmenu.find('[href="#' + closest_section.attr("id") + '"]');
+                if (link.length === 0) {
+                    // still not found in the sidebar. fall back to main section
+                    link = vmenu.find('[href="#"]');
+                }
+            }
+            // If we found a matching link then reset current and re-apply
+            // otherwise retain the existing match
+            if (link.length > 0) {
+                $('.wy-menu-vertical .current').removeClass('current');
+                link.addClass('current');
+                link.closest('li.toctree-l1').addClass('current');
+                link.closest('li.toctree-l1').parent().addClass('current');
+                link.closest('li.toctree-l1').addClass('current');
+                link.closest('li.toctree-l2').addClass('current');
+                link.closest('li.toctree-l3').addClass('current');
+                link.closest('li.toctree-l4').addClass('current');
+            }
+        }
+        catch (err) {
+            console.log("Error expanding nav for anchor", err);
+        }
+
+    };
+
+    nav.onScroll = function () {
+        this.winScroll = false;
+        var newWinPosition = this.win.scrollTop(),
+            winBottom = newWinPosition + this.winHeight,
+            navPosition = this.navBar.scrollTop(),
+            newNavPosition = navPosition + (newWinPosition - this.winPosition);
+        if (newWinPosition < 0 || winBottom > this.docHeight) {
+            return;
+        }
+        this.navBar.scrollTop(newNavPosition);
+        this.winPosition = newWinPosition;
+    };
+
+    nav.onResize = function () {
+        this.winResize = false;
+        this.winHeight = this.win.height();
+        this.docHeight = $(document).height();
+    };
+
+    nav.hashChange = function () {
+        this.linkScroll = true;
+        this.win.one('hashchange', function () {
+            this.linkScroll = false;
+        });
+    };
+
+    nav.toggleCurrent = function (elem) {
+        var parent_li = elem.closest('li');
+        parent_li.siblings('li.current').removeClass('current');
+        parent_li.siblings().find('li.current').removeClass('current');
+        parent_li.find('> ul li.current').removeClass('current');
+        parent_li.toggleClass('current');
+    }
+
+    return nav;
+};
+
+module.exports.ThemeNav = ThemeNav();
+
+if (typeof(window) != 'undefined') {
+    window.SphinxRtdTheme = {
+        Navigation: module.exports.ThemeNav,
+        // TODO remove this once static assets are split up between the theme
+        // and Read the Docs. For now, this patches 0.3.0 to be backwards
+        // compatible with a pre-0.3.0 layout.html
+        StickyNav: module.exports.ThemeNav,
+    };
+}
+
+
+// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+// https://gist.github.com/paulirish/1579671
+// MIT license
+
+(function() {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+
+    if (!window.requestAnimationFrame)
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+              timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+
+    if (!window.cancelAnimationFrame)
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+}());
+
+},{"jquery":"jquery"}],2:[function(require,module,exports){
+/**
+ * 默认配置
+ *
+ * @author 老雷<leizongmin@gmail.com>
+ */
+
+var FilterCSS = require('cssfilter').FilterCSS;
+var getDefaultCSSWhiteList = require('cssfilter').getDefaultWhiteList;
+var _ = require('./util');
+
+// 默认白名单
+function getDefaultWhiteList () {
+  return {
+    a:      ['target', 'href', 'title'],
+    abbr:   ['title'],
+    address: [],
+    area:   ['shape', 'coords', 'href', 'alt'],
+    article: [],
+    aside:  [],
+    audio:  ['autoplay', 'controls', 'loop', 'preload', 'src'],
+    b:      [],
+    bdi:    ['dir'],
+    bdo:    ['dir'],
+    big:    [],
+    blockquote: ['cite'],
+    br:     [],
+    caption: [],
+    center: [],
+    cite:   [],
+    code:   [],
+    col:    ['align', 'valign', 'span', 'width'],
+    colgroup: ['align', 'valign', 'span', 'width'],
+    dd:     [],
+    del:    ['datetime'],
+    details: ['open'],
+    div:    [],
+    dl:     [],
+    dt:     [],
+    em:     [],
+    font:   ['color', 'size', 'face'],
+    footer: [],
+    h1:     [],
+    h2:     [],
+    h3:     [],
+    h4:     [],
+    h5:     [],
+    h6:     [],
+    header: [],
+    hr:     [],
+    i:      [],
+    img:    ['src', 'alt', 'title', 'width', 'height'],
+    ins:    ['datetime'],
+    li:     [],
+    mark:   [],
+    nav:    [],
+    ol:     [],
+    p:      [],
+    pre:    [],
+    s:      [],
+    section:[],
+    small:  [],
+    span:   [],
+    sub:    [],
+    sup:    [],
+    strong: [],
+    table:  ['width', 'border', 'align', 'valign'],
+    tbody:  ['align', 'valign'],
+    td:     ['width', 'rowspan', 'colspan', 'align', 'valign'],
+    tfoot:  ['align', 'valign'],
+    th:     ['width', 'rowspan', 'colspan', 'align', 'valign'],
+    thead:  ['align', 'valign'],
+    tr:     ['rowspan', 'align', 'valign'],
+    tt:     [],
+    u:      [],
+    ul:     [],
+    video:  ['autoplay', 'controls', 'loop', 'preload', 'src', 'height', 'width']
+  };
+}
+
+// 默认CSS Filter
+var defaultCSSFilter = new FilterCSS();
+
+/**
+ * 匹配到标签时的处理方法
+ *
+ * @param {String} tag
+ * @param {String} html
+ * @param {Object} options
+ * @return {String}
+ */
+function onTag (tag, html, options) {
+  // do nothing
+}
+
+/**
+ * 匹配到不在白名单上的标签时的处理方法
+ *
+ * @param {String} tag
+ * @param {String} html
+ * @param {Object} options
+ * @return {String}
+ */
+function onIgnoreTag (tag, html, options) {
+  // do nothing
+}
+
+/**
+ * 匹配到标签属性时的处理方法
+ *
+ * @param {String} tag
+ * @param {String} name
+ * @param {String} value
+ * @return {String}
+ */
+function onTagAttr (tag, name, value) {
+  // do nothing
+}
+
+/**
+ * 匹配到不在白名单上的标签属性时的处理方法
+ *
+ * @param {String} tag
+ * @param {String} name
+ * @param {String} value
+ * @return {String}
+ */
+function onIgnoreTagAttr (tag, name, value) {
+  // do nothing
+}
+
+/**
+ * HTML转义
+ *
+ * @param {String} html
+ */
+function escapeHtml (html) {
+  return html.replace(REGEXP_LT, '&lt;').replace(REGEXP_GT, '&gt;');
+}
+
+/**
+ * 安全的标签属性值
+ *
+ * @param {String} tag
+ * @param {String} name
+ * @param {String} value
+ * @param {Object} cssFilter
+ * @return {String}
+ */
+function safeAttrValue (tag, name, value, cssFilter) {
+  // 转换为友好的属性值，再做判断
+  value = friendlyAttrValue(value);
+
+  if (name === 'href' || name === 'src') {
+    // 过滤 href 和 src 属性
+    // 仅允许 http:// | https:// | mailto: | / | # 开头的地址
+    value = _.trim(value);
+    if (value === '#') return '#';
+    if (!(value.substr(0, 7) === 'http://' ||
+         value.substr(0, 8) === 'https://' ||
+         value.substr(0, 7) === 'mailto:' ||
+         value.substr(0, 4) === 'tel:' ||
+         value[0] === '#' ||
+         value[0] === '/')) {
+      return '';
+    }
+  } else if (name === 'background') {
+    // 过滤 background 属性 （这个xss漏洞较老了，可能已经不适用）
+    // javascript:
+    REGEXP_DEFAULT_ON_TAG_ATTR_4.lastIndex = 0;
+    if (REGEXP_DEFAULT_ON_TAG_ATTR_4.test(value)) {
+      return '';
+    }
+  } else if (name === 'style') {
+    // /*注释*/
+    /*REGEXP_DEFAULT_ON_TAG_ATTR_3.lastIndex = 0;
+    if (REGEXP_DEFAULT_ON_TAG_ATTR_3.test(value)) {
+      return '';
+    }*/
+    // expression()
+    REGEXP_DEFAULT_ON_TAG_ATTR_7.lastIndex = 0;
+    if (REGEXP_DEFAULT_ON_TAG_ATTR_7.test(value)) {
+      return '';
+    }
+    // url()
+    REGEXP_DEFAULT_ON_TAG_ATTR_8.lastIndex = 0;
+    if (REGEXP_DEFAULT_ON_TAG_ATTR_8.test(value)) {
+      REGEXP_DEFAULT_ON_TAG_ATTR_4.lastIndex = 0;
+      if (REGEXP_DEFAULT_ON_TAG_ATTR_4.test(value)) {
+        return '';
+      }
+    }
+    if (cssFilter !== false) {
+      cssFilter = cssFilter || defaultCSSFilter;
+      value = cssFilter.process(value);
+    }
+  }
+
+  // 输出时需要转义<>"
+  value = escapeAttrValue(value);
+  return value;
+}
+
+// 正则表达式
+var REGEXP_LT = /</g;
+var REGEXP_GT = />/g;
+var REGEXP_QUOTE = /"/g;
+var REGEXP_QUOTE_2 = /&quot;/g;
+var REGEXP_ATTR_VALUE_1 = /&#([a-zA-Z0-9]*);?/img;
+var REGEXP_ATTR_VALUE_COLON = /&colon;?/img;
+var REGEXP_ATTR_VALUE_NEWLINE = /&newline;?/img;
+var REGEXP_DEFAULT_ON_TAG_ATTR_3 = /\/\*|\*\//mg;
+var REGEXP_DEFAULT_ON_TAG_ATTR_4 = /((j\s*a\s*v\s*a|v\s*b|l\s*i\s*v\s*e)\s*s\s*c\s*r\s*i\s*p\s*t\s*|m\s*o\s*c\s*h\s*a)\:/ig;
+var REGEXP_DEFAULT_ON_TAG_ATTR_5 = /^[\s"'`]*(d\s*a\s*t\s*a\s*)\:/ig;
+var REGEXP_DEFAULT_ON_TAG_ATTR_6 = /^[\s"'`]*(d\s*a\s*t\s*a\s*)\:\s*image\//ig;
+var REGEXP_DEFAULT_ON_TAG_ATTR_7 = /e\s*x\s*p\s*r\s*e\s*s\s*s\s*i\s*o\s*n\s*\(.*/ig;
+var REGEXP_DEFAULT_ON_TAG_ATTR_8 = /u\s*r\s*l\s*\(.*/ig;
+
+/**
+ * 对双引号进行转义
+ *
+ * @param {String} str
+ * @return {String} str
+ */
+function escapeQuote (str) {
+  return str.replace(REGEXP_QUOTE, '&quot;');
+}
+
+/**
+ * 对双引号进行转义
+ *
+ * @param {String} str
+ * @return {String} str
+ */
+function unescapeQuote (str) {
+  return str.replace(REGEXP_QUOTE_2, '"');
+}
+
+/**
+ * 对html实体编码进行转义
+ *
+ * @param {String} str
+ * @return {String}
+ */
+function escapeHtmlEntities (str) {
+  return str.replace(REGEXP_ATTR_VALUE_1, function replaceUnicode (str, code) {
+    return (code[0] === 'x' || code[0] === 'X')
+            ? String.fromCharCode(parseInt(code.substr(1), 16))
+            : String.fromCharCode(parseInt(code, 10));
+  });
+}
+
+/**
+ * 对html5新增的危险实体编码进行转义
+ *
+ * @param {String} str
+ * @return {String}
+ */
+function escapeDangerHtml5Entities (str) {
+  return str.replace(REGEXP_ATTR_VALUE_COLON, ':')
+            .replace(REGEXP_ATTR_VALUE_NEWLINE, ' ');
+}
+
+/**
+ * 清除不可见字符
+ *
+ * @param {String} str
+ * @return {String}
+ */
+function clearNonPrintableCharacter (str) {
+  var str2 = '';
+  for (var i = 0, len = str.length; i < len; i++) {
+    str2 += str.charCodeAt(i) < 32 ? ' ' : str.charAt(i);
+  }
+  return _.trim(str2);
+}
+
+/**
+ * 将标签的属性值转换成一般字符，便于分析
+ *
+ * @param {String} str
+ * @return {String}
+ */
+function friendlyAttrValue (str) {
+  str = unescapeQuote(str);             // 双引号
+  str = escapeHtmlEntities(str);         // 转换HTML实体编码
+  str = escapeDangerHtml5Entities(str);  // 转换危险的HTML5新增实体编码
+  str = clearNonPrintableCharacter(str); // 清除不可见字符
+  return str;
+}
+
+/**
+ * 转义用于输出的标签属性值
+ *
+ * @param {String} str
+ * @return {String}
+ */
+function escapeAttrValue (str) {
+  str = escapeQuote(str);
+  str = escapeHtml(str);
+  return str;
+}
+
+/**
+ * 去掉不在白名单中的标签onIgnoreTag处理方法
+ */
+function onIgnoreTagStripAll () {
+  return '';
+}
+
+/**
+ * 删除标签体
+ *
+ * @param {array} tags 要删除的标签列表
+ * @param {function} next 对不在列表中的标签的处理函数，可选
+ */
+function StripTagBody (tags, next) {
+  if (typeof(next) !== 'function') {
+    next = function () {};
+  }
+
+  var isRemoveAllTag = !Array.isArray(tags);
+  function isRemoveTag (tag) {
+    if (isRemoveAllTag) return true;
+    return (_.indexOf(tags, tag) !== -1);
+  }
+
+  var removeList = [];   // 要删除的位置范围列表
+  var posStart = false;  // 当前标签开始位置
+
+  return {
+    onIgnoreTag: function (tag, html, options) {
+      if (isRemoveTag(tag)) {
+        if (options.isClosing) {
+          var ret = '[/removed]';
+          var end = options.position + ret.length;
+          removeList.push([posStart !== false ? posStart : options.position, end]);
+          posStart = false;
+          return ret;
+        } else {
+          if (!posStart) {
+            posStart = options.position;
+          }
+          return '[removed]';
+        }
+      } else {
+        return next(tag, html, options);
+      }
+    },
+    remove: function (html) {
+      var rethtml = '';
+      var lastPos = 0;
+      _.forEach(removeList, function (pos) {
+        rethtml += html.slice(lastPos, pos[0]);
+        lastPos = pos[1];
+      });
+      rethtml += html.slice(lastPos);
+      return rethtml;
+    }
+  };
+}
+
+/**
+ * 去除备注标签
+ *
+ * @param {String} html
+ * @return {String}
+ */
+function stripCommentTag (html) {
+  return html.replace(STRIP_COMMENT_TAG_REGEXP, '');
+}
+var STRIP_COMMENT_TAG_REGEXP = /<!--[\s\S]*?-->/g;
+
+/**
+ * 去除不可见字符
+ *
+ * @param {String} html
+ * @return {String}
+ */
+function stripBlankChar (html) {
+  var chars = html.split('');
+  chars = chars.filter(function (char) {
+    var c = char.charCodeAt(0);
+    if (c === 127) return false;
+    if (c <= 31) {
+      if (c === 10 || c === 13) return true;
+      return false;
+    }
+    return true;
+  });
+  return chars.join('');
+}
+
+
+exports.whiteList = getDefaultWhiteList();
+exports.getDefaultWhiteList = getDefaultWhiteList;
+exports.onTag = onTag;
+exports.onIgnoreTag = onIgnoreTag;
+exports.onTagAttr = onTagAttr;
+exports.onIgnoreTagAttr = onIgnoreTagAttr;
+exports.safeAttrValue = safeAttrValue;
+exports.escapeHtml = escapeHtml;
+exports.escapeQuote = escapeQuote;
+exports.unescapeQuote = unescapeQuote;
+exports.escapeHtmlEntities = escapeHtmlEntities;
+exports.escapeDangerHtml5Entities = escapeDangerHtml5Entities;
+exports.clearNonPrintableCharacter = clearNonPrintableCharacter;
+exports.friendlyAttrValue = friendlyAttrValue;
+exports.escapeAttrValue = escapeAttrValue;
+exports.onIgnoreTagStripAll = onIgnoreTagStripAll;
+exports.StripTagBody = StripTagBody;
+exports.stripCommentTag = stripCommentTag;
+exports.stripBlankChar = stripBlankChar;
+exports.cssFilter = defaultCSSFilter;
+exports.getDefaultCSSWhiteList = getDefaultCSSWhiteList;
+
+},{"./util":5,"cssfilter":10}],3:[function(require,module,exports){
+/**
+ * 模块入口
+ *
+ * @author 老雷<leizongmin@gmail.com>
+ */
+
+var DEFAULT = require('./default');
+var parser = require('./parser');
+var FilterXSS = require('./xss');
+
+
+/**
+ * XSS过滤
+ *
+ * @param {String} html 要过滤的HTML代码
+ * @param {Object} options 选项：whiteList, onTag, onTagAttr, onIgnoreTag, onIgnoreTagAttr, safeAttrValue, escapeHtml
+ * @return {String}
+ */
+function filterXSS (html, options) {
+  var xss = new FilterXSS(options);
+  return xss.process(html);
+}
+
+
+// 输出
+exports = module.exports = filterXSS;
+exports.FilterXSS = FilterXSS;
+for (var i in DEFAULT) exports[i] = DEFAULT[i];
+for (var i in parser) exports[i] = parser[i];
+
+
+// 在浏览器端使用
+if (typeof window !== 'undefined') {
+  window.filterXSS = module.exports;
+}
+
+},{"./default":2,"./parser":4,"./xss":6}],4:[function(require,module,exports){
+/**
+ * 简单 HTML Parser
+ *
+ * @author 老雷<leizongmin@gmail.com>
+ */
+
+var _ = require('./util');
+
+/**
+ * 获取标签的名称
+ *
+ * @param {String} html 如：'<a hef="#">'
+ * @return {String}
+ */
+function getTagName (html) {
+  var i = _.spaceIndex(html);
+  if (i === -1) {
+    var tagName = html.slice(1, -1);
+  } else {
+    var tagName = html.slice(1, i + 1);
+  }
+  tagName = _.trim(tagName).toLowerCase();
+  if (tagName.slice(0, 1) === '/') tagName = tagName.slice(1);
+  if (tagName.slice(-1) === '/') tagName = tagName.slice(0, -1);
+  return tagName;
+}
+
+/**
+ * 是否为闭合标签
+ *
+ * @param {String} html 如：'<a hef="#">'
+ * @return {Boolean}
+ */
+function isClosing (html) {
+  return (html.slice(0, 2) === '</');
+}
+
+/**
+ * 分析HTML代码，调用相应的函数处理，返回处理后的HTML
+ *
+ * @param {String} html
+ * @param {Function} onTag 处理标签的函数
+ *   参数格式： function (sourcePosition, position, tag, html, isClosing)
+ * @param {Function} escapeHtml 对HTML进行转义的函数
+ * @return {String}
+ */
+function parseTag (html, onTag, escapeHtml) {
+  'user strict';
+
+  var rethtml = '';        // 待返回的HTML
+  var lastPos = 0;         // 上一个标签结束位置
+  var tagStart = false;    // 当前标签开始位置
+  var quoteStart = false;  // 引号开始位置
+  var currentPos = 0;      // 当前位置
+  var len = html.length;   // HTML长度
+  var currentHtml = '';    // 当前标签的HTML代码
+  var currentTagName = ''; // 当前标签的名称
+
+  // 逐个分析字符
+  for (currentPos = 0; currentPos < len; currentPos++) {
+    var c = html.charAt(currentPos);
+    if (tagStart === false) {
+      if (c === '<') {
+        tagStart = currentPos;
+        continue;
+      }
+    } else {
+      if (quoteStart === false) {
+        if (c === '<') {
+          rethtml += escapeHtml(html.slice(lastPos, currentPos));
+          tagStart = currentPos;
+          lastPos = currentPos;
+          continue;
+        }
+        if (c === '>') {
+          rethtml += escapeHtml(html.slice(lastPos, tagStart));
+          currentHtml = html.slice(tagStart, currentPos + 1);
+          currentTagName = getTagName(currentHtml);
+          rethtml += onTag(tagStart,
+                           rethtml.length,
+                           currentTagName,
+                           currentHtml,
+                           isClosing(currentHtml));
+          lastPos = currentPos + 1;
+          tagStart = false;
+          continue;
+        }
+        // HTML标签内的引号仅当前一个字符是等于号时才有效
+        if ((c === '"' || c === "'") && html.charAt(currentPos - 1) === '=') {
+          quoteStart = c;
+          continue;
+        }
+      } else {
+        if (c === quoteStart) {
+          quoteStart = false;
+          continue;
+        }
+      }
+    }
+  }
+  if (lastPos < html.length) {
+    rethtml += escapeHtml(html.substr(lastPos));
+  }
+
+  return rethtml;
+}
+
+// 不符合属性名称规则的正则表达式
+var REGEXP_ATTR_NAME = /[^a-zA-Z0-9_:\.\-]/img;
+
+/**
+ * 分析标签HTML代码，调用相应的函数处理，返回HTML
+ *
+ * @param {String} html 如标签'<a href="#" target="_blank">' 则为 'href="#" target="_blank"'
+ * @param {Function} onAttr 处理属性值的函数
+ *   函数格式： function (name, value)
+ * @return {String}
+ */
+function parseAttr (html, onAttr) {
+  'user strict';
+
+  var lastPos = 0;        // 当前位置
+  var retAttrs = [];      // 待返回的属性列表
+  var tmpName = false;    // 临时属性名称
+  var len = html.length;  // HTML代码长度
+
+  function addAttr (name, value) {
+    name = _.trim(name);
+    name = name.replace(REGEXP_ATTR_NAME, '').toLowerCase();
+    if (name.length < 1) return;
+    var ret = onAttr(name, value || '');
+    if (ret) retAttrs.push(ret);
+  };
+
+  // 逐个分析字符
+  for (var i = 0; i < len; i++) {
+    var c = html.charAt(i);
+    var v, j;
+    if (tmpName === false && c === '=') {
+      tmpName = html.slice(lastPos, i);
+      lastPos = i + 1;
+      continue;
+    }
+    if (tmpName !== false) {
+      // HTML标签内的引号仅当前一个字符是等于号时才有效
+      if (i === lastPos && (c === '"' || c === "'") && html.charAt(i - 1) === '=') {
+        j = html.indexOf(c, i + 1);
+        if (j === -1) {
+          break;
+        } else {
+          v = _.trim(html.slice(lastPos + 1, j));
+          addAttr(tmpName, v);
+          tmpName = false;
+          i = j;
+          lastPos = i + 1;
+          continue;
+        }
+      }
+    }
+    if (/\s|\n|\t/.test(c)) {
+      html = html.replace(/\s|\n|\t/g, ' ');
+      if (tmpName === false) {
+        j = findNextEqual(html, i);
+        if (j === -1) {
+          v = _.trim(html.slice(lastPos, i));
+          addAttr(v);
+          tmpName = false;
+          lastPos = i + 1;
+          continue;
+        } else {
+          i = j - 1;
+          continue;
+        }
+      } else {
+        j = findBeforeEqual(html, i - 1);
+        if (j === -1) {
+          v = _.trim(html.slice(lastPos, i));
+          v = stripQuoteWrap(v);
+          addAttr(tmpName, v);
+          tmpName = false;
+          lastPos = i + 1;
+          continue;
+        } else {
+          continue;
+        }
+      }
+    }
+  }
+
+  if (lastPos < html.length) {
+    if (tmpName === false) {
+      addAttr(html.slice(lastPos));
+    } else {
+      addAttr(tmpName, stripQuoteWrap(_.trim(html.slice(lastPos))));
+    }
+  }
+
+  return _.trim(retAttrs.join(' '));
+}
+
+function findNextEqual (str, i) {
+  for (; i < str.length; i++) {
+    var c = str[i];
+    if (c === ' ') continue;
+    if (c === '=') return i;
+    return -1;
+  }
+}
+
+function findBeforeEqual (str, i) {
+  for (; i > 0; i--) {
+    var c = str[i];
+    if (c === ' ') continue;
+    if (c === '=') return i;
+    return -1;
+  }
+}
+
+function isQuoteWrapString (text) {
+  if ((text[0] === '"' && text[text.length - 1] === '"') ||
+      (text[0] === '\'' && text[text.length - 1] === '\'')) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+function stripQuoteWrap (text) {
+  if (isQuoteWrapString(text)) {
+    return text.substr(1, text.length - 2);
+  } else {
+    return text;
+  }
+};
+
+
+exports.parseTag = parseTag;
+exports.parseAttr = parseAttr;
+
+},{"./util":5}],5:[function(require,module,exports){
+module.exports = {
+  indexOf: function (arr, item) {
+    var i, j;
+    if (Array.prototype.indexOf) {
+      return arr.indexOf(item);
+    }
+    for (i = 0, j = arr.length; i < j; i++) {
+      if (arr[i] === item) {
+        return i;
+      }
+    }
+    return -1;
+  },
+  forEach: function (arr, fn, scope) {
+    var i, j;
+    if (Array.prototype.forEach) {
+      return arr.forEach(fn, scope);
+    }
+    for (i = 0, j = arr.length; i < j; i++) {
+      fn.call(scope, arr[i], i, arr);
+    }
+  },
+  trim: function (str) {
+    if (String.prototype.trim) {
+      return str.trim();
+    }
+    return str.replace(/(^\s*)|(\s*$)/g, '');
+  },
+  spaceIndex: function (str) {
+      var reg = /\s|\n|\t/;
+      var match = reg.exec(str);
+      return match ? match.index : -1;
+  }
+};
+
+},{}],6:[function(require,module,exports){
+/**
+ * 过滤XSS
+ *
+ * @author 老雷<leizongmin@gmail.com>
+ */
+
+var FilterCSS = require('cssfilter').FilterCSS;
+var DEFAULT = require('./default');
+var parser = require('./parser');
+var parseTag = parser.parseTag;
+var parseAttr = parser.parseAttr;
+var _ = require('./util');
+
+
+/**
+ * 返回值是否为空
+ *
+ * @param {Object} obj
+ * @return {Boolean}
+ */
+function isNull (obj) {
+  return (obj === undefined || obj === null);
+}
+
+/**
+ * 取标签内的属性列表字符串
+ *
+ * @param {String} html
+ * @return {Object}
+ *   - {String} html
+ *   - {Boolean} closing
+ */
+function getAttrs (html) {
+  var i = _.spaceIndex(html);
+  if (i === -1) {
+    return {
+      html:    '',
+      closing: (html[html.length - 2] === '/')
+    };
+  }
+  html = _.trim(html.slice(i + 1, -1));
+  var isClosing = (html[html.length - 1] === '/');
+  if (isClosing) html = _.trim(html.slice(0, -1));
+  return {
+    html:    html,
+    closing: isClosing
+  };
+}
+
+/**
+ * 浅拷贝对象
+ *
+ * @param {Object} obj
+ * @return {Object}
+ */
+function shallowCopyObject (obj) {
+  var ret = {};
+  for (var i in obj) {
+    ret[i] = obj[i];
+  }
+  return ret;
+}
+
+/**
+ * XSS过滤对象
+ *
+ * @param {Object} options
+ *   选项：whiteList, onTag, onTagAttr, onIgnoreTag,
+ *        onIgnoreTagAttr, safeAttrValue, escapeHtml
+ *        stripIgnoreTagBody, allowCommentTag, stripBlankChar
+ *        css{whiteList, onAttr, onIgnoreAttr} css=false表示禁用cssfilter
+ */
+function FilterXSS (options) {
+  options = shallowCopyObject(options || {});
+
+  if (options.stripIgnoreTag) {
+    if (options.onIgnoreTag) {
+      console.error('Notes: cannot use these two options "stripIgnoreTag" and "onIgnoreTag" at the same time');
+    }
+    options.onIgnoreTag = DEFAULT.onIgnoreTagStripAll;
+  }
+
+  options.whiteList = options.whiteList || DEFAULT.whiteList;
+  options.onTag = options.onTag || DEFAULT.onTag;
+  options.onTagAttr = options.onTagAttr || DEFAULT.onTagAttr;
+  options.onIgnoreTag = options.onIgnoreTag || DEFAULT.onIgnoreTag;
+  options.onIgnoreTagAttr = options.onIgnoreTagAttr || DEFAULT.onIgnoreTagAttr;
+  options.safeAttrValue = options.safeAttrValue || DEFAULT.safeAttrValue;
+  options.escapeHtml = options.escapeHtml || DEFAULT.escapeHtml;
+  this.options = options;
+
+  if (options.css === false) {
+    this.cssFilter = false;
+  } else {
+    options.css = options.css || {};
+    this.cssFilter = new FilterCSS(options.css);
+  }
+}
+
+/**
+ * 开始处理
+ *
+ * @param {String} html
+ * @return {String}
+ */
+FilterXSS.prototype.process = function (html) {
+  // 兼容各种奇葩输入
+  html = html || '';
+  html = html.toString();
+  if (!html) return '';
+
+  var me = this;
+  var options = me.options;
+  var whiteList = options.whiteList;
+  var onTag = options.onTag;
+  var onIgnoreTag = options.onIgnoreTag;
+  var onTagAttr = options.onTagAttr;
+  var onIgnoreTagAttr = options.onIgnoreTagAttr;
+  var safeAttrValue = options.safeAttrValue;
+  var escapeHtml = options.escapeHtml;
+  var cssFilter = me.cssFilter;
+
+  // 是否清除不可见字符
+  if (options.stripBlankChar) {
+    html = DEFAULT.stripBlankChar(html);
+  }
+
+  // 是否禁止备注标签
+  if (!options.allowCommentTag) {
+    html = DEFAULT.stripCommentTag(html);
+  }
+
+  // 如果开启了stripIgnoreTagBody
+  var stripIgnoreTagBody = false;
+  if (options.stripIgnoreTagBody) {
+    var stripIgnoreTagBody = DEFAULT.StripTagBody(options.stripIgnoreTagBody, onIgnoreTag);
+    onIgnoreTag = stripIgnoreTagBody.onIgnoreTag;
+  }
+
+  var retHtml = parseTag(html, function (sourcePosition, position, tag, html, isClosing) {
+    var info = {
+      sourcePosition: sourcePosition,
+      position:       position,
+      isClosing:      isClosing,
+      isWhite:        (tag in whiteList)
+    };
+
+    // 调用onTag处理
+    var ret = onTag(tag, html, info);
+    if (!isNull(ret)) return ret;
+
+    // 默认标签处理方法
+    if (info.isWhite) {
+      // 白名单标签，解析标签属性
+      // 如果是闭合标签，则不需要解析属性
+      if (info.isClosing) {
+        return '</' + tag + '>';
+      }
+
+      var attrs = getAttrs(html);
+      var whiteAttrList = whiteList[tag];
+      var attrsHtml = parseAttr(attrs.html, function (name, value) {
+
+        // 调用onTagAttr处理
+        var isWhiteAttr = (_.indexOf(whiteAttrList, name) !== -1);
+        var ret = onTagAttr(tag, name, value, isWhiteAttr);
+        if (!isNull(ret)) return ret;
+
+        // 默认的属性处理方法
+        if (isWhiteAttr) {
+          // 白名单属性，调用safeAttrValue过滤属性值
+          value = safeAttrValue(tag, name, value, cssFilter);
+          if (value) {
+            return name + '="' + value + '"';
+          } else {
+            return name;
+          }
+        } else {
+          // 非白名单属性，调用onIgnoreTagAttr处理
+          var ret = onIgnoreTagAttr(tag, name, value, isWhiteAttr);
+          if (!isNull(ret)) return ret;
+          return;
+        }
+      });
+
+      // 构造新的标签代码
+      var html = '<' + tag;
+      if (attrsHtml) html += ' ' + attrsHtml;
+      if (attrs.closing) html += ' /';
+      html += '>';
+      return html;
+
+    } else {
+      // 非白名单标签，调用onIgnoreTag处理
+      var ret = onIgnoreTag(tag, html, info);
+      if (!isNull(ret)) return ret;
+      return escapeHtml(html);
+    }
+
+  }, escapeHtml);
+
+  // 如果开启了stripIgnoreTagBody，需要对结果再进行处理
+  if (stripIgnoreTagBody) {
+    retHtml = stripIgnoreTagBody.remove(retHtml);
+  }
+
+  return retHtml;
+};
+
+
+module.exports = FilterXSS;
+
+},{"./default":2,"./parser":4,"./util":5,"cssfilter":10}],7:[function(require,module,exports){
+/*!
+ * Bowser - a browser detector
+ * https://github.com/ded/bowser
+ * MIT License | (c) Dustin Diaz 2015
+ */
+
+!function (root, name, definition) {
+  if (typeof module != 'undefined' && module.exports) module.exports = definition()
+  else if (typeof define == 'function' && define.amd) define(name, definition)
+  else root[name] = definition()
+}(this, 'bowser', function () {
+  /**
+    * See useragents.js for examples of navigator.userAgent
+    */
+
+  var t = true
+
+  function detect(ua) {
+
+    function getFirstMatch(regex) {
+      var match = ua.match(regex);
+      return (match && match.length > 1 && match[1]) || '';
+    }
+
+    function getSecondMatch(regex) {
+      var match = ua.match(regex);
+      return (match && match.length > 1 && match[2]) || '';
+    }
+
+    var iosdevice = getFirstMatch(/(ipod|iphone|ipad)/i).toLowerCase()
+      , likeAndroid = /like android/i.test(ua)
+      , android = !likeAndroid && /android/i.test(ua)
+      , nexusMobile = /nexus\s*[0-6]\s*/i.test(ua)
+      , nexusTablet = !nexusMobile && /nexus\s*[0-9]+/i.test(ua)
+      , chromeos = /CrOS/.test(ua)
+      , silk = /silk/i.test(ua)
+      , sailfish = /sailfish/i.test(ua)
+      , tizen = /tizen/i.test(ua)
+      , webos = /(web|hpw)os/i.test(ua)
+      , windowsphone = /windows phone/i.test(ua)
+      , samsungBrowser = /SamsungBrowser/i.test(ua)
+      , windows = !windowsphone && /windows/i.test(ua)
+      , mac = !iosdevice && !silk && /macintosh/i.test(ua)
+      , linux = !android && !sailfish && !tizen && !webos && /linux/i.test(ua)
+      , edgeVersion = getSecondMatch(/edg([ea]|ios)\/(\d+(\.\d+)?)/i)
+      , versionIdentifier = getFirstMatch(/version\/(\d+(\.\d+)?)/i)
+      , tablet = /tablet/i.test(ua) && !/tablet pc/i.test(ua)
+      , mobile = !tablet && /[^-]mobi/i.test(ua)
+      , xbox = /xbox/i.test(ua)
+      , result
+
+    if (/opera/i.test(ua)) {
+      //  an old Opera
+      result = {
+        name: 'Opera'
+      , opera: t
+      , version: versionIdentifier || getFirstMatch(/(?:opera|opr|opios)[\s\/](\d+(\.\d+)?)/i)
+      }
+    } else if (/opr\/|opios/i.test(ua)) {
+      // a new Opera
+      result = {
+        name: 'Opera'
+        , opera: t
+        , version: getFirstMatch(/(?:opr|opios)[\s\/](\d+(\.\d+)?)/i) || versionIdentifier
+      }
+    }
+    else if (/SamsungBrowser/i.test(ua)) {
+      result = {
+        name: 'Samsung Internet for Android'
+        , samsungBrowser: t
+        , version: versionIdentifier || getFirstMatch(/(?:SamsungBrowser)[\s\/](\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/coast/i.test(ua)) {
+      result = {
+        name: 'Opera Coast'
+        , coast: t
+        , version: versionIdentifier || getFirstMatch(/(?:coast)[\s\/](\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/yabrowser/i.test(ua)) {
+      result = {
+        name: 'Yandex Browser'
+      , yandexbrowser: t
+      , version: versionIdentifier || getFirstMatch(/(?:yabrowser)[\s\/](\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/ucbrowser/i.test(ua)) {
+      result = {
+          name: 'UC Browser'
+        , ucbrowser: t
+        , version: getFirstMatch(/(?:ucbrowser)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/mxios/i.test(ua)) {
+      result = {
+        name: 'Maxthon'
+        , maxthon: t
+        , version: getFirstMatch(/(?:mxios)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/epiphany/i.test(ua)) {
+      result = {
+        name: 'Epiphany'
+        , epiphany: t
+        , version: getFirstMatch(/(?:epiphany)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/puffin/i.test(ua)) {
+      result = {
+        name: 'Puffin'
+        , puffin: t
+        , version: getFirstMatch(/(?:puffin)[\s\/](\d+(?:\.\d+)?)/i)
+      }
+    }
+    else if (/sleipnir/i.test(ua)) {
+      result = {
+        name: 'Sleipnir'
+        , sleipnir: t
+        , version: getFirstMatch(/(?:sleipnir)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (/k-meleon/i.test(ua)) {
+      result = {
+        name: 'K-Meleon'
+        , kMeleon: t
+        , version: getFirstMatch(/(?:k-meleon)[\s\/](\d+(?:\.\d+)+)/i)
+      }
+    }
+    else if (windowsphone) {
+      result = {
+        name: 'Windows Phone'
+      , osname: 'Windows Phone'
+      , windowsphone: t
+      }
+      if (edgeVersion) {
+        result.msedge = t
+        result.version = edgeVersion
+      }
+      else {
+        result.msie = t
+        result.version = getFirstMatch(/iemobile\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/msie|trident/i.test(ua)) {
+      result = {
+        name: 'Internet Explorer'
+      , msie: t
+      , version: getFirstMatch(/(?:msie |rv:)(\d+(\.\d+)?)/i)
+      }
+    } else if (chromeos) {
+      result = {
+        name: 'Chrome'
+      , osname: 'Chrome OS'
+      , chromeos: t
+      , chromeBook: t
+      , chrome: t
+      , version: getFirstMatch(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)
+      }
+    } else if (/edg([ea]|ios)/i.test(ua)) {
+      result = {
+        name: 'Microsoft Edge'
+      , msedge: t
+      , version: edgeVersion
+      }
+    }
+    else if (/vivaldi/i.test(ua)) {
+      result = {
+        name: 'Vivaldi'
+        , vivaldi: t
+        , version: getFirstMatch(/vivaldi\/(\d+(\.\d+)?)/i) || versionIdentifier
+      }
+    }
+    else if (sailfish) {
+      result = {
+        name: 'Sailfish'
+      , osname: 'Sailfish OS'
+      , sailfish: t
+      , version: getFirstMatch(/sailfish\s?browser\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/seamonkey\//i.test(ua)) {
+      result = {
+        name: 'SeaMonkey'
+      , seamonkey: t
+      , version: getFirstMatch(/seamonkey\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/firefox|iceweasel|fxios/i.test(ua)) {
+      result = {
+        name: 'Firefox'
+      , firefox: t
+      , version: getFirstMatch(/(?:firefox|iceweasel|fxios)[ \/](\d+(\.\d+)?)/i)
+      }
+      if (/\((mobile|tablet);[^\)]*rv:[\d\.]+\)/i.test(ua)) {
+        result.firefoxos = t
+        result.osname = 'Firefox OS'
+      }
+    }
+    else if (silk) {
+      result =  {
+        name: 'Amazon Silk'
+      , silk: t
+      , version : getFirstMatch(/silk\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/phantom/i.test(ua)) {
+      result = {
+        name: 'PhantomJS'
+      , phantom: t
+      , version: getFirstMatch(/phantomjs\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/slimerjs/i.test(ua)) {
+      result = {
+        name: 'SlimerJS'
+        , slimer: t
+        , version: getFirstMatch(/slimerjs\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (/blackberry|\bbb\d+/i.test(ua) || /rim\stablet/i.test(ua)) {
+      result = {
+        name: 'BlackBerry'
+      , osname: 'BlackBerry OS'
+      , blackberry: t
+      , version: versionIdentifier || getFirstMatch(/blackberry[\d]+\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (webos) {
+      result = {
+        name: 'WebOS'
+      , osname: 'WebOS'
+      , webos: t
+      , version: versionIdentifier || getFirstMatch(/w(?:eb)?osbrowser\/(\d+(\.\d+)?)/i)
+      };
+      /touchpad\//i.test(ua) && (result.touchpad = t)
+    }
+    else if (/bada/i.test(ua)) {
+      result = {
+        name: 'Bada'
+      , osname: 'Bada'
+      , bada: t
+      , version: getFirstMatch(/dolfin\/(\d+(\.\d+)?)/i)
+      };
+    }
+    else if (tizen) {
+      result = {
+        name: 'Tizen'
+      , osname: 'Tizen'
+      , tizen: t
+      , version: getFirstMatch(/(?:tizen\s?)?browser\/(\d+(\.\d+)?)/i) || versionIdentifier
+      };
+    }
+    else if (/qupzilla/i.test(ua)) {
+      result = {
+        name: 'QupZilla'
+        , qupzilla: t
+        , version: getFirstMatch(/(?:qupzilla)[\s\/](\d+(?:\.\d+)+)/i) || versionIdentifier
+      }
+    }
+    else if (/chromium/i.test(ua)) {
+      result = {
+        name: 'Chromium'
+        , chromium: t
+        , version: getFirstMatch(/(?:chromium)[\s\/](\d+(?:\.\d+)?)/i) || versionIdentifier
+      }
+    }
+    else if (/chrome|crios|crmo/i.test(ua)) {
+      result = {
+        name: 'Chrome'
+        , chrome: t
+        , version: getFirstMatch(/(?:chrome|crios|crmo)\/(\d+(\.\d+)?)/i)
+      }
+    }
+    else if (android) {
+      result = {
+        name: 'Android'
+        , version: versionIdentifier
+      }
+    }
+    else if (/safari|applewebkit/i.test(ua)) {
+      result = {
+        name: 'Safari'
+      , safari: t
+      }
+      if (versionIdentifier) {
+        result.version = versionIdentifier
+      }
+    }
+    else if (iosdevice) {
+      result = {
+        name : iosdevice == 'iphone' ? 'iPhone' : iosdevice == 'ipad' ? 'iPad' : 'iPod'
+      }
+      // WTF: version is not part of user agent in web apps
+      if (versionIdentifier) {
+        result.version = versionIdentifier
+      }
+    }
+    else if(/googlebot/i.test(ua)) {
+      result = {
+        name: 'Googlebot'
+      , googlebot: t
+      , version: getFirstMatch(/googlebot\/(\d+(\.\d+))/i) || versionIdentifier
+      }
+    }
+    else {
+      result = {
+        name: getFirstMatch(/^(.*)\/(.*) /),
+        version: getSecondMatch(/^(.*)\/(.*) /)
+     };
+   }
+
+    // set webkit or gecko flag for browsers based on these engines
+    if (!result.msedge && /(apple)?webkit/i.test(ua)) {
+      if (/(apple)?webkit\/537\.36/i.test(ua)) {
+        result.name = result.name || "Blink"
+        result.blink = t
+      } else {
+        result.name = result.name || "Webkit"
+        result.webkit = t
+      }
+      if (!result.version && versionIdentifier) {
+        result.version = versionIdentifier
+      }
+    } else if (!result.opera && /gecko\//i.test(ua)) {
+      result.name = result.name || "Gecko"
+      result.gecko = t
+      result.version = result.version || getFirstMatch(/gecko\/(\d+(\.\d+)?)/i)
+    }
+
+    // set OS flags for platforms that have multiple browsers
+    if (!result.windowsphone && (android || result.silk)) {
+      result.android = t
+      result.osname = 'Android'
+    } else if (!result.windowsphone && iosdevice) {
+      result[iosdevice] = t
+      result.ios = t
+      result.osname = 'iOS'
+    } else if (mac) {
+      result.mac = t
+      result.osname = 'macOS'
+    } else if (xbox) {
+      result.xbox = t
+      result.osname = 'Xbox'
+    } else if (windows) {
+      result.windows = t
+      result.osname = 'Windows'
+    } else if (linux) {
+      result.linux = t
+      result.osname = 'Linux'
+    }
+
+    function getWindowsVersion (s) {
+      switch (s) {
+        case 'NT': return 'NT'
+        case 'XP': return 'XP'
+        case 'NT 5.0': return '2000'
+        case 'NT 5.1': return 'XP'
+        case 'NT 5.2': return '2003'
+        case 'NT 6.0': return 'Vista'
+        case 'NT 6.1': return '7'
+        case 'NT 6.2': return '8'
+        case 'NT 6.3': return '8.1'
+        case 'NT 10.0': return '10'
+        default: return undefined
+      }
+    }
+
+    // OS version extraction
+    var osVersion = '';
+    if (result.windows) {
+      osVersion = getWindowsVersion(getFirstMatch(/Windows ((NT|XP)( \d\d?.\d)?)/i))
+    } else if (result.windowsphone) {
+      osVersion = getFirstMatch(/windows phone (?:os)?\s?(\d+(\.\d+)*)/i);
+    } else if (result.mac) {
+      osVersion = getFirstMatch(/Mac OS X (\d+([_\.\s]\d+)*)/i);
+      osVersion = osVersion.replace(/[_\s]/g, '.');
+    } else if (iosdevice) {
+      osVersion = getFirstMatch(/os (\d+([_\s]\d+)*) like mac os x/i);
+      osVersion = osVersion.replace(/[_\s]/g, '.');
+    } else if (android) {
+      osVersion = getFirstMatch(/android[ \/-](\d+(\.\d+)*)/i);
+    } else if (result.webos) {
+      osVersion = getFirstMatch(/(?:web|hpw)os\/(\d+(\.\d+)*)/i);
+    } else if (result.blackberry) {
+      osVersion = getFirstMatch(/rim\stablet\sos\s(\d+(\.\d+)*)/i);
+    } else if (result.bada) {
+      osVersion = getFirstMatch(/bada\/(\d+(\.\d+)*)/i);
+    } else if (result.tizen) {
+      osVersion = getFirstMatch(/tizen[\/\s](\d+(\.\d+)*)/i);
+    }
+    if (osVersion) {
+      result.osversion = osVersion;
+    }
+
+    // device type extraction
+    var osMajorVersion = !result.windows && osVersion.split('.')[0];
+    if (
+         tablet
+      || nexusTablet
+      || iosdevice == 'ipad'
+      || (android && (osMajorVersion == 3 || (osMajorVersion >= 4 && !mobile)))
+      || result.silk
+    ) {
+      result.tablet = t
+    } else if (
+         mobile
+      || iosdevice == 'iphone'
+      || iosdevice == 'ipod'
+      || android
+      || nexusMobile
+      || result.blackberry
+      || result.webos
+      || result.bada
+    ) {
+      result.mobile = t
+    }
+
+    // Graded Browser Support
+    // http://developer.yahoo.com/yui/articles/gbs
+    if (result.msedge ||
+        (result.msie && result.version >= 10) ||
+        (result.yandexbrowser && result.version >= 15) ||
+		    (result.vivaldi && result.version >= 1.0) ||
+        (result.chrome && result.version >= 20) ||
+        (result.samsungBrowser && result.version >= 4) ||
+        (result.firefox && result.version >= 20.0) ||
+        (result.safari && result.version >= 6) ||
+        (result.opera && result.version >= 10.0) ||
+        (result.ios && result.osversion && result.osversion.split(".")[0] >= 6) ||
+        (result.blackberry && result.version >= 10.1)
+        || (result.chromium && result.version >= 20)
+        ) {
+      result.a = t;
+    }
+    else if ((result.msie && result.version < 10) ||
+        (result.chrome && result.version < 20) ||
+        (result.firefox && result.version < 20.0) ||
+        (result.safari && result.version < 6) ||
+        (result.opera && result.version < 10.0) ||
+        (result.ios && result.osversion && result.osversion.split(".")[0] < 6)
+        || (result.chromium && result.version < 20)
+        ) {
+      result.c = t
+    } else result.x = t
+
+    return result
+  }
+
+  var bowser = detect(typeof navigator !== 'undefined' ? navigator.userAgent || '' : '')
+
+  bowser.test = function (browserList) {
+    for (var i = 0; i < browserList.length; ++i) {
+      var browserItem = browserList[i];
+      if (typeof browserItem=== 'string') {
+        if (browserItem in bowser) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Get version precisions count
+   *
+   * @example
+   *   getVersionPrecision("1.10.3") // 3
+   *
+   * @param  {string} version
+   * @return {number}
+   */
+  function getVersionPrecision(version) {
+    return version.split(".").length;
+  }
+
+  /**
+   * Array::map polyfill
+   *
+   * @param  {Array} arr
+   * @param  {Function} iterator
+   * @return {Array}
+   */
+  function map(arr, iterator) {
+    var result = [], i;
+    if (Array.prototype.map) {
+      return Array.prototype.map.call(arr, iterator);
+    }
+    for (i = 0; i < arr.length; i++) {
+      result.push(iterator(arr[i]));
+    }
+    return result;
+  }
+
+  /**
+   * Calculate browser version weight
+   *
+   * @example
+   *   compareVersions(['1.10.2.1',  '1.8.2.1.90'])    // 1
+   *   compareVersions(['1.010.2.1', '1.09.2.1.90']);  // 1
+   *   compareVersions(['1.10.2.1',  '1.10.2.1']);     // 0
+   *   compareVersions(['1.10.2.1',  '1.0800.2']);     // -1
+   *
+   * @param  {Array<String>} versions versions to compare
+   * @return {Number} comparison result
+   */
+  function compareVersions(versions) {
+    // 1) get common precision for both versions, for example for "10.0" and "9" it should be 2
+    var precision = Math.max(getVersionPrecision(versions[0]), getVersionPrecision(versions[1]));
+    var chunks = map(versions, function (version) {
+      var delta = precision - getVersionPrecision(version);
+
+      // 2) "9" -> "9.0" (for precision = 2)
+      version = version + new Array(delta + 1).join(".0");
+
+      // 3) "9.0" -> ["000000000"", "000000009"]
+      return map(version.split("."), function (chunk) {
+        return new Array(20 - chunk.length).join("0") + chunk;
+      }).reverse();
+    });
+
+    // iterate in reverse order by reversed chunks array
+    while (--precision >= 0) {
+      // 4) compare: "000000009" > "000000010" = false (but "9" > "10" = true)
+      if (chunks[0][precision] > chunks[1][precision]) {
+        return 1;
+      }
+      else if (chunks[0][precision] === chunks[1][precision]) {
+        if (precision === 0) {
+          // all version chunks are same
+          return 0;
+        }
+      }
+      else {
+        return -1;
+      }
+    }
+  }
+
+  /**
+   * Check if browser is unsupported
+   *
+   * @example
+   *   bowser.isUnsupportedBrowser({
+   *     msie: "10",
+   *     firefox: "23",
+   *     chrome: "29",
+   *     safari: "5.1",
+   *     opera: "16",
+   *     phantom: "534"
+   *   });
+   *
+   * @param  {Object}  minVersions map of minimal version to browser
+   * @param  {Boolean} [strictMode = false] flag to return false if browser wasn't found in map
+   * @param  {String}  [ua] user agent string
+   * @return {Boolean}
+   */
+  function isUnsupportedBrowser(minVersions, strictMode, ua) {
+    var _bowser = bowser;
+
+    // make strictMode param optional with ua param usage
+    if (typeof strictMode === 'string') {
+      ua = strictMode;
+      strictMode = void(0);
+    }
+
+    if (strictMode === void(0)) {
+      strictMode = false;
+    }
+    if (ua) {
+      _bowser = detect(ua);
+    }
+
+    var version = "" + _bowser.version;
+    for (var browser in minVersions) {
+      if (minVersions.hasOwnProperty(browser)) {
+        if (_bowser[browser]) {
+          if (typeof minVersions[browser] !== 'string') {
+            throw new Error('Browser version in the minVersion map should be a string: ' + browser + ': ' + String(minVersions));
+          }
+
+          // browser version and min supported version.
+          return compareVersions([version, minVersions[browser]]) < 0;
+        }
+      }
+    }
+
+    return strictMode; // not found
+  }
+
+  /**
+   * Check if browser is supported
+   *
+   * @param  {Object} minVersions map of minimal version to browser
+   * @param  {Boolean} [strictMode = false] flag to return false if browser wasn't found in map
+   * @param  {String}  [ua] user agent string
+   * @return {Boolean}
+   */
+  function check(minVersions, strictMode, ua) {
+    return !isUnsupportedBrowser(minVersions, strictMode, ua);
+  }
+
+  bowser.isUnsupportedBrowser = isUnsupportedBrowser;
+  bowser.compareVersions = compareVersions;
+  bowser.check = check;
+
+  /*
+   * Set our detect method to the main bowser object so we can
+   * reuse it to test other user agents.
+   * This is needed to implement future tests.
+   */
+  bowser._detect = detect;
+
+  /*
+   * Set our detect public method to the main bowser object
+   * This is needed to implement bowser in server side
+   */
+  bowser.detect = detect;
+  return bowser
+});
+
+},{}],8:[function(require,module,exports){
+/**
+ * cssfilter
+ *
+ * @author 老雷<leizongmin@gmail.com>
+ */
+
+var DEFAULT = require('./default');
+var parseStyle = require('./parser');
+var _ = require('./util');
+
+
+/**
+ * 返回值是否为空
+ *
+ * @param {Object} obj
+ * @return {Boolean}
+ */
+function isNull (obj) {
+  return (obj === undefined || obj === null);
+}
+
+
+/**
+ * 创建CSS过滤器
+ *
+ * @param {Object} options
+ *   - {Object} whiteList
+ *   - {Object} onAttr
+ *   - {Object} onIgnoreAttr
+ */
+function FilterCSS (options) {
+  options = options || {};
+  options.whiteList = options.whiteList || DEFAULT.whiteList;
+  options.onAttr = options.onAttr || DEFAULT.onAttr;
+  options.onIgnoreAttr = options.onIgnoreAttr || DEFAULT.onIgnoreAttr;
+  this.options = options;
+}
+
+FilterCSS.prototype.process = function (css) {
+  // 兼容各种奇葩输入
+  css = css || '';
+  css = css.toString();
+  if (!css) return '';
+
+  var me = this;
+  var options = me.options;
+  var whiteList = options.whiteList;
+  var onAttr = options.onAttr;
+  var onIgnoreAttr = options.onIgnoreAttr;
+
+  var retCSS = parseStyle(css, function (sourcePosition, position, name, value, source) {
+
+    var check = whiteList[name];
+    var isWhite = false;
+    if (check === true) isWhite = check;
+    else if (typeof check === 'function') isWhite = check(value);
+    else if (check instanceof RegExp) isWhite = check.test(value);
+    if (isWhite !== true) isWhite = false;
+
+    var opts = {
+      position: position,
+      sourcePosition: sourcePosition,
+      source: source,
+      isWhite: isWhite
+    };
+
+    if (isWhite) {
+
+      var ret = onAttr(name, value, opts);
+      if (isNull(ret)) {
+        return name + ':' + value;
+      } else {
+        return ret;
+      }
+
+    } else {
+
+      var ret = onIgnoreAttr(name, value, opts);
+      if (!isNull(ret)) {
+        return ret;
+      }
+
+    }
+  });
+
+  return retCSS;
+};
+
+
+module.exports = FilterCSS;
+
+},{"./default":9,"./parser":11,"./util":12}]

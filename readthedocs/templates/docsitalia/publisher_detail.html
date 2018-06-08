@@ -6,67 +6,62 @@
 Pagina di dettaglio del publisher con la lista
 dei publisher projects
 {% endcomment %}
-    <h1>{{ object }}</h1>
-    <div class="u-padding-r-bottom u-textLeft u-posRelative u-zindex-40">
-      <section class="u-layout-r-withGutter">
-        <div class="u-pullUp-l">
-          <div class="Grid Grid--withGutter">
-            {% for project in object.publisherproject_set.all %}
-              <div class="Grid-cell u-sm-size1of3 u-md-size1of4 u-lg-size1of4 u-margin-r-bottom u-layout-matchHeight">
-                  {% include 'docsitalia/includes/card.html' %}
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-        <button class="js-open-publisher-search">Search</button>
-      </section>
-    </div>
+<h1>{{ object }}</h1>
+<section class="container">
+  <div class="row">
+    {% for project in object.publisherproject_set.all %}
+    {% include 'docsitalia/includes/card.html' %}
+    {% endfor %}
+  </div>
+  <button class="js-open-publisher-search">Search</button>
+</section>
+</div>
 
-    <div class="publisher-metadata">
-        {% if object.metadata %}
-            {{ object.metadata.name }}
-            <a href="{{ object.metadata.website }}">{{ object.metadata.website }}</a>
-            {{ object.metadata.description }}
-            <img src="{{ object.metadata.assets.logo }}" />
-        {% endif %}
-    </div>
-    <div class="publisher-projects-metadata">
-        {% if object.projects_metada %}
-            {{ object.projects_metadata.title }}
-            {{ object.projects_metadata.description }}
-            {{ object.projects_metadata.website }}
-        {% endif %}
-    </div>
-    <div class="publisher-search" style="display: none">
-    {% comment %}
-    Questo è il popup di ricerca
-    ancora da definire
-    {% endcomment %}
-        <a class="js-publisher-search-close">close</a>
-        {% include "core/widesearchbar.html" %}
-        <strong>Ricerche frequenti</strong>
-        <ul>
-            <li>
-                <a>Tag 1</a>
-            </li>
-            <li>
-                <a>Tag 2</a>
-            </li>
-            <li>
-                <a>Progetto Spid</a>
-            </li>
-        </ul>
-    </div>
+<div class="publisher-metadata">
+  {% if object.metadata %}
+  {{ object.metadata.name }}
+  <a href="{{ object.metadata.website }}">{{ object.metadata.website }}</a>
+  {{ object.metadata.description }}
+  <img src="{{ object.metadata.assets.logo }}"/>
+  {% endif %}
+</div>
+<div class="publisher-projects-metadata">
+  {% if object.projects_metada %}
+  {{ object.projects_metadata.title }}
+  {{ object.projects_metadata.description }}
+  {{ object.projects_metadata.website }}
+  {% endif %}
+</div>
+<div class="publisher-search" style="display: none">
+  {% comment %}
+  Questo è il popup di ricerca
+  ancora da definire
+  {% endcomment %}
+  <a class="js-publisher-search-close">close</a>
+  {% include "core/widesearchbar.html" %}
+  <strong>Ricerche frequenti</strong>
+  <ul>
+    <li>
+      <a>Tag 1</a>
+    </li>
+    <li>
+      <a>Tag 2</a>
+    </li>
+    <li>
+      <a>Progetto Spid</a>
+    </li>
+  </ul>
+</div>
 {% endblock %}
 {% block extra_scripts %}
-  <script type="text/javascript">
-    $(document).ready(function() {
-        $('.js-publisher-search-close').on('click', function(){
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.js-publisher-search-close').on('click', function () {
             $('.publisher-search').hide();
         });
-        $('.js-open-publisher-search').on('click', function(){
+        $('.js-open-publisher-search').on('click', function () {
             $('.publisher-search').show();
         });
     });
-  </script>
+</script>
 {% endblock %}
