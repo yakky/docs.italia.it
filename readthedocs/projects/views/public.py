@@ -89,10 +89,7 @@ class ProjectDetailView(BuildTriggerMixin, ProjectOnboardMixin, DetailView):
         context['versions'] = Version.objects.public(
             user=self.request.user, project=project)
 
-        protocol = 'http'
-        if self.request.is_secure():
-            protocol = 'https'
-
+        protocol = getattr(settings, 'PUBLIC_PROTO', 'https')
         version_slug = project.get_default_version()
 
         context['badge_url'] = '%s://%s%s?version=%s' % (
