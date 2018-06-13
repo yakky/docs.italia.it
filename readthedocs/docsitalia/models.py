@@ -105,7 +105,7 @@ class Publisher(models.Model):
         'Publisher\'s name in full. You can refer to the "name" field from '
         '"publisher_settings.yml", e.g. Ministero della Documentazione.'
     ))
-    slug = models.SlugField(_('slug'), max_length=255, unique=True, help_text=_(
+    slug = models.SlugField(_('Slug'), max_length=255, unique=True, help_text=_(
         'Pick the URL fragment following "https://github.com" in the organization '
         'URL, e.g ministero-della-documentazione.'
     ))
