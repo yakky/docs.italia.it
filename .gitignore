@@ -61,3 +61,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+readthedocs/settings/managed.py
+readthedocs/settings/admin.py
