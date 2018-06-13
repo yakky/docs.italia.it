@@ -592,7 +592,8 @@ class DocsItaliaTest(TestCase):
                   "publisher_project": {
                     "canonical_url": "http://readthedocs.org/testorg/testproject",
                     "name": ""
-                  }
+                  },
+                  "tags": ["lorem", "sicut"]
                 }
               ]
             }
