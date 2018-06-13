@@ -2,44 +2,28 @@
 """Docs italia api"""
 from __future__ import absolute_import
 
-from rest_framework import viewsets
-from rest_framework import mixins
-
-from readthedocs.projects.models import Project
 from readthedocs.restapi.views.model_views import ProjectViewSet
 
 from ..serializers import DocsItaliaProjectSerializer
 
 
-class ProjectsByTagViewSet(
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet
-):  # pylint: disable=too-many-ancestors
-
-    """
-    Projects by Tag DRF list model mixin
-
-    Takes a GET with tags separated by a comma:
-    tags=tag1,tag2
-    """
-
-    serializer_class = DocsItaliaProjectSerializer
-    allowed_methods = ('GET',)
-
-    def get_queryset(self):
-        """filter projects by tags"""
-        tags = self.request.query_params.get('tags', None)
-        if tags:
-            tags = tags.split(',')
-            queryset = Project.objects.filter(tags__slug__in=tags).distinct()
-        else:
-            queryset = Project.objects.none()
-        return queryset
-
-
-class DocsItaliaProjectViewSet(ProjectViewSet):
+class DocsItaliaProjectViewSet(ProjectViewSet):  # pylint: disable=too-many-ancestors
 
     """Like :py:class:`ProjectViewSet` but using slug as lookup key."""
 
     lookup_field = 'slug'
     serializer_class = DocsItaliaProjectSerializer
+
+    def get_queryset(self):
+        """
+        Filter projects by tags
+
+        Takes a GET with tags separated by a comma:
+        tags=tag1,tag2
+        """
+        qs = super(DocsItaliaProjectViewSet, self).get_queryset()
+        tags = self.request.query_params.get('tags', None)
+        if tags:
+            tags = tags.split(',')
+            qs = qs.filter(tags__slug__in=tags).distinct()
+        return qs
