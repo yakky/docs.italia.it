@@ -24,7 +24,7 @@ class DocsItaliaProjectSerializer(ProjectSerializer):
     def get_publisher(obj):
         """gets the publisher"""
         p_p = obj.publisherproject_set.first()
-        if p_p.publisher:
+        if p_p:
             return {
                 'name': p_p.publisher.metadata.get('name', ''),
                 'canonical_url': p_p.publisher.get_canonical_url()
@@ -34,10 +34,11 @@ class DocsItaliaProjectSerializer(ProjectSerializer):
     def get_publisher_project(obj):
         """gets the publisher project"""
         p_p = obj.publisherproject_set.first()
-        return {
-            'name': p_p.metadata.get('name', ''),
-            'canonical_url': p_p.get_canonical_url()
-        }
+        if p_p:
+            return {
+                'name': p_p.metadata.get('name', ''),
+                'canonical_url': p_p.get_canonical_url()
+            }
 
     @staticmethod
     def get_tags(obj):

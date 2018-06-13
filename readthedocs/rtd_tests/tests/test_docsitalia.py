@@ -26,6 +26,7 @@ from readthedocs.docsitalia.models import (
     Publisher, PublisherProject, PublisherIntegration,
     validate_publisher_metadata, validate_projects_metadata,
     validate_document_metadata)
+from readthedocs.docsitalia.serializers import DocsItaliaProjectSerializer
 
 
 PUBLISHER_METADATA = """publisher:
@@ -621,3 +622,12 @@ class DocsItaliaTest(TestCase):
         response = self.client.get(reverse('docsitalia-project-list'), {'tags': 'sicut, amet'})
         self.assertEqual(len(response.data['results']), 0)
         self.assertEqual(response.status_code, 200)
+
+    def test_docsitalia_project_serializer_can_serialize_project_without_publisher_project(self):
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        serializer = DocsItaliaProjectSerializer(project)
+        self.assertTrue(serializer.data)
