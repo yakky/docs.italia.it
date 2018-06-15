@@ -26,6 +26,7 @@ from readthedocs.docsitalia.models import (
     Publisher, PublisherProject, PublisherIntegration,
     validate_publisher_metadata, validate_projects_metadata,
     validate_document_metadata)
+from readthedocs.docsitalia.serializers import DocsItaliaProjectSerializer
 
 
 PUBLISHER_METADATA = """publisher:
@@ -571,7 +572,7 @@ class DocsItaliaTest(TestCase):
             active=True
         )
         pub_project.projects.add(project)
-        response = self.client.get(reverse('projects-by-tag-list'), {'tags': 'lorem, sicut'})
+        response = self.client.get(reverse('docsitalia-project-list'), {'tags': 'lorem, sicut'})
         self.assertEqual(len(response.data['results']), 1)
         self.assertJSONEqual(
             response.content.decode('utf-8'), {
@@ -592,22 +593,23 @@ class DocsItaliaTest(TestCase):
                   "publisher_project": {
                     "canonical_url": "http://readthedocs.org/testorg/testproject",
                     "name": ""
-                  }
+                  },
+                  "tags": ["lorem", "sicut"]
                 }
               ]
             }
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_projects_by_tag_api_not_tags_provided(self):
+    def test_projects_by_tag_api_no_tags_provided(self):
         project = Project.objects.create(
             name='my project',
             slug='myprojectslug',
             repo='https://github.com/testorg/myrepourl.git'
         )
         project.tags.add('lorem', 'ipsum')
-        response = self.client.get(reverse('projects-by-tag-list'))
-        self.assertEqual(len(response.data['results']), 0)
+        response = self.client.get(reverse('docsitalia-project-list'))
+        self.assertTrue(response.data['results'])
         self.assertEqual(response.status_code, 200)
 
     def test_projects_by_tag_returns_only_data_that_matches_tags(self):
@@ -617,6 +619,15 @@ class DocsItaliaTest(TestCase):
             repo='https://github.com/testorg/myrepourl.git'
         )
         project.tags.add('lorem', 'ipsum')
-        response = self.client.get(reverse('projects-by-tag-list'), {'tags': 'sicut, amet'})
+        response = self.client.get(reverse('docsitalia-project-list'), {'tags': 'sicut, amet'})
         self.assertEqual(len(response.data['results']), 0)
         self.assertEqual(response.status_code, 200)
+
+    def test_docsitalia_project_serializer_can_serialize_project_without_publisher_project(self):
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        serializer = DocsItaliaProjectSerializer(project)
+        self.assertTrue(serializer.data)
