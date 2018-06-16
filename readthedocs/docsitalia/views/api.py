@@ -16,14 +16,17 @@ class DocsItaliaProjectViewSet(ProjectViewSet):  # pylint: disable=too-many-ance
 
     def get_queryset(self):
         """
-        Filter projects by tags
+        Filter projects by tags and publisher passed as query parameters
 
-        Takes a GET with tags separated by a comma:
-        tags=tag1,tag2
+        e.g. ?tags=tag1,tag2, ?publisher=publisher-slug
+
         """
         qs = super(DocsItaliaProjectViewSet, self).get_queryset()
         tags = self.request.query_params.get('tags', None)
         if tags:
             tags = tags.split(',')
             qs = qs.filter(tags__slug__in=tags).distinct()
+        publisher = self.request.query_params.get('publisher', None)
+        if publisher:
+            qs = qs.filter(publisherproject__publisher__slug=publisher)
         return qs
