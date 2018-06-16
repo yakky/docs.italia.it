@@ -572,7 +572,7 @@ class DocsItaliaTest(TestCase):
             active=True
         )
         pub_project.projects.add(project)
-        response = self.client.get(reverse('docsitalia-project-list'), {'tags': 'lorem, sicut'})
+        response = self.client.get(reverse('docsitalia-document-list'), {'tags': 'lorem, sicut'})
         self.assertEqual(len(response.data['results']), 1)
         self.assertJSONEqual(
             response.content.decode('utf-8'), {
@@ -657,7 +657,7 @@ class DocsItaliaTest(TestCase):
         )
         other_pub_project.projects.add(other_project)
 
-        response = self.client.get(reverse('docsitalia-project-list'), {'publisher': 'testorg'})
+        response = self.client.get(reverse('docsitalia-document-list'), {'publisher': 'testorg'})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['results']), 1)
         self.assertEqual(response.data['results'][0]['slug'], 'myprojectslug')
@@ -712,7 +712,7 @@ class DocsItaliaTest(TestCase):
         )
         other_pub_project.projects.add(other_project)
 
-        response = self.client.get(reverse('docsitalia-project-list'), {'project': 'testproject'})
+        response = self.client.get(reverse('docsitalia-document-list'), {'project': 'testproject'})
         self.assertEqual(len(response.data['results']), 1)
         self.assertEqual(response.data['results'][0]['slug'], 'myprojectslug')
 
@@ -723,7 +723,7 @@ class DocsItaliaTest(TestCase):
             repo='https://github.com/testorg/myrepourl.git'
         )
         project.tags.add('lorem', 'ipsum')
-        response = self.client.get(reverse('docsitalia-project-list'))
+        response = self.client.get(reverse('docsitalia-document-list'))
         self.assertTrue(response.data['results'])
         self.assertEqual(response.status_code, 200)
 
@@ -734,7 +734,7 @@ class DocsItaliaTest(TestCase):
             repo='https://github.com/testorg/myrepourl.git'
         )
         project.tags.add('lorem', 'ipsum')
-        response = self.client.get(reverse('docsitalia-project-list'), {'tags': 'sicut, amet'})
+        response = self.client.get(reverse('docsitalia-document-list'), {'tags': 'sicut, amet'})
         self.assertEqual(len(response.data['results']), 0)
         self.assertEqual(response.status_code, 200)
 
