@@ -16,9 +16,9 @@ class DocsItaliaProjectViewSet(ProjectViewSet):  # pylint: disable=too-many-ance
 
     def get_queryset(self):
         """
-        Filter projects by tags and publisher passed as query parameters
+        Filter projects by tags, publisher and project passed as query parameters
 
-        e.g. ?tags=tag1,tag2, ?publisher=publisher-slug
+        e.g. ?tags=tag1,tag2, ?publisher=publisher-slug, ?project=project-slug
 
         """
         qs = super(DocsItaliaProjectViewSet, self).get_queryset()
@@ -29,4 +29,7 @@ class DocsItaliaProjectViewSet(ProjectViewSet):  # pylint: disable=too-many-ance
         publisher = self.request.query_params.get('publisher', None)
         if publisher:
             qs = qs.filter(publisherproject__publisher__slug=publisher)
+        project = self.request.query_params.get('project', None)
+        if project:
+            qs = qs.filter(publisherproject__slug=project)
         return qs
