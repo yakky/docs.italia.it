@@ -601,6 +601,67 @@ class DocsItaliaTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    @pytest.mark.skipif(not IT_RESOLVER_IN_SETTINGS, reason='Require CLASS_OVERRIEDS in the settings file to work')
+    @pytest.mark.itresolver
+    @override_settings(PUBLIC_PROTO='http', PUBLIC_DOMAIN='readthedocs.org')
+    def test_projects_by_tag_api_filter_publisher(self):
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            active=True
+        )
+        pub_project = PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            metadata={
+                'documents': [
+                    'https://github.com/testorg/myrepourl',
+                    'https://github.com/testorg/anotherrepourl',
+                ]
+            },
+            publisher=publisher,
+            active=True
+        )
+        pub_project.projects.add(project)
+
+        other_project = Project.objects.create(
+            name='my other project',
+            slug='myotherprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        other_publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='othertestorg',
+            metadata={},
+            projects_metadata={},
+            active=True
+        )
+        other_pub_project = PublisherProject.objects.create(
+            name='Test other Project',
+            slug='testotherproject',
+            metadata={
+                'documents': [
+                    'https://github.com/othertestorg/myrepourl',
+                    'https://github.com/othertestorg/anotherrepourl',
+                ]
+            },
+            publisher=other_publisher,
+            active=True
+        )
+        other_pub_project.projects.add(other_project)
+
+        response = self.client.get(reverse('docsitalia-project-list'), {'publisher': 'testorg'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['slug'], 'myprojectslug')
+
     def test_projects_by_tag_api_no_tags_provided(self):
         project = Project.objects.create(
             name='my project',
