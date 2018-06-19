@@ -594,7 +594,7 @@ class DocsItaliaTest(TestCase):
                     "canonical_url": "http://readthedocs.org/testorg/testproject",
                     "name": ""
                   },
-                  "tags": ["lorem", "sicut"]
+                  "tags": ["ipsum", "lorem"]
                 }
               ]
             }
@@ -637,7 +637,7 @@ class DocsItaliaTest(TestCase):
             repo='https://github.com/testorg/myrepourl.git'
         )
         other_publisher = Publisher.objects.create(
-            name='Test Org',
+            name='Other Test Org',
             slug='othertestorg',
             metadata={},
             projects_metadata={},
