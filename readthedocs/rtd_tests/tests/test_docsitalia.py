@@ -12,6 +12,7 @@ from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.template.loader import get_template
+from django.utils import six
 from rest_framework.response import Response
 
 from readthedocs.builds.constants import LATEST
@@ -26,7 +27,8 @@ from readthedocs.docsitalia.models import (
     Publisher, PublisherProject, PublisherIntegration,
     validate_publisher_metadata, validate_projects_metadata,
     validate_document_metadata)
-from readthedocs.docsitalia.serializers import DocsItaliaProjectSerializer
+from readthedocs.docsitalia.serializers import (
+    DocsItaliaProjectSerializer, DocsItaliaProjectAdminSerializer)
 
 
 PUBLISHER_METADATA = """publisher:
@@ -754,3 +756,47 @@ class DocsItaliaTest(TestCase):
         )
         serializer = DocsItaliaProjectSerializer(project)
         self.assertTrue(serializer.data)
+
+    def test_docsitalia_project_admin_serializer_can_serialize_project(self):
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        serializer = DocsItaliaProjectAdminSerializer(project)
+        six.assertCountEqual(
+            self,
+            dict(serializer.data), {
+              "id": project.pk,
+              "name": "my project",
+              "slug": "myprojectslug",
+              "description": "",
+              "language": "en",
+              "programming_language": "words",
+              "repo": "https://github.com/testorg/myrepourl.git",
+              "repo_type": "git",
+              "default_version": "latest",
+              "default_branch": None,
+              "documentation_type": "sphinx",
+              "users": [],
+              "canonical_url": "http://readthedocs.org/docs/myprojectslug/en/latest/",
+              "enable_epub_build": True,
+              "enable_pdf_build": True,
+              "conf_py_file": "",
+              "analytics_code": None,
+              "cdn_enabled": False,
+              "container_image": None,
+              "container_mem_limit": None,
+              "container_time_limit": None,
+              "install_project": False,
+              "use_system_packages": False,
+              "suffix": ".rst",
+              "skip": False,
+              "requirements_file": None,
+              "python_interpreter": "python",
+              "features": [],
+              "publisher": None,
+              "publisher_project": None,
+              "tags": []
+            }
+        )

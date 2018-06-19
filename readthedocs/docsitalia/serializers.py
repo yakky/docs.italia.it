@@ -8,7 +8,7 @@ from readthedocs.restapi.serializers import ProjectSerializer
 
 class DocsItaliaProjectSerializer(ProjectSerializer):
 
-    """Projects by Tag DRF Serializer"""
+    """DocsItalia custom serializer for Projects"""
 
     publisher = serializers.SerializerMethodField()
     publisher_project = serializers.SerializerMethodField()
@@ -50,3 +50,38 @@ class DocsItaliaProjectSerializer(ProjectSerializer):
     def get_tags(obj):
         """gets the project tags"""
         return obj.tags.slugs()
+
+
+class DocsItaliaProjectAdminSerializer(DocsItaliaProjectSerializer):
+
+    """
+    Project serializer for admin only access.
+
+    Includes special internal fields that don't need to be exposed through the
+    general API, mostly for fields used in the build process
+    """
+
+    features = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='feature_id',
+    )
+
+    class Meta(DocsItaliaProjectSerializer.Meta):
+        fields = DocsItaliaProjectSerializer.Meta.fields + (
+            'enable_epub_build',
+            'enable_pdf_build',
+            'conf_py_file',
+            'analytics_code',
+            'cdn_enabled',
+            'container_image',
+            'container_mem_limit',
+            'container_time_limit',
+            'install_project',
+            'use_system_packages',
+            'suffix',
+            'skip',
+            'requirements_file',
+            'python_interpreter',
+            'features',
+        )

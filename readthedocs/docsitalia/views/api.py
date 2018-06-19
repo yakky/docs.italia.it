@@ -4,7 +4,8 @@ from __future__ import absolute_import
 
 from readthedocs.restapi.views.model_views import ProjectViewSet
 
-from ..serializers import DocsItaliaProjectSerializer
+from ..serializers import (
+    DocsItaliaProjectSerializer, DocsItaliaProjectAdminSerializer)
 
 
 class DocsItaliaProjectViewSet(ProjectViewSet):  # pylint: disable=too-many-ancestors
@@ -13,6 +14,7 @@ class DocsItaliaProjectViewSet(ProjectViewSet):  # pylint: disable=too-many-ance
 
     lookup_field = 'slug'
     serializer_class = DocsItaliaProjectSerializer
+    admin_serializer_class = DocsItaliaProjectAdminSerializer
 
     def get_queryset(self):
         """
