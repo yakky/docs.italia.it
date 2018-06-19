@@ -5,6 +5,8 @@ python:
 sudo: false
 matrix:
   include:
+    - python: 3.6
+      env: TOXENV=itresolver
     - python: 2.7
       env: TOXENV=docs
     - python: 2.7
