@@ -16,8 +16,14 @@ class DocsItaliaProjectSerializer(ProjectSerializer):
 
     class Meta(ProjectSerializer.Meta):
         fields = (
-            'id', 'name', 'slug', 'description', 'tags',
-            'canonical_url', 'publisher', 'publisher_project',
+            'id',
+            'name', 'slug', 'description', 'language',
+            'programming_language', 'repo', 'repo_type',
+            'default_version', 'default_branch',
+            'documentation_type',
+            'users',
+            'canonical_url',
+            'tags', 'publisher', 'publisher_project',
         )
 
     @staticmethod
