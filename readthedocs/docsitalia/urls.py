@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+from django.apps import apps
 from django.conf.urls import include, url
 
 from readthedocs.constants import pattern_opts
@@ -22,7 +23,6 @@ docsitalia_urls = [
         name='metadata_webhook'),
 ]
 
-
 urlpatterns = [
     url(r'^docsitalia/', include(docsitalia_urls)),
     url(
@@ -41,3 +41,10 @@ urlpatterns = [
         name='publisher_project_detail'
     ),
 ]
+
+if apps.is_installed('docs_italia_convertitore_web'):
+    urlpatterns.insert(
+        0,
+        url(r'converti/',
+            include('docs_italia_convertitore_web.urls', namespace='docs_italia_convertitore'))
+    )
