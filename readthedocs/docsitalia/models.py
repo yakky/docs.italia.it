@@ -39,6 +39,15 @@ def validate_projects_metadata(org, settings):
     try:
         projects = data['projects']
         for project in projects:
+            # required values for a well formed configuration
+            if not all((project['title'],
+                        project['description'],
+                        project['website'],
+                        project['documents'][0])):
+                raise ValueError
+            for document in project['documents']:
+                if not document['repository']:
+                    raise ValueError
             project['slug'] = slugify(project['title'])
             # expand the repository to an url so it's easier to query at
             # Project import time
