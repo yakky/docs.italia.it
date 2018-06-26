@@ -887,6 +887,7 @@ class TestPythonEnvironment(TestCase):
             'sphinx==1.7.4',
             'sphinx-rtd-theme<0.4',
             'readthedocs-sphinx-ext<0.6',
+            'git+https://github.com/italia/docs-italia-theme',
         ]
         requirements = self.base_requirements + requirements_sphinx
         args = self.pip_install_args + requirements
