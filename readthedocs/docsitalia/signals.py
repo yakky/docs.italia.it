@@ -41,7 +41,7 @@ def on_project_import(sender, **kwargs): # noqa
         log.error('Missing RemoteRepository for project {}'.format(project))
     else:
         pub_projects = PublisherProject.objects.filter(
-            metadata__documents__contains=[remote.html_url]
+            metadata__documents__contains=[{'repo_url': remote.html_url}]
         )
         for pub_proj in pub_projects:
             pub_proj.projects.add(project)

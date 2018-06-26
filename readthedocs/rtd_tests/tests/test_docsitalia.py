@@ -244,8 +244,15 @@ class DocsItaliaTest(TestCase):
             slug='testproject',
             metadata={
                 'documents': [
-                    'https://github.com/testorg/myrepourl',
-                    'https://github.com/testorg/anotherrepourl',
+                    {
+                        'title': 'a title',
+                        'repository': 'myrepourl',
+                        'repo_url': 'https://github.com/testorg/myrepourl'
+                    }, {
+                        'title': 'another title',
+                        'repository': 'anotherrepourl',
+                        'repo_url': 'https://github.com/testorg/anotherrepourl'
+                    },
                 ]
             },
             publisher=publisher,
