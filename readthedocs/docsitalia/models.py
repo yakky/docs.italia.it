@@ -48,10 +48,11 @@ def validate_projects_metadata(org, settings):
             for document in project['documents']:
                 if not document['repository']:
                     raise ValueError
+
+                # expand the document repository to an url so it's easier to query at
+                # Project import time
+                document['repo_url'] = '{}/{}'.format(org.url, document['repository'])
             project['slug'] = slugify(project['title'])
-            # expand the repository to an url so it's easier to query at
-            # Project import time
-            project['repo_url'] = '{}/{}'.format(org.url, project['title'])
     except (KeyError, TypeError):
         raise ValueError
     return data

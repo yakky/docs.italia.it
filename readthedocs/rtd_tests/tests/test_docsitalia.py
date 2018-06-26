@@ -420,8 +420,10 @@ class DocsItaliaTest(TestCase):
         data = validate_projects_metadata(org, PROJECTS_METADATA)
         self.assertTrue(data)
         project = data['projects'][0]
-        self.assertIn('repo_url', project)
         self.assertIn('slug', project)
+        document = data['projects'][0]['documents'][0]
+        self.assertIn('repo_url', document)
+        self.assertEqual(document['repo_url'], 'https://github.com/myorg/project-document-doc')
 
     def test_projects_metadata_raise_value_error_on_empty_document(self):
         with self.assertRaises(ValueError):
