@@ -415,6 +415,32 @@ class DocsItaliaTest(TestCase):
         with self.assertRaises(ValueError):
             validate_publisher_metadata(None, 'name: Ministero della Documentazione Pubblica')
 
+    def test_publisher_metadata_raise_value_error_without_name(self):
+        invalid_metadata = """publisher:
+  short-name: Min. Doc. Pub.
+  description: |
+    Lorem ipsum dolor sit amet, consectetur
+  website: https://www.ministerodocumentazione.gov.it"""
+        with self.assertRaises(ValueError):
+            validate_publisher_metadata(None, invalid_metadata)
+
+    def test_publisher_metadata_raise_value_error_without_description(self):
+        invalid_metadata = """publisher:
+  name: Ministero della Documentazione Pubblica
+  short-name: Min. Doc. Pub.
+  website: https://www.ministerodocumentazione.gov.it"""
+        with self.assertRaises(ValueError):
+            validate_publisher_metadata(None, invalid_metadata)
+
+    def test_publisher_metadata_raise_value_error_without_website(self):
+        invalid_metadata = """publisher:
+  name: Ministero della Documentazione Pubblica
+  short-name: Min. Doc. Pub.
+  description: |
+    Lorem ipsum dolor sit amet, consectetur"""
+        with self.assertRaises(ValueError):
+            validate_publisher_metadata(None, invalid_metadata)
+
     def test_projects_metadata_validation_parse_well_formed_metadata(self):
         org = RemoteOrganization(url='https://github.com/myorg')
         data = validate_projects_metadata(org, PROJECTS_METADATA)
