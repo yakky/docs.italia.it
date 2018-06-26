@@ -415,13 +415,41 @@ class DocsItaliaTest(TestCase):
         with self.assertRaises(ValueError):
             validate_publisher_metadata(None, 'name: Ministero della Documentazione Pubblica')
 
+    def test_publisher_metadata_raise_value_error_without_name(self):
+        invalid_metadata = """publisher:
+  short-name: Min. Doc. Pub.
+  description: |
+    Lorem ipsum dolor sit amet, consectetur
+  website: https://www.ministerodocumentazione.gov.it"""
+        with self.assertRaises(ValueError):
+            validate_publisher_metadata(None, invalid_metadata)
+
+    def test_publisher_metadata_raise_value_error_without_description(self):
+        invalid_metadata = """publisher:
+  name: Ministero della Documentazione Pubblica
+  short-name: Min. Doc. Pub.
+  website: https://www.ministerodocumentazione.gov.it"""
+        with self.assertRaises(ValueError):
+            validate_publisher_metadata(None, invalid_metadata)
+
+    def test_publisher_metadata_raise_value_error_without_website(self):
+        invalid_metadata = """publisher:
+  name: Ministero della Documentazione Pubblica
+  short-name: Min. Doc. Pub.
+  description: |
+    Lorem ipsum dolor sit amet, consectetur"""
+        with self.assertRaises(ValueError):
+            validate_publisher_metadata(None, invalid_metadata)
+
     def test_projects_metadata_validation_parse_well_formed_metadata(self):
         org = RemoteOrganization(url='https://github.com/myorg')
         data = validate_projects_metadata(org, PROJECTS_METADATA)
         self.assertTrue(data)
         project = data['projects'][0]
-        self.assertIn('repo_url', project)
         self.assertIn('slug', project)
+        document = data['projects'][0]['documents'][0]
+        self.assertIn('repo_url', document)
+        self.assertEqual(document['repo_url'], 'https://github.com/myorg/project-document-doc')
 
     def test_projects_metadata_raise_value_error_on_empty_document(self):
         with self.assertRaises(ValueError):
@@ -430,6 +458,59 @@ class DocsItaliaTest(TestCase):
     def test_projects_metadata_raise_value_error_without_projects(self):
         with self.assertRaises(ValueError):
             validate_projects_metadata(None, 'name: Progetto')
+
+    def test_projects_metadata_raise_value_error_without_documents(self):
+        invalid_metadata = """projects:
+- title: Progetto Documentato Pubblicamente
+  short-name: PDP
+  description: |
+    Lorem ipsum dolor sit amet, consectetur
+  website: https://progetto.ministerodocumentazione.gov.it
+  tags:
+    - amazing project"""
+        with self.assertRaises(ValueError):
+            validate_projects_metadata(None, invalid_metadata)
+
+    def test_projects_metadata_raise_value_error_without_title(self):
+        invalid_metadata = """projects:
+- short-name: PDP
+  description: |
+    Lorem ipsum dolor sit amet, consectetur
+  website: https://progetto.ministerodocumentazione.gov.it
+  documents:
+     - title: hi
+       repository: there
+  tags:
+    - amazing project"""
+        with self.assertRaises(ValueError):
+            validate_projects_metadata(None, invalid_metadata)
+
+    def test_projects_metadata_raise_value_error_without_description(self):
+        invalid_metadata = """projects:
+- title: Progetto Documentato Pubblicamente
+  short-name: PDP
+  website: https://progetto.ministerodocumentazione.gov.it
+  documents:
+     - title: hi
+       repository: there
+  tags:
+    - amazing project"""
+        with self.assertRaises(ValueError):
+            validate_projects_metadata(None, invalid_metadata)
+
+    def test_projects_metadata_raise_value_error_without_website(self):
+        invalid_metadata = """projects:
+- title: Progetto Documentato Pubblicamente
+  short-name: PDP
+  description: |
+    Lorem ipsum dolor sit amet, consectetur
+  documents:
+     - title: hi
+       repository: there
+  tags:
+    - amazing project"""
+        with self.assertRaises(ValueError):
+            validate_projects_metadata(None, invalid_metadata)
 
     def test_document_metadata_validation_parse_well_formed_metadata(self):
         data = validate_document_metadata(None, DOCUMENT_METADATA)

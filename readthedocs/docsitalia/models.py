@@ -27,7 +27,11 @@ def validate_publisher_metadata(org, settings): # noqa
     """Validate the publisher metadata"""
     data = load_yaml(settings)
     try:
-        data['publisher']
+        publisher = data['publisher']
+        if not all((publisher['name'],
+                    publisher['description'],
+                    publisher['website'])):
+            raise ValueError
     except (KeyError, TypeError):
         raise ValueError
     return data
@@ -39,10 +43,20 @@ def validate_projects_metadata(org, settings):
     try:
         projects = data['projects']
         for project in projects:
+            # required values for a well formed configuration
+            if not all((project['title'],
+                        project['description'],
+                        project['website'],
+                        project['documents'][0])):
+                raise ValueError
+            for document in project['documents']:
+                if not document['repository']:
+                    raise ValueError
+
+                # expand the document repository to an url so it's easier to query at
+                # Project import time
+                document['repo_url'] = '{}/{}'.format(org.url, document['repository'])
             project['slug'] = slugify(project['title'])
-            # expand the repository to an url so it's easier to query at
-            # Project import time
-            project['repo_url'] = '{}/{}'.format(org.url, project['title'])
     except (KeyError, TypeError):
         raise ValueError
     return data
