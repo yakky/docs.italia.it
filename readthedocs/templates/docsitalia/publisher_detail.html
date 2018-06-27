@@ -9,7 +9,7 @@ dei publisher projects
 <h1>{{ object }}</h1>
 <section class="container">
   <div class="row">
-    {% for project in object.publisherproject_set.all %}
+    {% for project in object.active_publisher_projects %}
     {% include 'docsitalia/includes/card.html' %}
     {% endfor %}
   </div>
