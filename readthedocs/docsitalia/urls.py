@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from django.apps import apps
 from django.conf.urls import include, url
+from django.views.generic.base import TemplateView
 
 from readthedocs.constants import pattern_opts
 from rest_framework import routers
@@ -29,6 +30,11 @@ urlpatterns = [
         r'^$',
         DocsItaliaHomePage.as_view(),
         name='homepage'
+    ),
+    url(
+        r'^che-cos-e-docs-italia/$',
+        TemplateView.as_view(template_name='docsitalia/about.html'),
+        name='about_docs_italia'
     ),
     url(
         r'^(?P<slug>[-\w]+)/$',

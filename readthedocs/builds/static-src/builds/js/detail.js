@@ -1,8 +1,6 @@
 // Build detail view
 
 var ko = require('knockout');
-var $ = require('jquery');
-
 
 function BuildCommand(data) {
     var self = this;

@@ -48,6 +48,7 @@ var sources = {
         'js/import.js': {},
         'css/import.less': {},
         'css/admin.less': {},
+        'css/main.less': {},
     },
     gold: {'js/gold.js': {}},
     donate: {'js/donate.js': {}}

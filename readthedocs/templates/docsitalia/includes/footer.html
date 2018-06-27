@@ -1,3 +1,6 @@
+{% load i18n %}
+{% load core_tags %}
+{%comment%}
 <div class="u-background-95">
   <div class="u-layout-wide u-layoutCenter u-layout-r-withGutter u-hiddenPrint">
     <footer class="Footer">
@@ -32,3 +35,71 @@
     </footer>
   </div>
 </div>
+{%endcomment%}
+
+<footer class="footer text-muted padding-umd">
+  <div class="container">
+    <div class="row d-none d-md-block">
+      <div class="col-md-4 offset-md-4 col-lg-3 offset-lg-3">
+        <p>In collaborazione con</p>
+      </div>
+    </div>
+    <div class="row align-items-center">
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="d-flex">
+          <div class="px-2 team-logo--icon">
+            <a href="http://teamdigitale.governo.it/" target="_blank" rel="noopener">
+              <img src="{{ MEDIA_URL }}docsitalia/images/logo-team-digitale.svg" alt="Team per la Trasformazione Digitale">
+            </a>
+          </div>
+          <div class="px-2 border-white border-left team-logo--text text-white">Team per la Trasformazione Digitale</div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <p class="agid-collab d-sm-none">In collaborazione con</p>
+        <a href="http://www.agid.gov.it/" target="_blank" rel="noopener">
+          <img class="agid-logo img-responsive" src="{{ MEDIA_URL }}docsitalia/images/logo-agid-full.svg" alt="Agenzia per l'Italia Digitale">
+        </a>
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-6">
+        <div class="text-right social">
+          <span>Seguici su:</span>
+          <a href="https://github.com/italia/" class="small-prints px-1"><i class="icon it-github"></i>GitHub</a>
+          <a href="https://twitter.com/teamdigitaleIT" class="small-prints px-1"><i class="icon it-twitter"></i>Twitter</a>
+          <a href="https://www.linkedin.com/company/teamdigitale/" class="small-prints px-1"><i class="icon it-linkedin"></i>LinkedIn</a>
+        </div>
+      </div>
+    </div><!--/row-->
+    <div class="row py-4 colophon">
+      <ul class="col list-inline small">
+        <li class="list-inline-item">
+          <a href="/privacy-policy/" class="small-prints">Privacy Policy</a>
+        </li>
+        <li class="list-inline-item">
+          <a href="/cookies-policy/" class="small-prints">Cookies Policy</a>
+        </li>
+        <li class="list-inline-item">
+          <a href="/note-legali/" class="small-prints">Note Legali</a>
+        </li>
+      </ul>
+      <div class="col column-setlang">
+        {% get_current_language as current_lang %}
+        <form action="/i18n/setlang/" method="post" style="float: right">
+          <input name="next" type="hidden" value="/" />
+          {% csrf_token %}
+          <select name="language">
+            {% for lang in LANGUAGES %}
+            {% if lang.0 == current_lang %}
+            <option selected="selected" value="{{ lang.0 }}">{{ lang.0|language_name_local }} [{{ lang.1 }}]</option>
+            {% else %}
+            <option value="{{ lang.0 }}">{{ lang.0|language_name_local }} [{{ lang.1 }}]</option>
+            {% endif %}
+            {% endfor %}
+          </select>
+          <button type="submit" name="submit" class="btn-primary">{% trans 'Change Language' %}</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</footer>
