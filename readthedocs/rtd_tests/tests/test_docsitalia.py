@@ -26,7 +26,7 @@ from readthedocs.docsitalia.oauth.services.github import DocsItaliaGithubService
 from readthedocs.docsitalia.models import (
     Publisher, PublisherProject, PublisherIntegration,
     validate_publisher_metadata, validate_projects_metadata,
-    validate_document_metadata)
+    validate_document_metadata, update_project_from_metadata)
 from readthedocs.docsitalia.serializers import (
     DocsItaliaProjectSerializer, DocsItaliaProjectAdminSerializer)
 
@@ -535,6 +535,38 @@ class DocsItaliaTest(TestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'docsitalia/docsitalia_homepage.html')
+
+    def test_update_project_from_metadata_use_it_as_default_language(self):
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        self.assertEqual(project.language, 'en')
+        metadata = validate_document_metadata(None, DOCUMENT_METADATA)
+        self.assertNotIn('language', metadata)
+        update_project_from_metadata(project, metadata)
+        self.assertEqual(project.language, 'it')
+
+    def test_update_project_from_metadata_updates_the_project(self):
+        document_metadata = """document:
+          name: Documento Documentato Pubblicamente
+          description: Lorem ipsum dolor sit amet, consectetur
+          language: fr
+          tags:
+            - amazing document"""
+
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        metadata = validate_document_metadata(None, document_metadata)
+        update_project_from_metadata(project, metadata)
+        self.assertEqual(project.name, 'Documento Documentato Pubblicamente')
+        self.assertEqual(project.description, 'Lorem ipsum dolor sit amet, consectetur')
+        self.assertEqual(project.language, 'fr')
+        self.assertEqual(list(project.tags.slugs()), ['amazing-document'])
 
     def test_metadata_webhook_github_updates_publisher_metadata(self):
         organization = RemoteOrganization.objects.create(

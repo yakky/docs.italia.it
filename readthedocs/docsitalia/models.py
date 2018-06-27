@@ -88,6 +88,10 @@ def update_project_from_metadata(project, metadata):
     project.name = document['name']
     project.description = document['description']
     project.tags.set(*document['tags'], clear=True)
+    try:
+        project.language = document['language']
+    except KeyError:
+        project.language = 'it'
     project.save()
 
 
