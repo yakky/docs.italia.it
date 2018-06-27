@@ -5,6 +5,8 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from django.views.generic import DetailView, ListView
+
+from readthedocs.builds.models import Version
 from readthedocs.docsitalia.models import PublisherProject, Publisher
 from readthedocs.projects.models import Project
 
@@ -17,9 +19,30 @@ class DocsItaliaHomePage(ListView):  # pylint: disable=too-many-ancestors
     template_name = 'docsitalia/docsitalia_homepage.html'
 
     def get_queryset(self):
-        """get queryset"""
-        actives = PublisherProject.objects.filter(active=True)
-        return Project.objects.filter(publisherproject__in=actives).order_by(
+        """
+        Filter projects to show in homepage
+
+        We show in homepage projects that matches the following requirements:
+        - Publisher is active
+        - PublisherProject is active
+        - document (Project) has a public build
+        """
+        active_pub_projects = PublisherProject.objects.filter(
+            active=True,
+            publisher__active=True
+        )
+        with_public_version = Version.objects.filter(
+            privacy_level='public',
+            active=True,
+        ).values_list(
+            'project',
+            flat=True
+        )
+        return Project.objects.filter(
+            pk__in=with_public_version
+        ).filter(
+            publisherproject__in=active_pub_projects
+        ).order_by(
             '-modified_date', '-pub_date'
         )[:24]
 
