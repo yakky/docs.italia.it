@@ -53,6 +53,10 @@ class PublisherIndex(DetailView):  # pylint: disable=too-many-ancestors
 
     model = Publisher
 
+    def get_queryset(self):
+        """Filter for active Publisher"""
+        return Publisher.objects.filter(active=True)
+
 
 class PublisherProjectIndex(DetailView):  # pylint: disable=too-many-ancestors
 

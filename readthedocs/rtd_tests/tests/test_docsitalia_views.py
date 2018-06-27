@@ -4,7 +4,8 @@ from __future__ import absolute_import, unicode_literals
 from django.test import TestCase
 from readthedocs.builds.models import Version
 from readthedocs.docsitalia.models import Publisher, PublisherProject
-from readthedocs.docsitalia.views.core_views import DocsItaliaHomePage
+from readthedocs.docsitalia.views.core_views import (
+    DocsItaliaHomePage, PublisherIndex)
 from readthedocs.projects.models import Project
 
 
@@ -75,3 +76,23 @@ class DocsItaliaViewsTest(TestCase):
         version.save()
         qs = hp.get_queryset().values_list('pk')
         self.assertTrue(list(qs), [project.pk])
+
+    def test_docsitalia_publisher_index_get_queryset_filter_active(self):
+        index = PublisherIndex()
+
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            active=False
+        )
+
+        qs = index.get_queryset()
+        self.assertFalse(qs.exists())
+
+        publisher.active = True
+        publisher.save()
+
+        qs = index.get_queryset()
+        self.assertTrue(qs.exists())
