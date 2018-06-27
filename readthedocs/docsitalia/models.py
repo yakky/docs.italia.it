@@ -175,6 +175,10 @@ class Publisher(models.Model):
             active=False
         )
 
+    def active_publisher_projects(self):
+        """Active publisher projects"""
+        return self.publisherproject_set.filter(active=True)
+
     def get_absolute_url(self):
         """Get absolute url for publisher"""
         return reverse('publisher_detail', args=[self.slug])
