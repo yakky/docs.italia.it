@@ -11,7 +11,7 @@ associati
 {% trans 'Available documents' %}
 <section class="container">
   <div class="row">
-    {% for project in object.projects.all %}
+    {% for project in object.active_documents %}
     {% include 'docsitalia/includes/card.html' %}
     {% endfor %}
   </div>

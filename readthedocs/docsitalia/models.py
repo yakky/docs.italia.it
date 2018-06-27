@@ -11,6 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.text import slugify
 from django.core.urlresolvers import reverse
 
+from readthedocs.builds.models import Version
 from readthedocs.projects.models import Project
 from readthedocs.oauth.models import RemoteOrganization
 
@@ -221,6 +222,21 @@ class PublisherProject(models.Model):
 
     def __str__(self):
         return self.name
+
+    def active_documents(self):
+        """Active documents"""
+        with_public_version = Version.objects.filter(
+            privacy_level='public',
+            active=True,
+        ).values_list(
+            'project',
+            flat=True
+        )
+        return self.projects.filter(
+            pk__in=with_public_version
+        ).order_by(
+            '-modified_date', '-pub_date'
+        )
 
     def get_absolute_url(self):
         """get absolute url for publisher project"""
