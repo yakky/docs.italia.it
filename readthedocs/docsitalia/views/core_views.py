@@ -63,3 +63,10 @@ class PublisherProjectIndex(DetailView):  # pylint: disable=too-many-ancestors
     """Detail view of :py:class:`PublisherProject` instances."""
 
     model = PublisherProject
+
+    def get_queryset(self):
+        """Filter for active PublisherProject"""
+        return PublisherProject.objects.filter(
+            active=True,
+            publisher__active=True
+        )
