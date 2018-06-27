@@ -5,7 +5,7 @@ from django.test import TestCase
 from readthedocs.builds.models import Version
 from readthedocs.docsitalia.models import Publisher, PublisherProject
 from readthedocs.docsitalia.views.core_views import (
-    DocsItaliaHomePage, PublisherIndex)
+    DocsItaliaHomePage, PublisherIndex, PublisherProjectIndex)
 from readthedocs.projects.models import Project
 
 
@@ -94,5 +94,48 @@ class DocsItaliaViewsTest(TestCase):
         publisher.active = True
         publisher.save()
 
+        qs = index.get_queryset()
+        self.assertTrue(qs.exists())
+
+    def test_docsitalia_publisher_project_index_get_queryset_filter_active(self):
+        index = PublisherProjectIndex()
+
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            active=False
+        )
+        pub_project = PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            metadata={
+                'documents': [
+                    'https://github.com/testorg/myrepourl',
+                    'https://github.com/testorg/anotherrepourl',
+                ]
+            },
+            publisher=publisher,
+            active=False
+        )
+
+        qs = index.get_queryset()
+        self.assertFalse(qs.exists())
+
+        publisher.active = True
+        publisher.save()
+        qs = index.get_queryset()
+        self.assertFalse(qs.exists())
+
+        pub_project.active = True
+        pub_project.save()
+        publisher.active = False
+        publisher.save()
+        qs = index.get_queryset()
+        self.assertFalse(qs.exists())
+
+        publisher.active = True
+        publisher.save()
         qs = index.get_queryset()
         self.assertTrue(qs.exists())
