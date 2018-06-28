@@ -70,3 +70,11 @@
     var site = require('core/site');
     site.handle_notification_dismiss();
 </script>
+<script>
+    $(function() {
+        {% comment %} Choose language {% endcomment %}
+        $("#language").on("change", function() {
+            this.form.submit();
+        });
+    });
+</script>

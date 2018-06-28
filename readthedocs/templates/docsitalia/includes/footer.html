@@ -71,7 +71,7 @@
       </div>
     </div><!--/row-->
     <div class="row py-4 colophon">
-      <ul class="col list-inline small">
+      <ul class="col list-inline small py-2">
         <li class="list-inline-item">
           <a href="/privacy-policy/" class="small-prints">Privacy Policy</a>
         </li>
@@ -87,16 +87,17 @@
         <form action="/i18n/setlang/" method="post" style="float: right">
           <input name="next" type="hidden" value="/" />
           {% csrf_token %}
-          <select name="language">
-            {% for lang in LANGUAGES %}
-            {% if lang.0 == current_lang %}
-            <option selected="selected" value="{{ lang.0 }}">{{ lang.0|language_name_local }} [{{ lang.1 }}]</option>
-            {% else %}
-            <option value="{{ lang.0 }}">{{ lang.0|language_name_local }} [{{ lang.1 }}]</option>
-            {% endif %}
-            {% endfor %}
-          </select>
-          <button type="submit" name="submit" class="btn-primary">{% trans 'Change Language' %}</button>
+            <div class="form-group mt-0 pb-0 bg-white">
+              <select class="custom-select" id="language" name="language">
+                {% for lang in LANGUAGES %}
+                {% if lang.0 == current_lang %}
+                <option selected="selected" value="{{ lang.0 }}">{{ lang.0|language_name_local }} [{{ lang.1 }}]</option>
+                {% else %}
+                <option value="{{ lang.0 }}">{{ lang.0|language_name_local }} [{{ lang.1 }}]</option>
+                {% endif %}
+                {% endfor %}
+              </select>
+            </div>
         </form>
       </div>
     </div>

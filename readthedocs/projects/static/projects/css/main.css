@@ -1,8 +1,4 @@
 @charset "UTF-8";
-ul {
-  list-style-type: none;
-  padding: 0;
-}
 .bd-menu-docs-toggle {
   line-height: 1;
   color: #19191a;
@@ -76,7 +72,7 @@ ul {
   overflow: hidden;
 }
 @media screen and (min-width: 768px) {
-  .docs-card .docs-card {
+  .docs-card {
     min-height: 16rem;
     height: 16rem;
   }
