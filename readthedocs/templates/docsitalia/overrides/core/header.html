@@ -19,7 +19,7 @@
     <div class="menu menu-user" id="subnav-user-menu">
       <div class="menu-button">
         <a href="{% url 'projects_dashboard' %}">
-          {% gravatar request.user.email 24 %}
+          {% comment %}{% gravatar request.user.email 24 %}% endcomment %}
           {{ request.user }}</a>
         <button class="menu-drop">▼</button>
       </div>

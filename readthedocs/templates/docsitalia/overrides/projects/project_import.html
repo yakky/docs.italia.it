@@ -59,13 +59,13 @@
 
       <button
           data-bind="click: sync_projects, visible: !is_syncing()"
-          class="remote-sync">
+          class="btn remote-sync">
         <span>{% trans "Refresh your accounts" %}</span>
       </button>
       <span
           data-bind="visible: is_syncing"
-          class="remote-sync-loader"
-          style="display: none;">
+          class="btn remote-sync-loader"
+          style="display: none; border:none !important">
         <img src="{% static 'core/img/loader.gif' %}"/>
       </span>
 
@@ -203,7 +203,7 @@
           </p>
 
           <form action="{% url "projects_import_manual" %}" method="get" class="import-manual">
-            <input type="submit" value="{% trans "Import Manually" %}"/>
+            <button type="submit" class="btn btn-primary">{% trans "Import Manually" %}</button>
           </form>
         </div>
       {% endblock %}
