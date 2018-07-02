@@ -133,7 +133,7 @@ div.menu-user div.menu-dropdown.menu-dropped {
 /* module */
 
 .module { margin-bottom: 60px;  }
-#content .module ul { margin-bottom: 0; }
+#content .module ul { margin-bottom: 0; list-style-type: none; padding: 0; }
 .module-header .small_head { padding: 0 10px; font-size: 14px; }
 
 /* module list*/
