@@ -1,61 +1,4 @@
 {% load static %}
-{% comment %}
-<script src="{{ MEDIA_URL }}docsitalia/toolkit/IWT.min.js"></script>
-<script src="{{ MEDIA_URL }}docsitalia/scripts/main.js"></script>
-<script src="{{ MEDIA_URL }}docsitalia/scripts/clamp.min.js"></script>
-<script src="{{ MEDIA_URL }}docsitalia/scripts/jquery.textfill.min.js"></script>
-
-
-<script>
-  $(document).on('keydown', function(e) {
-    if (e.keyCode === 9) {
-      $('body').removeClass('hide-focus');
-    } else if (e.keyCode == 191) { // slash
-      $('#id_site_search').focus();
-      e.preventDefault();
-    }
-  })
-
-  $(document).on('click', function(e) {
-    $('body').addClass('hide-focus');
-  })
-  
-  $(document).ready(function() {
-    $('.Card-text').each(function() {
-        $clamp(this, { clamp: 3 });
-    });
-    $('.Card-title').each(function() {
-      $(this).hide();
-      var height = $(this).closest('.Card-content').height() - 64 - 50 - 20;
-      var width = $(this).closest('.Card-content').width() - 64;
-      $(this).show();
-      $(this).textfill({
-          explicitWidth: width,
-          explicitHeight: height,
-          innerTag: 'a',
-          maxFontPixels: 23
-      });
-    });
-  });
-</script>
-
-<!-- Piwik -->
-<script type="text/javascript">
-  var _paq = _paq || [];
-  _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
-  _paq.push(['trackPageView']);
-  _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//italia.piwikpro.com/";
-    _paq.push(['setTrackerUrl', u+'piwik.php']);
-    _paq.push(['setSiteId', '9966c07e-e545-4281-8558-a5ad707c5c52']);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-  })();
-</script>
-<noscript><p><img src="//italia.piwikpro.com/piwik.php?idsite={{ site.piwik }}" style="border:0;" alt="" /></p></noscript>
-<!-- End Piwik Code -->
-{% endcomment %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha256-98vAGjEDGN79TjHkYWVD4s87rvWkdWLHPs5MC3FvFX4=" crossorigin="anonymous"></script>
@@ -69,4 +12,11 @@
 <script>
     var site = require('core/site');
     site.handle_notification_dismiss();
+</script>
+<script>
+    $(function() {
+        $("#language").on("change", function() {
+            this.form.submit();
+        });
+    });
 </script>

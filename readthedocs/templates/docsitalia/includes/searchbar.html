@@ -8,7 +8,8 @@
 <form action="{% url "search" %}" method="GET">
   <div class="form-row align-items-center">
     <div class="col-auto">
-      <input class="bg-white" type="text" name="q" value="{{ term }}" id="id_site_search" placeholder="{% trans 'Search Read the Docs' %}">
+      <label class="sr-only" for="id_site_search">Cerca</label>
+      <input type="text" class="form-control bg-white" name="q" value="{{ term }}" id="id_site_search" placeholder="{% trans 'Search Read the Docs' %}">
     </div>
     <div class="col-auto">
       <button type="submit" class="btn btn-primary">{% trans "Let's do this." %}</button>
