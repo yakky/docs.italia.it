@@ -2,22 +2,22 @@
 
 
 ###########################################################################
-#          auto-created readthedocs.org specific configuration            #
+#          auto-created docs italia specific configuration                #
 ###########################################################################
 
 
 #
-# The following code was added during an automated build on readthedocs.org
+# The following code was added during an automated build on docs italia
 # It is auto created and injected for every build. The result is based on the
-# conf.py.tmpl file found in the readthedocs.org codebase:
-# https://github.com/rtfd/readthedocs.org/blob/master/readthedocs/doc_builder/templates/doc_builder/conf.py.tmpl
+# conf.py.tmpl file found in the docs italia codebase:
+# https://github.com/italia/docs.italia.it/blob/master/readthedocs/templates/doc_builder/conf.py.tmpl
 #
 
 
 import sys
 import os.path
+import yaml
 from six import string_types
-
 from sphinx import version_info
 
 # Get suffix for proper linking to GitHub
@@ -38,12 +38,24 @@ if os.path.exists('_static'):
     html_static_path.append('_static')
 html_static_path.append('{{ static_path }}')
 
-# Overriding the theme with the docs italia one
+# Setting the theme to docs-italia-theme
 theme = __import__('docs-italia-theme')
 html_theme = 'docs-italia-theme'
 html_style = None
 html_theme_options = {}
 html_theme_path = [theme.get_html_theme_path()]
+
+# docs-italia-theme default options
+source_suffix = SUFFIX
+html_title = u'{{ project.name }}'
+html_use_index = False
+numfig = True
+latex_documents = [
+  ('index', '{{ project.slug }}.tex', u'{{ project.name }}',
+   u'{{ project.publisherproject.first.publisher.name }}', 'manual'),
+]
+latex_show_urls = 'footnote'
+latex_show_pagerefs = True
 
 if globals().get('websupport2_base_url', False):
     websupport2_base_url = '{{ api_host }}/websupport'
@@ -104,9 +116,6 @@ context = {
     {% endif %}
 }
 
-{# Provide block for extending context data from child template #}
-{% block extra_context %}
-import yaml
 context['subproject_data'] = [
     {% for subproject in subprojects %}
     {
@@ -126,7 +135,6 @@ try:
 except:
     data = {}
 context['docsitalia_data'] = data
-{% endblock %}
 
 if 'html_context' in globals():
     html_context.update(context)
