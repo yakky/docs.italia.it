@@ -1,13 +1,15 @@
 from __future__ import absolute_import
 
 from django.apps import apps
+from django.conf import settings
 from django.conf.urls import include, url
 from django.views.generic.base import TemplateView
 
 from readthedocs.constants import pattern_opts
 from rest_framework import routers
 
-from .views.core_views import DocsItaliaHomePage, PublisherIndex, PublisherProjectIndex
+from .views.core_views import (
+    DocsItaliaHomePage, PublisherIndex, PublisherProjectIndex, DocsItaliaImport)
 from .views import integrations, api
 
 router = routers.DefaultRouter()
@@ -22,6 +24,9 @@ docsitalia_urls = [
          r'(?P<integration_pk>{integer_pk})/$'.format(**pattern_opts)),
         integrations.MetadataWebhookView.as_view(),
         name='metadata_webhook'),
+    url(r'^dashboard/import/$',
+        DocsItaliaImport.as_view(),
+        name='projects_import'),
 ]
 
 urlpatterns = [

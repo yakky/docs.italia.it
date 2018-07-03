@@ -262,7 +262,7 @@ class PrivateProjectUserAccessTest(PrivateProjectMixin, TestCase):
     response_data = {
         # Auth'd users can import projects, have no perms on pip
         '/dashboard/': {'status_code': 200},
-        '/dashboard/import/': {'status_code': 200},
+        '/docsitalia/dashboard/import/': {'status_code': 200},
         '/dashboard/import/manual/': {'status_code': 200},
         '/dashboard/import/manual/demo/': {'status_code': 302},
 
