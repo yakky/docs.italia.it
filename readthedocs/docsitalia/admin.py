@@ -4,6 +4,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
+from .forms import PublisherAdminForm
 from .models import Publisher, PublisherProject
 
 
@@ -11,6 +12,7 @@ class PublisherAdmin(admin.ModelAdmin):
 
     """Admin view for :py:class:`Publisher`"""
 
+    form = PublisherAdminForm
     readonly_fields = ('metadata', 'projects_metadata',)
     fieldsets = (
         (None, {
