@@ -1,15 +1,55 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+import mock
+import requests_mock
+from requests.exceptions import ConnectionError
+
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.test.utils import override_settings
 from readthedocs.builds.models import Version
+from readthedocs.docsitalia.github import InvalidMetadata
 from readthedocs.docsitalia.models import Publisher, PublisherProject
 from readthedocs.docsitalia.views.core_views import (
     DocsItaliaHomePage, PublisherIndex, PublisherProjectIndex)
+from readthedocs.oauth.models import RemoteRepository
 from readthedocs.projects.models import Project
 
 
+DOCUMENT_METADATA = """document:
+  name: Documento Documentato Pubblicamente
+  description: |
+    Lorem ipsum dolor sit amet, consectetur
+  tags:
+    - amazing document"""
+
+
 class DocsItaliaViewsTest(TestCase):
+    fixtures = ['eric']
+
+    def setUp(self):
+        eric = User.objects.get(username='eric')
+        remote = RemoteRepository.objects.create(
+            full_name='remote repo name',
+            html_url='https://github.com/testorg/myrepourl',
+        )
+        remote.users.add(eric)
+
+        self.import_project_data = {
+            'repo_type': 'git',
+            'description': 'description',
+            'remote_repository': str(remote.pk),
+            'repo': 'https://github.com/org-docs-italia/altro-progetto.git',
+            'project_url': 'https://github.com/org-docs-italia/altro-progetto',
+            'name': 'altro-progetto'
+        }
+        self.document_settings_url = (
+            'https://raw.githubusercontent.com/org-docs-italia/'
+            'altro-progetto/master/document_settings.yml'
+        )
+
     def test_docsitalia_homepage_get_queryset_filter_projects(self):
         hp = DocsItaliaHomePage()
 
@@ -139,3 +179,30 @@ class DocsItaliaViewsTest(TestCase):
         publisher.save()
         qs = index.get_queryset()
         self.assertTrue(qs.exists())
+
+    def test_docsitalia_import_render_error_without_metadata(self):
+        self.client.login(username='eric', password='test')
+        with requests_mock.Mocker() as rm:
+            rm.get(self.document_settings_url, exc=ConnectionError)
+            response = self.client.post(
+                '/docsitalia/dashboard/import/', data=self.import_project_data)
+        self.assertTemplateUsed(response, 'docsitalia/import_error.html')
+
+    def test_docsitalia_import_render_error_with_invalid_metadata(self):
+        self.client.login(username='eric', password='test')
+        with requests_mock.Mocker() as rm:
+            rm.get(self.document_settings_url, exc=InvalidMetadata)
+            response = self.client.post(
+                '/docsitalia/dashboard/import/', data=self.import_project_data)
+        self.assertTemplateUsed(response, 'docsitalia/import_error.html')
+
+    @mock.patch('readthedocs.docsitalia.views.core_views.trigger_build')
+    def test_docsitalia_redirect_to_project_detail_with_valid_metadata(self, trigger_build):
+        self.client.login(username='eric', password='test')
+        with requests_mock.Mocker() as rm:
+            rm.get(self.document_settings_url, text=DOCUMENT_METADATA)
+            response = self.client.post(
+                '/docsitalia/dashboard/import/', data=self.import_project_data)
+        project = Project.objects.last()
+        redirect_url = reverse('projects_detail', kwargs={'project_slug': 'altro-progetto'})
+        self.assertRedirects(response, redirect_url)
