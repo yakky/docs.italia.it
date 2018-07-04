@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from django.apps import apps
 from django.conf import settings
 from django.conf.urls import include, url
-from django.views.generic.base import TemplateView
+from django.views.generic.base import RedirectView, TemplateView
 
 from readthedocs.constants import pattern_opts
 from rest_framework import routers
@@ -27,6 +27,12 @@ docsitalia_urls = [
     url(r'^dashboard/import/$',
         DocsItaliaImport.as_view(),
         name='projects_import'),
+    url(r'^dashboard/import/manual/$',
+        RedirectView.as_view(pattern_name='projects_import'),
+        name='projects_import_manual'),
+    url(r'^dashboard/import/manual/demo/$',
+        RedirectView.as_view(pattern_name='projects_import'),
+        name='projects_import_demo'),
 ]
 
 urlpatterns = [
