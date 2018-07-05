@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 
 import requests
+from django.utils.encoding import force_text
 from future.backports.urllib.parse import urlparse
 
 from readthedocs.docsitalia.models import (
@@ -45,8 +46,10 @@ def parse_metadata(data, org, model, settings):
     validator = SETTINGS_VALIDATORS[settings]
     try:
         metadata = validator(org, data)
-    except ValueError:
-        msg = 'invalid {} metadata for {}'.format(settings, model)
+    except ValueError as error:
+        msg = 'invalid {} metadata for {} - '.format(settings, model)
+        if getattr(settings, 'DOCSITALIA_YML_VALIDATION_VERBOSE', True):
+            msg += force_text(error)
         raise InvalidMetadata(msg)
 
     return metadata

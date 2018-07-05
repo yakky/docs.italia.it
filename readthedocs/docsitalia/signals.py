@@ -49,7 +49,7 @@ def on_project_import(sender, **kwargs): # noqa
     try:
         # we take the file via http because we don't have a checkout
         metadata = get_metadata_for_document(project)
-    except Exception as e: # noqa
+    except Exception as e:  # noqa
         log.error(
             'Failed to import document metadata: %s', e)
     else:
