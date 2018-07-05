@@ -23,18 +23,21 @@ PUBLISHER_SETTINGS = 'publisher_settings.yml'
 PROJECTS_SETTINGS = 'projects_settings.yml'
 DOCUMENT_SETTINGS = 'document_settings.yml'
 
+PUBLISHER_REQUIRED_FIELDS = 'name', 'description', 'website'
+PROJECT_REQUIRED_FIELDS = 'title', 'description', 'website', 'documents'
+DOCUMENT_REQUIRED_FIELDS = 'name', 'description', 'tags'
+
 
 def validate_publisher_metadata(org, settings): # noqa
     """Validate the publisher metadata"""
     data = load_yaml(settings)
     try:
         publisher = data['publisher']
-        if not all((publisher['name'],
-                    publisher['description'],
-                    publisher['website'])):
-            raise ValueError
+        for field in PUBLISHER_REQUIRED_FIELDS:
+            if not publisher[field]:
+                raise ValueError('Missing required field "%s" in %s' % (field, publisher))
     except (KeyError, TypeError):
-        raise ValueError
+        raise ValueError('General error in parsing %s' % data)
     return data
 
 
@@ -45,21 +48,21 @@ def validate_projects_metadata(org, settings):
         projects = data['projects']
         for project in projects:
             # required values for a well formed configuration
-            if not all((project['title'],
-                        project['description'],
-                        project['website'],
-                        project['documents'][0])):
-                raise ValueError
+            for field in PROJECT_REQUIRED_FIELDS:
+                if not project[field]:
+                    raise ValueError('Missing required field "%s" in %s' % (field, project))
+            if not project['documents'][0]:
+                raise ValueError('Missing required field "%s" in %s' % ('documents', project))
             for document in project['documents']:
                 if not document['repository']:
-                    raise ValueError
+                    raise ValueError('Missing "repository" field in %s' % document)
 
                 # expand the document repository to an url so it's easier to query at
                 # Project import time
                 document['repo_url'] = '{}/{}'.format(org.url, document['repository'])
             project['slug'] = slugify(project['title'])
     except (KeyError, TypeError):
-        raise ValueError
+        raise ValueError('General error in parsing %s' % data)
     return data
 
 
@@ -68,11 +71,11 @@ def validate_document_metadata(org, settings): # noqa
     data = load_yaml(settings)
     try:
         document = data['document']
-        document['name'] # noqa
-        document['description'] # noqa
-        document['tags'] # noqa
+        for field in DOCUMENT_REQUIRED_FIELDS:
+            if not document[field]:
+                raise ValueError('Missing required field "%s" in %s' % (field, document))
     except (KeyError, TypeError):
-        raise ValueError
+        raise ValueError('General error in parsing %s' % data)
     return data
 
 
