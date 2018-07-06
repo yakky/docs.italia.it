@@ -7,13 +7,15 @@ Questa è la pagina di dettaglio del publisher
 project con la lista dei progetti (documenti)
 associati
 {% endcomment %}
-<h1>{{ object }}</h1>
-{% trans 'Available documents' %}
 <section class="container">
-  <div class="row">
-    {% for project in object.active_documents %}
-    {% include 'docsitalia/includes/card.html' %}
-    {% endfor %}
+  <div class="py-5">
+    <h1>{{ object }}</h1>
+    <p>{% trans 'Available documents' %}</p>
+    <div class="row">
+      {% for project in object.projects.all %}
+      {% include 'docsitalia/includes/card.html' %}
+      {% endfor %}
+    </div>
   </div>
 </section>
 {% endblock %}
