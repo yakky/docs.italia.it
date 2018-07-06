@@ -43,15 +43,33 @@
       </a>
       <div class="d-flex flex-column pl-3 pl-sm-4">
         <h1 class="bd-logo-title"><a href="/" class="pr-2 text-white">{{isbase}}Docs Italia</a><span class="badge badge-pill bg-primary--mid-dark align-middle px-2 text-white">beta</span></h1>
-        <h2 class="bd-logo-subtitle text-white">Documenti pubblici, digitali. <a href="/che-cos-e-docs-italia/" class="ml-4 text-white" aria-label="Che cos'è Docs Italia" title="Che cos'è Docs Italia"><b>Che cos'è?</b></a></h2>
+        <h2 class="bd-logo-subtitle text-white">Documenti pubblici, digitali.</h2>
       </div>
     </div>
-    {% if request.user.is_authenticated %}
-      {% include 'docsitalia/includes/user_menu.html' %}
-    {% else %}
-      <div class="rtfd-header-nav">
-        <a class="btn btn-primary" href="{% url 'account_login' %}">{% trans "Log In" %}</a>
+
+    <nav class="navbar navbar-expand-lg"><span></span>
+      <button class="custom-navbar-toggler" type="button" aria-controls="navbarNavB" aria-expanded="false" aria-label="Toggle navigation" data-target="#navbarNavB"><span class="it-list"></span>
+      </button>
+      <div class="navbar-collapsable" id="navbarNavB">
+        <div class="close-div">
+          <button class="btn close-menu" type="button"><span class="it-close"></span>chiudi</button>
+        </div>
+        <div class="menu-wrapper">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/che-cos-e-docs-italia/" aria-label="Che cos'è Docs Italia" title="Che cos'è Docs Italia"><b>Che cos'è?</b></a>
+            </li>
+            {% if request.user.is_authenticated %}
+            {% include 'docsitalia/includes/user_menu.html' %}
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'account_login' %}"><span>{% trans "Log In" %}</span></a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
       </div>
-    {% endif %}
+    </nav>
+
   </div>
 </header>

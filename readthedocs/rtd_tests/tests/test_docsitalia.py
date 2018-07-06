@@ -7,6 +7,7 @@ from django.test.utils import override_settings
 from mock import patch
 import pytest
 
+from django import forms
 from django.conf import settings
 from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import reverse
@@ -22,6 +23,8 @@ from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
 from readthedocs.projects.models import Project
 from readthedocs.projects.signals import project_import
 
+from readthedocs.docsitalia.forms import PublisherAdminForm
+from readthedocs.docsitalia.github import InvalidMetadata
 from readthedocs.docsitalia.oauth.services.github import DocsItaliaGithubService
 from readthedocs.docsitalia.models import (
     Publisher, PublisherProject, PublisherIntegration,
@@ -920,3 +923,88 @@ class DocsItaliaTest(TestCase):
               "tags": []
             }
         )
+
+    def test_publisher_admin_form_errors_without_publisher_settings(self):
+        data = {
+            'name': 'testorg',
+            'slug': 'testorg',
+            'config_repo_name': 'docs-italia-conf',
+        }
+        form = PublisherAdminForm(data)
+        with requests_mock.Mocker() as rm:
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'docs-italia-conf/master/publisher_settings.yml',
+                exc=IOError)
+            self.assertFalse(form.is_valid())
+
+    def test_publisher_admin_form_errors_with_invalid_publisher_settings(self):
+        data = {
+            'name': 'testorg',
+            'slug': 'testorg',
+            'config_repo_name': 'docs-italia-conf',
+        }
+        form = PublisherAdminForm(data)
+        with requests_mock.Mocker() as rm:
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'docs-italia-conf/master/publisher_settings.yml',
+                exc=InvalidMetadata)
+            self.assertFalse(form.is_valid())
+
+    def test_publisher_admin_form_errors_without_projects_settings(self):
+        data = {
+            'name': 'testorg',
+            'slug': 'testorg',
+            'config_repo_name': 'docs-italia-conf',
+        }
+        form = PublisherAdminForm(data)
+        with requests_mock.Mocker() as rm:
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'docs-italia-conf/master/publisher_settings.yml',
+                text=PUBLISHER_METADATA)
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'docs-italia-conf/master/projects_settings.yml',
+                exc=IOError)
+            self.assertFalse(form.is_valid())
+
+    def test_publisher_admin_form_errors_without_projects_settings(self):
+        data = {
+            'name': 'testorg',
+            'slug': 'testorg',
+            'config_repo_name': 'docs-italia-conf',
+        }
+        form = PublisherAdminForm(data)
+        with requests_mock.Mocker() as rm:
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'docs-italia-conf/master/publisher_settings.yml',
+                text=PUBLISHER_METADATA)
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'docs-italia-conf/master/projects_settings.yml',
+                exc=InvalidMetadata)
+            self.assertFalse(form.is_valid())
+
+    def test_publisher_admin_form_save_publisher_with_valid_metadata(self):
+        data = {
+            'name': 'testorg',
+            'slug': 'testorg',
+            'metadata': '{}',
+            'projects_metadata': '{}',
+            'config_repo_name': 'docs-italia-conf',
+        }
+        form = PublisherAdminForm(data)
+        with requests_mock.Mocker() as rm:
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'docs-italia-conf/master/publisher_settings.yml',
+                text=PUBLISHER_METADATA)
+            rm.get(
+                'https://raw.githubusercontent.com/testorg/'
+                'docs-italia-conf/master/projects_settings.yml',
+                text=PROJECTS_METADATA)
+            publisher = form.save()
+        self.assertTrue(publisher.pk)

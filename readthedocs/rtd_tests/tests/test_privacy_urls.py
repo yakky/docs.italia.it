@@ -227,7 +227,8 @@ class PrivateProjectAdminAccessTest(PrivateProjectMixin, TestCase):
 
     response_data = {
         # Places where we 302 on success -- These delete pages should probably be 405'ing
-        '/dashboard/import/manual/demo/': {'status_code': 302},
+        '/docsitalia/dashboard/import/manual/demo/': {'status_code': 302},
+        '/docsitalia/dashboard/import/manual/': {'status_code': 302},
         '/dashboard/pip/': {'status_code': 302},
         '/dashboard/pip/subprojects/delete/sub/': {'status_code': 302},
         '/dashboard/pip/translations/delete/sub/': {'status_code': 302},
@@ -262,9 +263,9 @@ class PrivateProjectUserAccessTest(PrivateProjectMixin, TestCase):
     response_data = {
         # Auth'd users can import projects, have no perms on pip
         '/dashboard/': {'status_code': 200},
-        '/dashboard/import/': {'status_code': 200},
-        '/dashboard/import/manual/': {'status_code': 200},
-        '/dashboard/import/manual/demo/': {'status_code': 302},
+        '/docsitalia/dashboard/import/': {'status_code': 200},
+        '/docsitalia/dashboard/import/manual/': {'status_code': 302},
+        '/docsitalia/dashboard/import/manual/demo/': {'status_code': 302},
 
         # Unauth access redirect for non-owners
         '/dashboard/pip/': {'status_code': 302},
