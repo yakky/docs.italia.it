@@ -6,16 +6,17 @@
 Pagina di dettaglio del publisher con la lista
 dei publisher projects
 {% endcomment %}
-<h1>{{ object }}</h1>
 <section class="container">
-  <div class="row">
-    {% for project in object.active_publisher_projects %}
-    {% include 'docsitalia/includes/card.html' %}
-    {% endfor %}
+  <div class="py-5">
+    <h1>{{ object }}</h1>
+    <div class="row">
+      {% for project in object.publisherproject_set.all %}
+      {% include 'docsitalia/includes/card.html' %}
+      {% endfor %}
+    </div>
   </div>
-  <button class="js-open-publisher-search">Search</button>
+  <button class="js-open-publisher-search btn btn-primary">Search</button>
 </section>
-</div>
 
 <div class="publisher-metadata">
   {% if object.metadata %}
