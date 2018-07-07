@@ -36,7 +36,7 @@ from readthedocs.docsitalia.serializers import (
 
 PUBLISHER_METADATA = """publisher:
   name: Ministero della Documentazione Pubblica
-  short-name: Min. Doc. Pub.
+  short_name: Min. Doc. Pub.
   description: |
     Lorem ipsum dolor sit amet, consectetur 
     adipisicing elit, sed do eiusmod tempor
@@ -55,13 +55,12 @@ PUBLISHER_METADATA = """publisher:
     - documents
     - public
     - amazing publisher
-  assets:
-    logo: assets/images/logo.svg"""
+  logo: assets/images/logo.svg"""
 
 
 PROJECTS_METADATA = """projects:
-  - title: Progetto Documentato Pubblicamente
-    short-name: PDP
+  - name: Progetto Documentato Pubblicamente
+    short_name: PDP
     description: |
       Lorem ipsum dolor sit amet, consectetur 
       adipisicing elit, sed do eiusmod tempor
@@ -81,8 +80,7 @@ PROJECTS_METADATA = """projects:
       - citizenship
       - amazing project
     documents:
-      - title: Documento del progetto
-        repository: project-document-doc"""
+      - project-document-doc"""
 
 
 DOCUMENT_METADATA = """document:
