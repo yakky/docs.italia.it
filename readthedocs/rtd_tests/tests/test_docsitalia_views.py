@@ -34,6 +34,7 @@ class DocsItaliaViewsTest(TestCase):
         remote = RemoteRepository.objects.create(
             full_name='remote repo name',
             html_url='https://github.com/testorg/myrepourl',
+            ssh_url='https://github.com/org-docs-italia/altro-progetto.git',
         )
         remote.users.add(eric)
 
@@ -107,7 +108,7 @@ class DocsItaliaViewsTest(TestCase):
         version = Version.objects.first()
         version.privacy_level = 'private'
         version.save()
-   
+
         qs = hp.get_queryset()
         self.assertFalse(qs.exists())
 
@@ -203,6 +204,8 @@ class DocsItaliaViewsTest(TestCase):
             rm.get(self.document_settings_url, text=DOCUMENT_METADATA)
             response = self.client.post(
                 '/docsitalia/dashboard/import/', data=self.import_project_data)
-        project = Project.objects.last()
+        project = Project.objects.get(repo=self.import_project_data['repo'])
+        repo = RemoteRepository.objects.get(ssh_url=project.repo)
+        self.assertEqual(repo.project, project)
         redirect_url = reverse('projects_detail', kwargs={'project_slug': 'altro-progetto'})
         self.assertRedirects(response, redirect_url)

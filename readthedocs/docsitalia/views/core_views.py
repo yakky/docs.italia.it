@@ -91,7 +91,7 @@ class DocsItaliaImport(ImportView):  # pylint: disable=too-many-ancestors
     def post(self, request, *args, **kwargs):
         """Validate metadata before importing the project"""
         form = ProjectBasicsForm(request.POST, user=request.user)
-        project = form.save(commit=False)
+        project = form.save()
 
         try:
             get_metadata_for_document(project)
