@@ -24,7 +24,7 @@ PROJECTS_SETTINGS = 'projects_settings.yml'
 DOCUMENT_SETTINGS = 'document_settings.yml'
 
 PUBLISHER_REQUIRED_FIELDS = 'name', 'description', 'website'
-PROJECT_REQUIRED_FIELDS = 'title', 'description', 'website', 'documents'
+PROJECT_REQUIRED_FIELDS = 'name', 'description', 'documents'
 DOCUMENT_REQUIRED_FIELDS = 'name', 'description', 'tags'
 
 
@@ -37,7 +37,7 @@ def validate_publisher_metadata(org, settings): # noqa
             if not publisher[field]:
                 raise ValueError('Missing required field "%s" in %s' % (field, publisher))
     except (KeyError, TypeError):
-        raise ValueError('General error in parsing %s' % data)
+        raise ValueError('General error in parsing publisher metadata %s' % data)
     return data
 
 
@@ -53,16 +53,16 @@ def validate_projects_metadata(org, settings):
                     raise ValueError('Missing required field "%s" in %s' % (field, project))
             if not project['documents'][0]:
                 raise ValueError('Missing required field "%s" in %s' % ('documents', project))
-            for document in project['documents']:
-                if not document['repository']:
-                    raise ValueError('Missing "repository" field in %s' % document)
-
+            for index, document in enumerate(project['documents']):
                 # expand the document repository to an url so it's easier to query at
                 # Project import time
-                document['repo_url'] = '{}/{}'.format(org.url, document['repository'])
-            project['slug'] = slugify(project['title'])
+                project['documents'][index] = {
+                    'repository':  document,
+                    'repo_url': '{}/{}'.format(org.url, document)
+                }
+            project['slug'] = slugify(project['name'])
     except (KeyError, TypeError):
-        raise ValueError('General error in parsing %s' % data)
+        raise ValueError('General error in parsing projects metadata %s' % data)
     return data
 
 
@@ -75,7 +75,7 @@ def validate_document_metadata(org, settings): # noqa
             if not document[field]:
                 raise ValueError('Missing required field "%s" in %s' % (field, document))
     except (KeyError, TypeError):
-        raise ValueError('General error in parsing %s' % data)
+        raise ValueError('General error in parsing document metadata %s' % data)
     return data
 
 
@@ -161,7 +161,7 @@ class Publisher(models.Model):
         for project in settings['projects']:
             proj, _ = PublisherProject.objects.get_or_create(
                 publisher=self,
-                name=project['title'],
+                name=project['name'],
                 slug=project['slug'],
             )
             proj.metadata = project
