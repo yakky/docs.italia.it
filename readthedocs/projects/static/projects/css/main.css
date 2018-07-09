@@ -99,6 +99,19 @@
 .docs-card-content-title h4 a {
   color: #06c;
 }
+.projects-list .module-item {
+  display: flex;
+  justify-content: space-between;
+}
+.projects-list .build-date {
+  margin-right: 10px;
+}
+.projects-list .show-documents ul {
+  display: none;
+}
+.projects-list .show-documents ul.js-open {
+  display: block;
+}
 .blue-to-transparent-up {
   background: #0066cc;
   background: linear-gradient(178deg, #0066cc 0%, #0066cc 74.9%, rgba(255, 255, 255, 0) 75%);
