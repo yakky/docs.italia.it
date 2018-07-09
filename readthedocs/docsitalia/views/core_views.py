@@ -10,7 +10,7 @@ from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, ListView
 
-from readthedocs.builds.models import Version
+from readthedocs.builds.models import Build
 from readthedocs.core.utils import trigger_build
 from readthedocs.projects.forms import ProjectBasicsForm, ProjectExtraForm
 from readthedocs.projects.models import Project
@@ -38,20 +38,23 @@ class DocsItaliaHomePage(ListView):  # pylint: disable=too-many-ancestors
         - Publisher is active
         - PublisherProject is active
         - document (Project) has a public build
+        - Build is success and finished
         """
         active_pub_projects = PublisherProject.objects.filter(
             active=True,
             publisher__active=True
         )
-        with_public_version = Version.objects.filter(
-            privacy_level='public',
-            active=True,
+        with_ok_build_and_pub_version = Build.objects.filter(
+            success=True,
+            state='finished',
+            version__privacy_level='public',
+            version__active=True
         ).values_list(
             'project',
             flat=True
         )
         return Project.objects.filter(
-            pk__in=with_public_version
+            pk__in=with_ok_build_and_pub_version
         ).filter(
             publisherproject__in=active_pub_projects
         ).order_by(

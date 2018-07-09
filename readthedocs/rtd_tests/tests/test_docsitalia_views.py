@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.utils import override_settings
-from readthedocs.builds.models import Version
+from readthedocs.builds.models import Build, Version
 from readthedocs.docsitalia.github import InvalidMetadata
 from readthedocs.docsitalia.models import Publisher, PublisherProject
 from readthedocs.docsitalia.views.core_views import (
@@ -107,14 +107,35 @@ class DocsItaliaViewsTest(TestCase):
         version = Version.objects.first()
         version.privacy_level = 'private'
         version.save()
-   
+
         qs = hp.get_queryset()
         self.assertFalse(qs.exists())
 
-        # at last it should return our project
+        # no build is passed, so no project even if it is public
         version.privacy_level = 'public'
         version.save()
         qs = hp.get_queryset().values_list('pk')
+        self.assertFalse(qs.exists())
+
+        # let's create a build, but it is only triggered
+        build = Build.objects.create(
+            project=project,
+            version=version,
+            type='html',
+            state='triggered',
+        )
+        build.save()
+        self.assertFalse(qs.exists())
+
+        # build is finished, but it is not passed
+        build.state = 'finished'
+        build.success = False
+        build.save()
+        self.assertFalse(qs.exists())
+
+        # build is finally passed, so we have our project in homepage
+        build.success = True
+        build.save()
         self.assertTrue(list(qs), [project.pk])
 
     def test_docsitalia_publisher_index_get_queryset_filter_active(self):
