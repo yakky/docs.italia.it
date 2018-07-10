@@ -25,7 +25,8 @@ class PublisherAdminForm(forms.ModelForm):
         # create the minimal object required for validation. We mock the
         # required RemoteOrganization attributes to reuse the same object.
         slug = self.cleaned_data.get('slug')
-        publisher = Publisher(slug=slug)
+        name = self.cleaned_data.get('name')
+        publisher = Publisher(slug=slug, name=name)
         publisher.url = ''
 
         msg = _('Error retrieving {filename}')
