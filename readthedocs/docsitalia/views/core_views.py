@@ -101,9 +101,8 @@ class DocsItaliaImport(ImportView):  # pylint: disable=too-many-ancestors
         project = form.save()
         try:
             get_metadata_for_document(project)
-        except InvalidMetadata:
-            log.error(
-                'Failed to import document invalid metadata')
+        except InvalidMetadata as exception:
+            log.error('Failed to import document invalid metadata %s', exception)
             msg = _('Invalid document_settings.yml found in the repository')
             return render(request, 'docsitalia/import_error.html', {'error_msg': msg})
         except Exception as e: # noqa
