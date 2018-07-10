@@ -76,6 +76,8 @@ def search_file(request, query, project_slug=None, version_slug=LATEST, taxonomy
     """
     kwargs = {}
     body = {
+        # avoid elastic search returning hits with very low score
+        "min_score": getattr(settings, 'ES_SEARCH_FILE_MIN_SCORE', 1),
         "query": {
             "bool": {
                 "should": [
