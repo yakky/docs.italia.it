@@ -23,7 +23,7 @@ PUBLISHER_SETTINGS = 'publisher_settings.yml'
 PROJECTS_SETTINGS = 'projects_settings.yml'
 DOCUMENT_SETTINGS = 'document_settings.yml'
 
-PUBLISHER_REQUIRED_FIELDS = 'name', 'description', 'website'
+PUBLISHER_REQUIRED_FIELDS = 'name', 'description'
 PROJECT_REQUIRED_FIELDS = 'name', 'description', 'documents'
 DOCUMENT_REQUIRED_FIELDS = 'name', 'description', 'tags'
 
