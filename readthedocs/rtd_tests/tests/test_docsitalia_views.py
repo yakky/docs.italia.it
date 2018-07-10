@@ -230,3 +230,16 @@ class DocsItaliaViewsTest(TestCase):
         self.assertEqual(repo.project, project)
         redirect_url = reverse('projects_detail', kwargs={'project_slug': 'altro-progetto'})
         self.assertRedirects(response, redirect_url)
+
+    @mock.patch('readthedocs.docsitalia.views.core_views.trigger_build')
+    def test_docsitalia_import_render_error_for_invalid_fields(self, trigger_build):
+        self.client.login(username='eric', password='test')
+        with requests_mock.Mocker() as rm:
+            rm.get(self.document_settings_url, text=DOCUMENT_METADATA)
+            response = self.client.post(
+                '/docsitalia/dashboard/import/', data=self.import_project_data)
+            self.assertEqual(response.status_code, 302)
+            response = self.client.post(
+                '/docsitalia/dashboard/import/', data=self.import_project_data)
+            self.assertEqual(response.status_code, 200)
+            self.assertTemplateUsed(response, 'docsitalia/import_error.html')
