@@ -94,31 +94,32 @@ class DocsItaliaImport(ImportView):  # pylint: disable=too-many-ancestors
     def post(self, request, *args, **kwargs):
         """Validate metadata before importing the project"""
         form = ProjectBasicsForm(request.POST, user=request.user)
-        if form.is_valid():
-            project = form.save()
 
-            try:
-                get_metadata_for_document(project)
-            except InvalidMetadata:
-                log.error(
-                    'Failed to import document invalid metadata')
-                msg = _('Invalid document_settings.yml found in the repository')
-                return render(request, 'docsitalia/import_error.html', {'error_msg': msg})
-            except Exception as e: # noqa
-                log.error(
-                    'Failed to import document metadata: %s', e)
-                msg = _('Failed to download document_settings.yml from the repository')
-                return render(request, 'docsitalia/import_error.html', {'error_msg': msg})
+        if not form.is_valid():
+            return render(request, 'docsitalia/import_error.html', {'error_list': form.errors})
 
-            extra_fields = ProjectExtraForm.Meta.fields
-            for field, value in request.POST.items():
-                if field in extra_fields:
-                    setattr(project, field, value)
-            project.save()
-            project.users.add(request.user)
+        project = form.save()
+        try:
+            get_metadata_for_document(project)
+        except InvalidMetadata:
+            log.error(
+                'Failed to import document invalid metadata')
+            msg = _('Invalid document_settings.yml found in the repository')
+            return render(request, 'docsitalia/import_error.html', {'error_msg': msg})
+        except Exception as e: # noqa
+            log.error(
+                'Failed to import document metadata: %s', e)
+            msg = _('Failed to download document_settings.yml from the repository')
+            return render(request, 'docsitalia/import_error.html', {'error_msg': msg})
 
-            # FIXME: move what we are doing in our signal handler here
-            project_import.send(sender=project, request=self.request)
-            trigger_build(project, basic=True)
-            return redirect('projects_detail', project_slug=project.slug)
-        return render(request, 'docsitalia/import_error.html', {'error_list': form.errors})
+        extra_fields = ProjectExtraForm.Meta.fields
+        for field, value in request.POST.items():
+            if field in extra_fields:
+                setattr(project, field, value)
+        project.save()
+        project.users.add(request.user)
+
+        # FIXME: move what we are doing in our signal handler here
+        project_import.send(sender=project, request=self.request)
+        trigger_build(project, basic=True)
+        return redirect('projects_detail', project_slug=project.slug)
