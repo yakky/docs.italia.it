@@ -1,8 +1,11 @@
 from __future__ import absolute_import
 import os
 
+from .docsitalia import DocsItaliaSettings
 from .test import CommunityTestSettings
 
+# at least check we don't have typos
+DocsItaliaSettings()
 
 CommunityTestSettings.load_settings(__name__)
 
