@@ -1,6 +1,7 @@
 var ko = require('knockout');
 var tasks = require('readthedocs/core/static-src/core/js/tasks');
 
+
 $(function () {
   var input = $('#id_repo');
   var repo = $('#id_repo_type');
@@ -227,9 +228,8 @@ function ProjectImportView(instance, config) {
 
         self.error(null);
 
-        $.ajax(url, {
-            dataType: "json",
-            success: function (projects_list) {
+        $.getJSON(url)
+            .done(function (projects_list) {
                 var projects = [];
                 self.page_next(projects_list.next);
                 self.page_previous(projects_list.previous);
@@ -239,41 +239,36 @@ function ProjectImportView(instance, config) {
                     projects.push(project);
                 }
                 self.projects(projects);
-            },
-            error: function (error) {
+            })
+            .fail(function (error) {
                 var error_msg = error.responseJSON.detail || error.statusText;
                 self.error({message: error_msg});
-            },
-            always: function () {
+            })
+            .always(function () {
                 self.is_ready(true);
-            }
-        });
+            });
     }).extend({ deferred: true });
 
     self.get_organizations = function () {
-        $.ajax(self.urls['remoteorganization-list'], {
-            dataType: "json",
-            success: function (organizations) {
+        $.getJSON(self.urls['remoteorganization-list'])
+            .done(function (organizations) {
                 self.organizations_raw(organizations.results);
-            },
-            error: function (error) {
+            })
+            .fail(function (error) {
                 var error_msg = error.responseJSON.detail || error.statusText;
                 self.error({message: error_msg});
-            }
-        });
+            });
     };
 
     self.get_accounts = function () {
-        $.ajax(self.urls['remoteaccount-list'], {
-            dataType: "json",
-            success: function (accounts) {
+        $.getJSON(self.urls['remoteaccount-list'])
+            .done(function (accounts) {
                 self.accounts_raw(accounts.results);
-            },
-            error: function (error) {
+            })
+            .fail(function (error) {
                 var error_msg = error.responseJSON.detail || error.statusText;
                 self.error({message: error_msg});
-            }
-        });
+            });
     };
 
     self.sync_projects = function () {
