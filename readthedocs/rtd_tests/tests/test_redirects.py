@@ -1,6 +1,8 @@
 from __future__ import absolute_import
+
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.test import TestCase
 from django.test.utils import override_settings
 
@@ -47,6 +49,18 @@ class RedirectTests(TestCase):
         self.assertEqual(r.status_code, 302)
         self.assertEqual(
             r['Location'], 'http://readthedocs.org/docs/pip/en/latest/')
+
+    def test_owner_with_multiple_projects_can_serve_the_requested_version(self):
+        # GH #4350
+        eric = User.objects.get(username='eric')
+        notpip = eric.projects.exclude(slug='pip').first()
+        notpip.versions.create_latest()
+
+        self.client.login(username='eric', password='test')
+        with patch('readthedocs.core.views.serve._serve_symlink_docs') as _serve_docs:
+            _serve_docs.return_value = HttpResponse()
+            r = self.client.get('/docs/pip/en/latest/')
+        self.assertTrue(_serve_docs.called)
 
     # Specific Page Redirects
     def test_proper_page_on_main_site(self):

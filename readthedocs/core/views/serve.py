@@ -152,13 +152,17 @@ def serve_docs(
     """Exists to map existing proj, lang, version, filename views to the file format."""
     if not version_slug:
         version_slug = project.get_default_version()
+
     try:
-        version = project.versions.public(request.user).get(slug=version_slug)
+        version = project.versions.get(slug=version_slug)
     except Version.DoesNotExist:
-        # Properly raise a 404 if the version doesn't exist & a 401 if it does
-        if project.versions.filter(slug=version_slug).exists():
-            return _serve_401(request, project)
         raise Http404('Version does not exist.')
+
+    # only project admins should see private versions
+    if (version.privacy_level == constants.PRIVATE and
+            not AdminPermission.is_member(user=request.user, obj=project)):
+        return _serve_401(request, project)
+
     filename = resolve_path(
         subproject or project,  # Resolve the subproject if it exists
         version_slug=version_slug,
@@ -166,9 +170,6 @@ def serve_docs(
         filename=filename,
         subdomain=True,  # subdomain will make it a "full" path without a URL prefix
     )
-    if (version.privacy_level == constants.PRIVATE and
-            not AdminPermission.is_member(user=request.user, obj=project)):
-        return _serve_401(request, project)
     return _serve_symlink_docs(
         request,
         filename=filename,
