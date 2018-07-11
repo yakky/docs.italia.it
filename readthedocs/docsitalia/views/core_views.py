@@ -120,5 +120,5 @@ class DocsItaliaImport(ImportView):  # pylint: disable=too-many-ancestors
 
         # FIXME: move what we are doing in our signal handler here
         project_import.send(sender=project, request=self.request)
-        trigger_build(project, basic=True)
+        trigger_build(project)
         return redirect('projects_detail', project_slug=project.slug)
