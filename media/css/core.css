@@ -738,8 +738,8 @@ div.project-import-remote li.remote-repo a.remote-repo-view,
 div.project-import-remote li.remote-repo span.remote-repo-locked {
     display: block;
     margin: .25em 0em;
-    height: 1em;
-    padding: .5em .75em;
+    height: 40px;
+    padding: 8px 14px;
     font-size: 1em;
     font-weight: normal;
 }

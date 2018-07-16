@@ -112,6 +112,74 @@
 .projects-list .show-documents ul.js-open {
   display: block;
 }
+.options ul {
+  list-style: none;
+  padding-left: 0;
+}
+.btn-grey,
+select {
+  border: 0;
+  cursor: pointer;
+  padding: 6px 10px 4px;
+  margin: 7px 7px 0 0;
+  font-weight: bold;
+  font-size: 14px;
+  text-decoration: none;
+  color: #fff;
+  background: #8CA1AF;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 1px #465158;
+  -moz-box-shadow: 0 1px 1px #465158;
+  -webkit-box-shadow: 0 1px 1px #465158;
+}
+.btn-grey:hover,
+select:hover {
+  background-color: #697983;
+  box-shadow: 0 1px 0px #465158;
+  -moz-box-shadow: 0 1px 0px #465158;
+  -webkit-box-shadow: 0 1px 0px #465158;
+}
+.submit-input-wrapper {
+  margin-top: 20px;
+}
+.search-results {
+  margin-top: 40px;
+}
+#project_edit .project_edit__menu {
+  margin-right: 0;
+}
+#project_edit .project_edit__form {
+  padding-left: 16px;
+}
+#project_edit .project_edit__form h3,
+#project_edit .project_edit__form h4 {
+  margin-top: 16px;
+}
+#project_edit .project_edit__form label {
+  font-weight: bold;
+  margin-bottom: 0;
+}
+#project_edit .project_edit__form input {
+  font-weight: normal;
+}
+#project_edit .project_edit__form label + select {
+  margin-left: 10px;
+}
+#project_edit .project_edit__form textarea {
+  width: 100%;
+}
+#project_edit .project_edit__form .helptext {
+  display: block;
+  color: #5c6f82;
+  font-size: 16px;
+}
+.project-import-sidebar .remote-filters {
+  list-style: none;
+  padding-left: 0;
+}
 .blue-to-transparent-up {
   background: #0066cc;
   background: linear-gradient(178deg, #0066cc 0%, #0066cc 74.9%, rgba(255, 255, 255, 0) 75%);
