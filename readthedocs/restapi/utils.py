@@ -99,9 +99,10 @@ def index_search_request(
     publisher_project = project.publisherproject_set.select_related('publisher').first()
     if publisher_project:
         publisher_slug = publisher_project.publisher.slug
+        publisher_name = publisher_project.publisher.name
         publisher_project_slug = publisher_project.slug
     else:
-        publisher_slug, publisher_project_slug = None, None
+        publisher_slug, publisher_project_slug, publisher_name = None, None, None
 
     log_msg = ' '.join([page['path'] for page in page_list])
     log.info(
@@ -124,8 +125,9 @@ def index_search_request(
             'weight': project_scale,
             'progetto': publisher_project_slug,
             'publisher': publisher_slug,
-        })
-
+            'publisher_name': publisher_name,
+        }
+    )
     page_obj = PageIndex()
     section_obj = SectionIndex()
     index_list = []
@@ -149,6 +151,7 @@ def index_search_request(
             'weight': page_scale + project_scale,
             'progetto': publisher_project_slug,
             'publisher': publisher_slug,
+            'publisher_name': publisher_name,
         })
         if section:
             for sect in page['sections']:

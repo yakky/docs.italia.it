@@ -53,6 +53,7 @@ class TestSearch(TestCase):
             'id': 6,
             'weight': 1,
             'publisher': None,
+            'publisher_name': None,
             'url': u'/projects/pip/',
             'author': ['eric'],
             'progetto': None,
@@ -99,14 +100,15 @@ class TestSearch(TestCase):
             'id': 6,
             'weight': 1,
             'publisher': 'publisher',
+            'publisher_name': 'Test Org',
             'url': u'/projects/pip/',
             'author': ['eric'],
             'progetto': 'testproject',
             'description': ''
         })
         bulk_mock.assert_called_with(
-            [{'publisher': 'publisher', 'taxonomy': None, 'project': 'pip',
-              'commit': None, 'progetto': 'testproject', 'path': 'path',
+            [{'publisher': 'publisher','publisher_name': 'Test Org', 'taxonomy': None,
+            'project': 'pip', 'commit': None, 'progetto': 'testproject', 'path': 'path',
               'weight': 2, 'version': 'verbose-name', 'headers': 'headers',
               'id': 'b3129830187e487e332bb2eab1b7a9c3', 'title': 'title',
               'content': 'content'}], routing='pip'
