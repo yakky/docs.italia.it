@@ -52,7 +52,7 @@
               </div>
               <div class="submit-input-wrapper">
                 {% comment %}Translators: This is about starting a search{% endcomment %}
-                <input type="submit" value="{% trans 'Search' %}">
+                <input type="submit" class="btn btn-primary" value="{% trans 'Search' %}">
               </div>
             </form>
           </div>
@@ -62,7 +62,7 @@
 
         {% if query %}
         <!-- BEGIN search results -->
-        <div class="module">
+        <div class="module search-results">
           <div class="module-wrapper">
 
             <div class="module-header">
