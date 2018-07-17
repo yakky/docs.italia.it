@@ -49,6 +49,7 @@ class Index(object):
             'number_of_shards': settings.ES_DEFAULT_NUM_SHARDS,
             'refresh_interval': '5s',
             'analysis': self.get_analysis(),
+            'mapping.single_type': True,
         }
         if settings_override:
             default_settings.update(settings_override)
