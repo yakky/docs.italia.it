@@ -446,3 +446,11 @@ class TestBadges(TestCase):
         res = self.client.get(self.badge_url, {'version': self.version.slug})
         static_badge = static(self.BADGE_PATH % 'failing')
         self.assertEquals(res.url, static_badge)
+
+
+class TestTags(TestCase):
+    def test_project_filtering_work_with_tags_with_space_in_name(self):
+        pip = get(Project, slug='pip')
+        pip.tags.add('tag with space')
+        response = self.client.get('/projects/tags/tag-with-space/')
+        self.assertContains(response, '"/projects/pip/"')
