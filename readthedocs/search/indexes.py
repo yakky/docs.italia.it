@@ -237,7 +237,6 @@ class ProjectIndex(Index):
                     'weight': {'type': 'float'},
                     'progetto': {'type': 'keyword'},
                     'publisher': {'type': 'keyword'},
-                    'publisher_name': {'type': 'keyword'},
                 }
             }
         }
@@ -248,7 +247,7 @@ class ProjectIndex(Index):
         doc = {}
 
         attrs = ('id', 'name', 'slug', 'description', 'lang', 'tags', 'author', 'url',
-                 'progetto', 'publisher', 'publisher_name',)
+                 'progetto', 'publisher',)
         for attr in attrs:
             doc[attr] = data.get(attr, '')
 
@@ -293,7 +292,6 @@ class PageIndex(Index):
                     },
                     'progetto': {'type': 'keyword'},
                     'publisher': {'type': 'keyword'},
-                    'publisher_name': {'type': 'keyword'},
                 }
             }
         }
@@ -304,7 +302,7 @@ class PageIndex(Index):
         doc = {}
 
         attrs = ('project', 'title', 'headers', 'version', 'path',
-                 'content', 'taxonomy', 'commit', 'progetto', 'publisher', 'publisher_name',)
+                 'content', 'taxonomy', 'commit', 'progetto', 'publisher',)
         for attr in attrs:
             doc[attr] = data.get(attr, '')
 

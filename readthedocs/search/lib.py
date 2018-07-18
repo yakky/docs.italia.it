@@ -128,7 +128,7 @@ def search_file(request, query, project_slug=None, version_slug=LATEST, taxonomy
                 "content": {},
             }
         },
-        "_source": ["title", "project", "version", "path", "publisher", "publisher_name", "progetto"],
+        "_source": ["title", "project", "version", "path", "publisher", "progetto"],
         "size": 50  # TODO: Support pagination.
     }
 
