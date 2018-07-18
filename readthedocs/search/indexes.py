@@ -127,6 +127,7 @@ class Index(object):
             doc = {
                 '_index': index,
                 '_type': self._type,
+                '_id': source['id'],
                 '_source': source,
             }
             if routing:
@@ -301,7 +302,7 @@ class PageIndex(Index):
     def extract_document(self, data):
         doc = {}
 
-        attrs = ('project', 'title', 'headers', 'version', 'path',
+        attrs = ('id', 'project', 'title', 'headers', 'version', 'path',
                  'content', 'taxonomy', 'commit', 'progetto', 'publisher')
         for attr in attrs:
             doc[attr] = data.get(attr, '')
