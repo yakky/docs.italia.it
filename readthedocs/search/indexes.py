@@ -128,6 +128,7 @@ class Index(object):
                 '_index': index,
                 '_type': self._type,
                 '_source': source,
+                '_id': d['id'],
             }
             if routing:
                 doc['_routing'] = routing
