@@ -86,7 +86,7 @@ class ProjectUpdate(ProjectSpamMixin, PrivateViewMixin, UpdateView):
     lookup_field = 'slug'
 
     def get_queryset(self):
-        return self.model.objects.for_admin_user(self.request.user)
+        return self.model.objects.user_can_admin(self.request.user)
 
     def get_success_url(self):
         return reverse('projects_detail', args=[self.object.slug])
@@ -103,7 +103,7 @@ class ProjectAdvancedUpdate(ProjectSpamMixin, PrivateViewMixin, UpdateView):
     initial = {'num_minor': 2, 'num_major': 2, 'num_point': 2}
 
     def get_queryset(self):
-        return self.model.objects.for_admin_user(self.request.user)
+        return self.model.objects.user_can_admin(self.request.user)
 
     def get_success_url(self):
         return reverse('projects_detail', args=[self.object.slug])

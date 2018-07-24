@@ -32,9 +32,16 @@ class ProjectQuerySetBase(models.QuerySet):
         return queryset
 
     def for_admin_user(self, user=None):
+        """Projects owned by the user, i.e. where the user is admin"""
         if user.is_authenticated():
             return self.filter(users__in=[user])
         return self.none()
+
+    def user_can_admin(self, user):
+        """Like for_admin_user but allows all projects access to superusers"""
+        if user.is_superuser:
+            return self.all()
+        return self.for_admin_user(user)
 
     def public(self, user=None):
         queryset = self.filter(privacy_level=constants.PUBLIC)
