@@ -421,6 +421,37 @@ class TestPrivateMixins(MockBuildTestCase):
         self.assertEqual(view.get_context_data()['project'], self.project)
 
 
+class TestAdminPrivateViews(TestCase):
+    fixtures = ['test_data', 'eric']
+
+    def test_admin_can_see_other_user_project_data(self):
+        pip = Project.objects.get(slug='pip')
+        pip.versions.create_latest()
+        urls = [
+            '/dashboard/pip/version/latest/',
+            '/dashboard/pip/versions/',
+            '/dashboard/pip/users/',
+            '/dashboard/pip/notifications/',
+            '/dashboard/pip/translations/',
+            '/dashboard/pip/redirects/',
+        ]
+
+        self.client.login(username='eric', password='test')
+        for url in urls:
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 200)
+
+        self.client.login(username='super', password='test')
+        for url in urls:
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 200)
+
+        self.client.login(username='tester', password='test')
+        for url in urls:
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 404)
+
+
 class TestBadges(TestCase):
     """Test a static badge asset is served for each build."""
 
