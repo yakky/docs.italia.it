@@ -159,6 +159,74 @@ class DocsItaliaViewsTest(TestCase):
         qs = index.get_queryset()
         self.assertTrue(qs.exists())
 
+    def test_docsitalia_publisher_index_show_publisher_with_active_builds(self):
+        index = PublisherIndex()
+
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            active=True
+        )
+
+        inactive_pub_project = PublisherProject.objects.create(
+            name='Inactive Project',
+            slug='inactivetestproject',
+            metadata={
+                'documents': [
+                    'https://github.com/testorg/myrepourl',
+                    'https://github.com/testorg/anotherrepourl',
+                ]
+            },
+            publisher=publisher,
+            active=False
+        )
+
+        project = Project.objects.create(
+            name='my project',
+            slug='projectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        pub_project = PublisherProject.objects.create(
+            name='Built Test Project',
+            slug='builttestproject',
+            metadata={
+                'documents': [
+                    'https://github.com/testorg/myrepourl',
+                    'https://github.com/testorg/anotherrepourl',
+                ]
+            },
+            publisher=publisher,
+            active=True
+        )
+        pub_project.projects.add(project)
+
+        no_build_project = Project.objects.create(
+            name='no build project',
+            slug='nobuildprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        no_build_project.versions.all().delete()
+        pub_project_no_build = PublisherProject.objects.create(
+            name='Test Project no build',
+            slug='nobuildtestproject',
+            metadata={
+                'documents': [
+                    'https://github.com/testorg/myrepourl',
+                    'https://github.com/testorg/anotherrepourl',
+                ]
+            },
+            publisher=publisher,
+            active=True
+        )
+        pub_project_no_build.projects.add(no_build_project)
+
+        response = self.client.get('/testorg/')
+        self.assertContains(response, 'Built Test Project')
+        self.assertNotContains(response, 'Inactive Project')
+        self.assertNotContains(response, 'Test Project no build')
+
     def test_docsitalia_publisher_project_index_get_queryset_filter_active(self):
         index = PublisherProjectIndex()
 

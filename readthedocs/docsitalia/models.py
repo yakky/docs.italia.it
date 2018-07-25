@@ -180,8 +180,20 @@ class Publisher(models.Model):
         )
 
     def active_publisher_projects(self):
-        """Active publisher projects"""
-        return self.publisherproject_set.filter(active=True)
+        """Active publisher projects with active documents"""
+        with_public_version = Version.objects.filter(
+            privacy_level='public',
+            active=True,
+        ).values_list(
+            'project',
+            flat=True
+        )
+        return self.publisherproject_set.filter(
+            active=True,
+            projects__in=with_public_version
+        ).order_by(
+            '-modified_date', '-pub_date'
+        ).distinct()
 
     def get_absolute_url(self):
         """Get absolute url for publisher"""
