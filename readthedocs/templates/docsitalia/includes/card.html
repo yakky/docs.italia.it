@@ -3,22 +3,22 @@
     <div class="docs-card-header d-flex align-self-start w-100">
       <div class="px-3 w-75 border-bottom">
         <h3 class="h6">
-          {% with project.publisherproject_set.all.first as publisher %}
+        {% block card_header %}
+          {% with project.publisher as publisher %}
           <a href="{{ publisher.get_absolute_url }}">
             {{ publisher }}
           </a>
           {% endwith %}
+        {% endblock %}
         </h3>
       </div>
-      {% if project.version %}
-      <span>{{ project.version }}</span>
-      {% endif %}
+      {% block card_version %}{% endblock %}
     </div>
     <div class="docs-card-content u-color-grey-50 d-flex u-sizeFillAlt flex-fill">
       <div class="p-3 align-self-end">
         <div class="docs-card-content-title">
           <h4>
-            <a href="{{ project.get_docs_url }}">{{ project }}</a>
+            <a href="{% block card_url %}{{ project.get_absolute_url }}{% endblock %}">{{ project }}</a>
           </h4>
         </div>
         <div class="docs-card-content-text">{{ project.description|safe }}</div>
