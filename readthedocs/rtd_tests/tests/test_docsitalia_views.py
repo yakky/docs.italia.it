@@ -311,3 +311,7 @@ class DocsItaliaViewsTest(TestCase):
                 '/docsitalia/dashboard/import/', data=self.import_project_data)
             self.assertEqual(response.status_code, 200)
             self.assertTemplateUsed(response, 'docsitalia/import_error.html')
+
+    def test_docsearch_api_is_here(self):
+        response = self.client.get('/api/v2/docsearch/')
+        self.assertEqual(response.status_code, 400)
