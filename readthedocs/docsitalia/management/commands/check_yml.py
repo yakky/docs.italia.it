@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Command that check local docs-italia-conf yml file"""
+"""Command that check local docs italia yml conf file"""
 
 from __future__ import absolute_import, print_function, unicode_literals
 
@@ -35,7 +35,7 @@ class YmlType(Enum):
 
 class Command(BaseCommand):
 
-    """Command that check local docs-italia-conf yml file"""
+    """Command that check local docs italia yml conf file"""
 
     help = 'Check yml file.'
 
