@@ -213,15 +213,15 @@ class DocsItaliaTest(TestCase):
                 rm.get('https://api.github.com/orgs/testorg', json=org_json)
                 rm.get(
                     'https://raw.githubusercontent.com/testorg/'
-                    'docs-italia-conf/master/publisher_settings.yml',
+                    'italia-conf/master/publisher_settings.yml',
                     text=PUBLISHER_METADATA)
                 rm.get(
                     'https://raw.githubusercontent.com/testorg/'
-                    'docs-italia-conf/master/projects_settings.yml',
+                    'italia-conf/master/projects_settings.yml',
                     text=PROJECTS_METADATA)
                 rm.get('https://api.github.com/orgs/testorg', json=org_json)
                 rm.get('https://api.github.com/orgs/testorg/repos', json=org_repos_json)
-                rm.post('https://api.github.com/repos/testorg/docs-italia-conf/hooks', json={})
+                rm.post('https://api.github.com/repos/testorg/italia-conf/hooks', json={})
                 self.service.sync_organizations()
 
         projects = PublisherProject.objects.filter(publisher=publisher)
@@ -581,11 +581,11 @@ class DocsItaliaTest(TestCase):
         with requests_mock.Mocker() as rm:
             rm.get(
                 'https://raw.githubusercontent.com/testorg/'
-                'docs-italia-conf/master/publisher_settings.yml',
+                'italia-conf/master/publisher_settings.yml',
                 text=PUBLISHER_METADATA)
             rm.get(
                 'https://raw.githubusercontent.com/testorg/'
-                'docs-italia-conf/master/projects_settings.yml',
+                'italia-conf/master/projects_settings.yml',
                 text=PROJECTS_METADATA)
             response = self.client.post(url, {'ref': 'refs/heads/master'})
         self.assertEqual(response.status_code, 200)
@@ -917,13 +917,13 @@ class DocsItaliaTest(TestCase):
         data = {
             'name': 'testorg',
             'slug': 'testorg',
-            'config_repo_name': 'docs-italia-conf',
+            'config_repo_name': 'italia-conf',
         }
         form = PublisherAdminForm(data)
         with requests_mock.Mocker() as rm:
             rm.get(
                 'https://raw.githubusercontent.com/testorg/'
-                'docs-italia-conf/master/publisher_settings.yml',
+                'italia-conf/master/publisher_settings.yml',
                 exc=IOError)
             self.assertFalse(form.is_valid())
 
@@ -931,13 +931,13 @@ class DocsItaliaTest(TestCase):
         data = {
             'name': 'testorg',
             'slug': 'testorg',
-            'config_repo_name': 'docs-italia-conf',
+            'config_repo_name': 'italia-conf',
         }
         form = PublisherAdminForm(data)
         with requests_mock.Mocker() as rm:
             rm.get(
                 'https://raw.githubusercontent.com/testorg/'
-                'docs-italia-conf/master/publisher_settings.yml',
+                'italia-conf/master/publisher_settings.yml',
                 exc=InvalidMetadata)
             self.assertFalse(form.is_valid())
 
@@ -945,17 +945,17 @@ class DocsItaliaTest(TestCase):
         data = {
             'name': 'testorg',
             'slug': 'testorg',
-            'config_repo_name': 'docs-italia-conf',
+            'config_repo_name': 'italia-conf',
         }
         form = PublisherAdminForm(data)
         with requests_mock.Mocker() as rm:
             rm.get(
                 'https://raw.githubusercontent.com/testorg/'
-                'docs-italia-conf/master/publisher_settings.yml',
+                'italia-conf/master/publisher_settings.yml',
                 text=PUBLISHER_METADATA)
             rm.get(
                 'https://raw.githubusercontent.com/testorg/'
-                'docs-italia-conf/master/projects_settings.yml',
+                'italia-conf/master/projects_settings.yml',
                 exc=IOError)
             self.assertFalse(form.is_valid())
 
@@ -963,17 +963,17 @@ class DocsItaliaTest(TestCase):
         data = {
             'name': 'testorg',
             'slug': 'testorg',
-            'config_repo_name': 'docs-italia-conf',
+            'config_repo_name': 'italia-conf',
         }
         form = PublisherAdminForm(data)
         with requests_mock.Mocker() as rm:
             rm.get(
                 'https://raw.githubusercontent.com/testorg/'
-                'docs-italia-conf/master/publisher_settings.yml',
+                'italia-conf/master/publisher_settings.yml',
                 text=PUBLISHER_METADATA)
             rm.get(
                 'https://raw.githubusercontent.com/testorg/'
-                'docs-italia-conf/master/projects_settings.yml',
+                'italia-conf/master/projects_settings.yml',
                 exc=InvalidMetadata)
             self.assertFalse(form.is_valid())
 
@@ -983,17 +983,17 @@ class DocsItaliaTest(TestCase):
             'slug': 'testorg',
             'metadata': '{}',
             'projects_metadata': '{}',
-            'config_repo_name': 'docs-italia-conf',
+            'config_repo_name': 'italia-conf',
         }
         form = PublisherAdminForm(data)
         with requests_mock.Mocker() as rm:
             rm.get(
                 'https://raw.githubusercontent.com/testorg/'
-                'docs-italia-conf/master/publisher_settings.yml',
+                'italia-conf/master/publisher_settings.yml',
                 text=PUBLISHER_METADATA)
             rm.get(
                 'https://raw.githubusercontent.com/testorg/'
-                'docs-italia-conf/master/projects_settings.yml',
+                'italia-conf/master/projects_settings.yml',
                 text=PROJECTS_METADATA)
             publisher = form.save()
         self.assertTrue(publisher.pk)

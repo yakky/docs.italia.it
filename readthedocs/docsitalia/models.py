@@ -140,7 +140,7 @@ class Publisher(models.Model):
     # the name of the repository that will hold the metadata
     config_repo_name = models.CharField(_('Docs italia config repo'),
                                         max_length=255,
-                                        default=u'docs-italia-conf')
+                                        default=u'italia-conf')
 
     # the remote organization where we can find the configuration repository
     remote_organization = models.ForeignKey(RemoteOrganization,
