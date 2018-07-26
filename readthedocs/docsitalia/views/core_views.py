@@ -10,7 +10,6 @@ from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, ListView
 
-from readthedocs.builds.models import Build
 from readthedocs.core.utils import trigger_build
 from readthedocs.projects.forms import ProjectBasicsForm, ProjectExtraForm
 from readthedocs.projects.models import Project
@@ -19,6 +18,7 @@ from readthedocs.projects.views.private import ImportView
 
 from ..github import get_metadata_for_document, InvalidMetadata
 from ..models import PublisherProject, Publisher
+from ..utils import get_projects_with_builds
 
 log = logging.getLogger(__name__)  # noqa
 
@@ -44,18 +44,8 @@ class DocsItaliaHomePage(ListView):  # pylint: disable=too-many-ancestors
             active=True,
             publisher__active=True
         )
-        with_ok_build_and_pub_version = Build.objects.filter(
-            success=True,
-            state='finished',
-            version__privacy_level='public',
-            version__active=True
-        ).values_list(
-            'project',
-            flat=True
-        )
-        return Project.objects.filter(
-            pk__in=with_ok_build_and_pub_version
-        ).filter(
+        qs = get_projects_with_builds()
+        return qs.filter(
             publisherproject__in=active_pub_projects
         ).order_by(
             '-modified_date', '-pub_date'

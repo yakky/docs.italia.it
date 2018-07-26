@@ -6,6 +6,8 @@ from __future__ import unicode_literals
 
 import yaml
 
+from readthedocs.builds.models import Build
+from readthedocs.projects.models import Project
 from readthedocs.restapi.client import api as apiv2
 
 
@@ -38,4 +40,20 @@ def get_subprojects(project_pk):
         apiv2.project(project_pk)
         .subprojects()
         .get()['subprojects']
+    )
+
+
+def get_projects_with_builds():
+    """Returns a queryset of Projects with active public builds"""
+    with_ok_build_and_pub_version = Build.objects.filter(
+        success=True,
+        state='finished',
+        version__privacy_level='public',
+        version__active=True
+    ).values_list(
+        'project',
+        flat=True
+    )
+    return Project.objects.filter(
+        pk__in=with_ok_build_and_pub_version
     )
