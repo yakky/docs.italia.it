@@ -3,22 +3,60 @@
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Team Digitale e AgID" />
+<meta name="description" content="Docs Italia è un servizio a disposizione delle Pubbliche Amministrazioni per pubblicare documenti tecnici e amministrativi, e offre ai cittadini la possibilità di leggere e commentare documenti pubblici ed essere informati sull’andamento dei progetti." />
 
-{% include 'docsitalia/includes/meta.html' %}
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@teamdigitaleIT">
+<meta name="twitter:title" content="Docs Italia">
+<meta name="twitter:description" content="Docs Italia è un servizio a disposizione delle Pubbliche Amministrazioni per pubblicare documenti tecnici e amministrativi, e offre ai cittadini la possibilità di leggere e commentare documenti pubblici ed essere informati sull’andamento dei progetti.">
+<meta name="twitter:image" content="{{ MEDIA_URL }}docsitalia/images/social-card.png">
 
-<link rel="alternate" type="application/rss+xml" title="" href="feed.xml">
+<!-- Open Graph -->
+<meta property="og:locale" content="it_IT" />
+<meta property="og:url" content="https://docs.italia.it/">
+<meta property="og:title" content="Docs Italia">
+<meta property="og:description" content="Docs Italia è un servizio a disposizione delle Pubbliche Amministrazioni per pubblicare documenti tecnici e amministrativi, e offre ai cittadini la possibilità di leggere e commentare documenti pubblici ed essere informati sull’andamento dei progetti.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="{{ MEDIA_URL }}docsitalia/images/social-card.png">
+<meta property="og:image:secure_url" content="{{ MEDIA_URL }}docsitalia/images/social-card.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Favicons -->
+<link rel="apple-touch-icon" href="{{ MEDIA_URL }}docsitalia/icons/apple-touch-icon.png">
+<link rel="icon" href="{{ MEDIA_URL }}docsitalia/icons/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="{{ MEDIA_URL }}docsitalia/icons/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="manifest" href="{{ MEDIA_URL }}docsitalia/icons/manifest.webmanifest">
+<link rel="mask-icon" href="{{ MEDIA_URL }}docsitalia/icons/safari-pinned-tab.svg" color="#0066CC">
+<link rel="icon" href="{{ MEDIA_URL }}docsitalia/icons/favicon.ico">
+<meta name="msapplication-config" content="{{ site.baseurl }}/docs/assets/img/favicons/browserconfig.xml">
+<meta name="theme-color" content="#0066CC">
 
 <link media="all" rel="stylesheet" href="{% static 'vendor/bootstrap-italia/css/bootstrap-italia.min.css' %}">
 <link media="all" rel="stylesheet" href="{% static 'vendor/bootstrap-italia/css/italia-icon-font.css' %}">
 <link media="all" rel="stylesheet" href="{% static 'projects/css/main.css' %}">
 
-<!-- css solo per backoffice - to do: ripulire -->
+{% comment %} BackOffice CSS {% endcomment %}
 <link media="all" rel="stylesheet" href="{{ MEDIA_URL }}docsitalia/css/core.css">
 
-<!-- js solo per backoffice - to do: ripulire -->
-<!--<script src="{% static 'vendor/jquery.js' %}"></script>
-<script src="{% static 'vendor/jquery-migrate.js' %}"></script>
-<script src="{% static 'vendor/jquery-ui.js' %}"></script>
+{% comment %}
+Available Tracking IDs:
+- UA-122854273-1: Staging - https://docs-italia-staging.teamdigitale.it/
+- UA-122854273-2: Live - https://docs.italia.it/
+{% endcomment %}
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
 <script>
-  require('jquery');
-</script>-->
+    window['ga-disable-{{ GLOBAL_ANALYTICS_CODE }}'] = (document.cookie.indexOf('cookies_consent=true') === -1);
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ trackingID }}"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '{{ GLOBAL_ANALYTICS_CODE }}', { 'anonymize_ip': true });
+</script>
