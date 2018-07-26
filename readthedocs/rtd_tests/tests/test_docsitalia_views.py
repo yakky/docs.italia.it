@@ -13,7 +13,7 @@ from readthedocs.builds.models import Build, Version
 from readthedocs.docsitalia.github import InvalidMetadata
 from readthedocs.docsitalia.models import Publisher, PublisherProject
 from readthedocs.docsitalia.views.core_views import (
-    DocsItaliaHomePage, PublisherIndex, PublisherProjectIndex)
+    DocsItaliaHomePage, PublisherIndex, PublisherProjectIndex, PublisherList)
 from readthedocs.oauth.models import RemoteRepository
 from readthedocs.projects.models import Project
 
@@ -226,6 +226,59 @@ class DocsItaliaViewsTest(TestCase):
         self.assertContains(response, 'Built Test Project')
         self.assertNotContains(response, 'Inactive Project')
         self.assertNotContains(response, 'Test Project no build')
+
+    def test_docsitalia_publisher_list_filters_active_publishers(self):
+        publisher_list = PublisherList()
+
+        Publisher.objects.create(
+            name='No meta Org',
+            slug='nometaorg',
+            metadata={'some': 'meta'},
+            active=False
+        )
+        Publisher.objects.create(
+            name='Inactive Org',
+            slug='inactiveorg',
+            metadata={},
+            active=False
+        )
+        Publisher.objects.create(
+            name='Active Org',
+            slug='activeorg',
+            metadata={'some': 'meta'},
+            active=True
+        )
+        publisher = Publisher.objects.create(
+            name='Org',
+            slug='testorg',
+            metadata={'some': 'meta'},
+            active=True
+        )
+        project = Project.objects.create(
+            name='my project',
+            slug='projectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        pub_project = PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            publisher=publisher,
+            active=True
+        )
+        pub_project.projects.add(project)
+        version = project.versions.last()
+        Build.objects.create(
+            project=project,
+            version=version,
+            type='html',
+            state='finished',
+            success=True
+        )
+
+        qs = publisher_list.get_queryset()
+        self.assertTrue(qs.exists())
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first().pk, publisher.pk)
 
     def test_docsitalia_publisher_project_index_get_queryset_filter_active(self):
         index = PublisherProjectIndex()

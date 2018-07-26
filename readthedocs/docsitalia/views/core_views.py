@@ -52,6 +52,36 @@ class DocsItaliaHomePage(ListView):  # pylint: disable=too-many-ancestors
         )[:24]
 
 
+class PublisherList(ListView):  # pylint: disable=too-many-ancestors
+
+    """List view of :py:class:`Publisher` instances."""
+
+    model = Publisher
+
+    def get_queryset(self):
+        """
+        Filter publisher to be listed
+
+        We show publishers that matches the following requirements:
+        - are active
+        - have documents with successful public build
+        """
+        active_pub_projects = PublisherProject.objects.filter(
+            active=True,
+            publisher__active=True
+        )
+        publishers_with_projects = get_projects_with_builds().filter(
+            publisherproject__in=active_pub_projects
+        ).values_list(
+            'publisherproject__publisher',
+            flat=True
+        )
+
+        return Publisher.objects.filter(
+            pk__in=publishers_with_projects
+        )
+
+
 class PublisherIndex(DetailView):  # pylint: disable=too-many-ancestors
 
     """Detail view of :py:class:`Publisher` instances."""

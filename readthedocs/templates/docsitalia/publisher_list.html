@@ -1,0 +1,21 @@
+{% extends "docsitalia/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<section class="container">
+  <div class="py-5">
+    <h1>Amministrazioni</h1>
+    <div class="row">
+      {% for publisher in object_list %}
+      <div class="publisher">
+        {% with metadata=publisher.metadata.publisher %}
+          {% if metadata.logo %}<img src="{{ metadata.logo }}"/>{% endif %}
+          {{ metadata.name }}
+          <a href="{% url 'publisher_detail' publisher.slug %}">Vai al dettaglio</a>
+        {% endwith %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

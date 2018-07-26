@@ -9,7 +9,9 @@ from readthedocs.constants import pattern_opts
 from rest_framework import routers
 
 from .views.core_views import (
-    DocsItaliaHomePage, PublisherIndex, PublisherProjectIndex, DocsItaliaImport)
+    DocsItaliaHomePage, PublisherIndex, PublisherProjectIndex, DocsItaliaImport,
+    PublisherList,
+)
 from .views import integrations, api
 
 router = routers.DefaultRouter()
@@ -41,6 +43,11 @@ urlpatterns = [
         r'^$',
         DocsItaliaHomePage.as_view(),
         name='homepage'
+    ),
+    url(
+        r'^amministrazioni/$',
+        PublisherList.as_view(),
+        name='amministrazioni'
     ),
     url(
         r'^che-cos-e-docs-italia/$',
