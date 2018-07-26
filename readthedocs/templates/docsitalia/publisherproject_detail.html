@@ -13,7 +13,7 @@ associati
     <p>{% trans 'Available documents' %}</p>
     <div class="row">
       {% for project in object.projects.all %}
-      {% include 'docsitalia/includes/card.html' %}
+      {% include 'docsitalia/includes/document_card.html' %}
       {% endfor %}
     </div>
   </div>

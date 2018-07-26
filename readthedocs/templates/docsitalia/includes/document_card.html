@@ -1,0 +1,17 @@
+{% extends "docsitalia/includes/card.html" %}
+
+{% block card_header %}
+{% with project.publisherproject_set.all.first as publisher %}
+  <a href="{{ publisher.get_absolute_url }}">
+    {{ publisher }}
+  </a>
+{% endwith %}
+{% endblock %}
+
+{% block card_version %}
+{% if project.version %}
+<span>{{ project.version }}</span>
+{% endif %}
+{% endblock %}
+
+{% block card_url %}{{ project.get_docs_url }}{% endblock %}
