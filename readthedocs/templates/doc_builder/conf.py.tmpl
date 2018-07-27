@@ -52,7 +52,7 @@ html_use_index = False
 numfig = True
 latex_documents = [
   ('index', '{{ project.slug }}.tex', u'{{ project.name }}',
-   u'{{ project.publisherproject.first.publisher.name }}', 'manual'),
+   u'{{ publisher.name }}', 'manual'),
 ]
 latex_show_urls = 'footnote'
 latex_show_pagerefs = True
@@ -84,6 +84,10 @@ context = {
     ],
     'slug': '{{ project.slug }}',
     'name': u'{{ project.name }}',
+    'publisher_project': u'{{ publisher_project.name }}',
+    'publisher_project_slug': '{{ publisher_project.slug }}',
+    'publisher': u'{{ publisher.name }}',
+    'publisher_slug': '{{ publisher.slug }}',
     'rtd_language': u'{{ project.language }}',
     'programming_language': u'{{ project.programming_language }}',
     'canonical_url': '{{ project.get_canonical_url }}',

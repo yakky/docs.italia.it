@@ -409,7 +409,11 @@ class DocsItaliaTest(TestCase):
             build_env=build_env,
             data=data,
         )
-        self.assertEqual(data, {'subprojects': [u'sub1']})
+        self.assertEqual(data, {
+            'subprojects': [u'sub1'],
+            'publisher_project': pub_project,
+            'publisher': publisher
+        })
 
     def test_publisher_metadata_validation_parse_well_formed_metadata(self):
         data = validate_publisher_metadata(None, PUBLISHER_METADATA)

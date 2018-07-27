@@ -99,3 +99,6 @@ def add_sphinx_context_data(sender, data, build_env, **kwargs):  # pylint: disab
 
     subprojects = get_subprojects(build_env.project.pk)
     data['subprojects'] = subprojects
+    publisher_project = build_env.project.publisherproject_set.first()
+    data['publisher_project'] = publisher_project
+    data['publisher'] = publisher_project.publisher if publisher_project else None
