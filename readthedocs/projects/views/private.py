@@ -24,6 +24,7 @@ from vanilla import CreateView, DeleteView, DetailView, GenericView, UpdateView
 from readthedocs.builds.forms import AliasForm, VersionForm
 from readthedocs.builds.models import Version, VersionAlias
 from readthedocs.core.mixins import ListViewWithForm, LoginRequiredMixin
+from readthedocs.core.permissions import AdminPermission
 from readthedocs.core.utils import broadcast, trigger_build
 from readthedocs.integrations.models import HttpExchange, Integration
 from readthedocs.oauth.services import registry
@@ -85,7 +86,7 @@ class ProjectUpdate(ProjectSpamMixin, PrivateViewMixin, UpdateView):
     lookup_field = 'slug'
 
     def get_queryset(self):
-        return self.model.objects.for_admin_user(self.request.user)
+        return self.model.objects.user_can_admin(self.request.user)
 
     def get_success_url(self):
         return reverse('projects_detail', args=[self.object.slug])
@@ -102,7 +103,7 @@ class ProjectAdvancedUpdate(ProjectSpamMixin, PrivateViewMixin, UpdateView):
     initial = {'num_minor': 2, 'num_major': 2, 'num_point': 2}
 
     def get_queryset(self):
-        return self.model.objects.for_admin_user(self.request.user)
+        return self.model.objects.user_can_admin(self.request.user)
 
     def get_success_url(self):
         return reverse('projects_detail', args=[self.object.slug])
@@ -116,8 +117,9 @@ def project_versions(request, project_slug):
     Shows the available versions and lets the user choose which ones he would
     like to have built.
     """
-    project = get_object_or_404(
-        Project.objects.for_admin_user(request.user), slug=project_slug)
+    project = get_object_or_404(Project, slug=project_slug)
+    if not AdminPermission.is_admin(request.user, project):
+        raise Http404
 
     if not project.is_imported:
         raise Http404
@@ -140,8 +142,9 @@ def project_versions(request, project_slug):
 @login_required
 def project_version_detail(request, project_slug, version_slug):
     """Project version detail page."""
-    project = get_object_or_404(
-        Project.objects.for_admin_user(request.user), slug=project_slug)
+    project = get_object_or_404(Project, slug=project_slug)
+    if not AdminPermission.is_admin(request.user, project):
+        raise Http404
     version = get_object_or_404(
         Version.objects.public(
             user=request.user, project=project, only_active=False),
@@ -444,8 +447,9 @@ class ProjectRelationshipDelete(ProjectRelationshipMixin, DeleteView):
 @login_required
 def project_users(request, project_slug):
     """Project users view and form view."""
-    project = get_object_or_404(
-        Project.objects.for_admin_user(request.user), slug=project_slug)
+    project = get_object_or_404(Project, slug=project_slug)
+    if not AdminPermission.is_admin(request.user, project):
+        raise Http404
 
     form = UserForm(data=request.POST or None, project=project)
 
@@ -481,8 +485,9 @@ def project_users_delete(request, project_slug):
 @login_required
 def project_notifications(request, project_slug):
     """Project notification view and form view."""
-    project = get_object_or_404(
-        Project.objects.for_admin_user(request.user), slug=project_slug)
+    project = get_object_or_404(Project, slug=project_slug)
+    if not AdminPermission.is_admin(request.user, project):
+        raise Http404
 
     email_form = EmailHookForm(data=request.POST or None, project=project)
     webhook_form = WebHookForm(data=request.POST or None, project=project)
@@ -537,8 +542,9 @@ def project_notifications_delete(request, project_slug):
 @login_required
 def project_translations(request, project_slug):
     """Project translations view and form view."""
-    project = get_object_or_404(
-        Project.objects.for_admin_user(request.user), slug=project_slug)
+    project = get_object_or_404(Project, slug=project_slug)
+    if not AdminPermission.is_admin(request.user, project):
+        raise Http404
     form = TranslationForm(
         data=request.POST or None,
         parent=project,
@@ -584,8 +590,9 @@ def project_translations_delete(request, project_slug, child_slug):
 @login_required
 def project_redirects(request, project_slug):
     """Project redirects view and form view."""
-    project = get_object_or_404(
-        Project.objects.for_admin_user(request.user), slug=project_slug)
+    project = get_object_or_404(Project, slug=project_slug)
+    if not AdminPermission.is_admin(request.user, project):
+        raise Http404
 
     form = RedirectForm(data=request.POST or None, project=project)
 
