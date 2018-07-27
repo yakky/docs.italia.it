@@ -2,14 +2,10 @@
 
 <!-- BEGIN wide search bar -->
 <h2 class="text-white">Cerca</h2>
-
-
-
 <form action="{% url "search" %}" method="GET">
   <div class="form-row align-items-center">
     <div class="col-auto">
       <label class="sr-only" for="id_site_search">Cerca</label>
-      <input type="hidden" name="type" value="file">
       <input type="text" class="form-control bg-white" name="q" value="{{ term }}" id="id_site_search" placeholder="{% trans 'Search Read the Docs' %}">
     </div>
     <div class="col-auto">
@@ -17,6 +13,3 @@
     </div>
   </div>
 </form>
-
-
-
