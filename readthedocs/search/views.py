@@ -68,7 +68,7 @@ def elastic_search(request):
             del hit['_source']
 
         if 'aggregations' in results:
-            for facet_type in ['project', 'version', 'taxonomy', 'language']:
+            for facet_type in ['project', 'version', 'taxonomy', 'language', 'publisher', 'progetto']:
                 if facet_type in results['aggregations']:
                     facets[facet_type] = collections.OrderedDict()
                     for term in results['aggregations'][facet_type]['buckets']:
