@@ -1,3 +1,13 @@
+const onAutoFillStart = (el) => $(el).siblings('label, i').addClass('active');
+const inputSelector = `${['text', 'password', 'email', 'url', 'tel', 'number', 'search']
+    .map((selector) => `input[type=${selector}]:enabled:not([readonly])`)
+    .join(', ')}, textarea`;
+$('body').find(inputSelector).on('animationstart', function(e){
+    if (e.originalEvent.animationName) {
+        onAutoFillStart(e.target);
+    }
+});
+
 $(function() {
   $('body')
     .on('click', '.dropdown > span > a:last-child', open_dropdown)

@@ -3,35 +3,13 @@
 
 {% get_providers as socialaccount_providers %}
 
-<div class="link-list-wrapper">
-  <ul class="link-list">
-  {% for provider in socialaccount_providers %}
-    {% if provider.id == "openid" %}
-      {% for brand in provider.get_brands %}
-        <li>
-          <a class="list-item left-icon {{ provider.id }} {{ brand.id }}" href="{% provider_login_url provider.id openid=brand.openid_url process=process next=next %}" title="{{ brand.name }}">
-            <i class="it-chevron-right left secondary" aria-hidden="true"></i>
-            <span>
-              {% blocktrans with brand_name=brand.name verbiage=verbiage|default:'Connect to' %}
-              {{ verbiage }} {{ brand_name }}
-              {% endblocktrans %}
-            </span>
-          </a>
-        </li>
-      {% endfor %}
-    {% endif %}
-    {% if provider.id != 'bitbucket' %}
-      <li>
-        <a class="list-item left-icon {{ provider.id }}" href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params next=next %}" title="{{ provider.name }}">
-          <i class="it-chevron-right left secondary" aria-hidden="true"></i>
-          <span>
-            {% blocktrans with provider_name=provider.name verbiage=verbiage|default:'Connect to' %}
-            {{ verbiage }} {{ provider_name }}
-            {% endblocktrans %}
-          </span>
-        </a>
-      </li>
-    {% endif %}
-  {% endfor %}
-  </ul>
-</div>
+{% for provider in socialaccount_providers %}
+  {% if provider.id == "github" %}
+    <a class="btn btn-outline-primary {{ provider.id }}" href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params next=next %}" title="{{ provider.name }}">
+      <i class="it-github left secondary" aria-hidden="true"></i>
+      <span>
+        Autenticati con {{ provider.name }}
+      </span>
+    </a>
+  {% endif %}
+{% endfor %}

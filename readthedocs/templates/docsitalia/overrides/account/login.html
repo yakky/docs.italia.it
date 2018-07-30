@@ -8,30 +8,41 @@
 {% block body_class %}login-page{% endblock %}
 
 {% block content %}
+<section class="container" style="max-width: 40em">
+  <h1>{% trans "Log In" %}</h1>
 
-<h1>{% trans "Sign In" %}</h1>
+  <form class="login" method="POST" action="{% url "account_login" %}">
+    {% csrf_token %}
+    {% for field in form %}
+      {%comment%}Better using a custom filter for detecting CheckboxInput here {% endcomment%}
+      {% if field.name != 'remember' %}
+      <div class="form-group">
+        <input type="{{ field.field.widget.input_type }}" class="form-control" id="id_{{ field.name }}">
+        <label for="id_{{ field.name }}">{{ field.label }}</label>
+      </div>
+      {% else %}
+      <div class="form-check">
+        <input id="id_{{ field.name }}" type="checkbox">
+        <label for="id_{{ field.name }}">{{ field.label }}</label>
+      </div>
+      {% endif %}
+    {% endfor %}
 
-<p><small>{% blocktrans %}If you have not created an account yet, then please
-<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</small></p>
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <div class="py-4">
+      <button class="btn btn-primary" type="submit">{% trans "Log In" %}</button>
+    <span class="px-3">oppure</span>
+      {% include "socialaccount/snippets/provider_list.html" with process="login" next=request.GET.next verbiage="Sign in with" %}
 
-<form class="login" method="POST" action="{% url "account_login" %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
+      <p>{% url 'account_reset_password' as password_reset_url %}</p>
+    </div>
+    <p>Se non hai ancora creato un account, <a href="{{ signup_url }}">registrati</a> adesso.</p>
+    <p>Se invece hai dimenticato la password, puoi <a href="{{ password_reset_url }}">reimpostarla</a>.</p>
+  </form>
+</section>
 
-  {% url 'account_reset_password' as password_reset_url %}
-  <p>
-    <small>{% blocktrans %}If you forgot your password, <a href="{{ password_reset_url }}">reset it.</a>{% endblocktrans %}</small>
-  </p>
-</form>
 
-<h3>{% trans 'Or' %}</h3>
-
-<div class="clearfix">
-  {% include "socialaccount/snippets/provider_list.html" with process="login" next=request.GET.next verbiage="Sign in with" %}
-</div>
 
 {% endblock content %}

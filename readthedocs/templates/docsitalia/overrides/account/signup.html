@@ -7,28 +7,33 @@
 {% block body_class %}signup-page{% endblock %}
 
 {% block content %}
-<h1>{% trans "Sign Up" %}</h1>
+<section class="container" style="max-width: 40em">
+  <h1>{% trans "Sign Up" %}</h1>
+  <p>Hai già un account? <a href="{{ login_url }}">Accedi</a>.</p>
 
-<p>
-  <small>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</small>
-</p>
+  <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-group">
+        <input type="{{ field.field.widget.input_type }}" class="form-control" id="id_{{ field.name }}" name="{{ field.name }}">
+        <label for="id_{{ field.name }}">{{ field.label }}</label>
+        {% if field.errors %}
+        <small class="form-text text-warning">{{ field.errors }}</small>
+        {% else %}
+          {% if field.help_text %}
+          <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+          {% endif %}
+        {% endif %}
+      </div>
+    {% endfor %}
+    {% if redirect_field_value %}<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />{% endif %}
+    <div class="py-4">
+      <button class="btn btn-primary" type="submit">{% trans "Sign Up" %}</button>
+      <span class="px-3">oppure</span>
+      {% include "socialaccount/snippets/provider_list.html" with process="login" next="" verbiage="Sign up with" %}
+    </div>
 
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
-  <p>
-    <small>{% blocktrans %}By signing up, you agree to our <a href="https://docs.readthedocs.io/en/latest/privacy-policy.html">privacy policy</a>.{% endblocktrans %}</small>
-  </p>
-</form>
-
-<h3>{% trans 'Or' %}</h3>
-
-<div class="clearfix">
-  {% include "socialaccount/snippets/provider_list.html" with process="login" next="" verbiage="Sign up with" %}
-</div>
-
+    <p>Registrandoti, accetti la nostra <a href="/privacy-policy/">privacy policy</a>.</p>
+  </form>
+</section>
 {% endblock %}
