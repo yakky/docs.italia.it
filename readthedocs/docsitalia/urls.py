@@ -48,6 +48,21 @@ urlpatterns = [
         name='about_docs_italia'
     ),
     url(
+        r'^privacy-policy/$',
+        TemplateView.as_view(template_name='docsitalia/privacy-policy.html'),
+        name='privacy_policy'
+    ),
+    url(
+        r'^cookies-policy/$',
+        TemplateView.as_view(template_name='docsitalia/cookies-policy.html'),
+        name='cookies_policy'
+    ),
+    url(
+        r'^note-legali/$',
+        TemplateView.as_view(template_name='docsitalia/note-legali.html'),
+        name='note_legali'
+    ),
+    url(
         r'^(?P<slug>[-\w]+)/$',
         PublisherIndex.as_view(),
         name='publisher_detail'
