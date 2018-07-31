@@ -36,7 +36,6 @@ class Command(BaseCommand):
             print(p_o.name, p_o.get_absolute_url(), p_o.pk)
             try:
                 e_s.delete(index='readthedocs', doc_type='project', id=p_o.pk)
-
             except NotFoundError:
                 print('Index not found')
             try:
