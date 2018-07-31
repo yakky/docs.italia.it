@@ -7,6 +7,7 @@ Pagina di dettaglio del publisher con la lista
 dei publisher projects
 {% endcomment %}
 <section class="container">
+  {% include 'docsitalia/includes/breadcrumb.html' %}
   <div class="py-5">
     <h1>{{ object }}</h1>
     <div class="row">
@@ -15,7 +16,6 @@ dei publisher projects
       {% endfor %}
     </div>
   </div>
-  <button class="js-open-publisher-search btn btn-primary">Search</button>
 </section>
 
 <div class="publisher-metadata">
@@ -33,11 +33,10 @@ dei publisher projects
   {{ object.projects_metadata.website }}
   {% endif %}
 </div>
+{% comment %}
 <div class="publisher-search" style="display: none">
-  {% comment %}
   Questo è il popup di ricerca
   ancora da definire
-  {% endcomment %}
   <a class="js-publisher-search-close">close</a>
   {% include "core/widesearchbar.html" %}
   <strong>Ricerche frequenti</strong>
@@ -54,6 +53,7 @@ dei publisher projects
   </ul>
 </div>
 {% endblock %}
+La search bar dentro il publisher %}
 {% block extra_scripts %}
 <script type="text/javascript">
     $(document).ready(function () {
@@ -65,4 +65,5 @@ dei publisher projects
         });
     });
 </script>
+{% endcomment %}
 {% endblock %}

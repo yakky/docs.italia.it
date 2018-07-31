@@ -1,0 +1,13 @@
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a><span class="separator">&gt;</span></li>
+      {% if publisherproject %}
+      <li class="breadcrumb-item">
+          <a href="{{ publisherproject.publisher.get_absolute_url }}">{{ publisherproject.publisher }}</a><span class="separator">&gt;</span>
+      </li>
+      <li class="breadcrumb-item">{{ publisherproject }}</li>
+      {% else %}
+      <li class="breadcrumb-item">{{ publisher }}</li>
+      {% endif %}
+  </ol>
+</nav>
