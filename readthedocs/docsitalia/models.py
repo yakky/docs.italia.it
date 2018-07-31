@@ -134,8 +134,8 @@ class Publisher(models.Model):
 
     # TODO: is this enough to hold the publisher metadata?
     # https://github.com/italia/docs-italia-starter-kit/tree/master/repo-configurazione
-    metadata = JSONField(_('Publisher Metadata'), blank=True, default={})
-    projects_metadata = JSONField(_('Projects Metadata'), blank=True, default={})
+    metadata = JSONField(_('Publisher Metadata'), blank=True, default=dict)
+    projects_metadata = JSONField(_('Projects Metadata'), blank=True, default=dict)
 
     # the name of the repository that will hold the metadata
     config_repo_name = models.CharField(_('Docs italia config repo'),
@@ -225,7 +225,7 @@ class PublisherProject(models.Model):
     slug = models.SlugField(_('slug'), max_length=255, unique=True)
 
     # this holds the metadata for the single project
-    metadata = JSONField(_('Metadata'), blank=True, default={})
+    metadata = JSONField(_('Metadata'), blank=True, default=dict)
 
     # the organization that holds the project
     publisher = models.ForeignKey(Publisher, verbose_name=_('Publisher'))
@@ -285,7 +285,7 @@ class PublisherIntegration(models.Model):
         max_length=32,
         choices=INTEGRATIONS
     )
-    provider_data = JSONField(_('Provider data'), blank=True, default={})
+    provider_data = JSONField(_('Provider data'), blank=True, default=dict)
 
     # Integration attributes
     has_sync = True
