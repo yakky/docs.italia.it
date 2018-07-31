@@ -28,14 +28,22 @@ class PublisherAdmin(admin.ModelAdmin):
             )
         }),
     )
+    list_display = ('name', 'remote_organization', 'pub_date',)
+    list_filter = ('active',)
 
 
 class PublisherProjectAdmin(admin.ModelAdmin):
 
     """Admin view for :py:class:`PublisherProject`"""
 
-    list_filter = ('featured',)
+    list_filter = ('featured', 'active',)
+    list_display = ('name', 'publisher', 'documents', 'pub_date',)
 
+
+    def documents(self, obj):
+        """Return the number of linked projects"""
+        return obj.projects.count()
+    documents.short_description = _('documents')
 
 admin.site.register(Publisher, PublisherAdmin)
 admin.site.register(PublisherProject, PublisherProjectAdmin)
