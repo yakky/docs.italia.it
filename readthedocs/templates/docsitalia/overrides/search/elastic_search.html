@@ -122,7 +122,7 @@
                     <p class="module-item-title">
                       {% if result.fields.name %}
                       {# Project #}
-                      <a href="{{ result.fields.url }}">{{ result.fields.name }}</a>
+                      <a href="{% doc_url result.fields.slug|get_project %}">{{ result.fields.name }}</a>
                       {% for fragment in result.highlight.description|slice:":3" %}
                     <p>
                       ...{{ fragment|safe }}...
