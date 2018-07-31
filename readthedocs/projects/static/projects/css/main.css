@@ -412,3 +412,13 @@ select:hover {
     border-right: 1px solid rgba(255, 255, 255, 0.5);
   }
 }
+.amministrazione__logo {
+  height: 64px;
+  width: 64px;
+}
+.amministrazione__nome {
+  color: #1C2024;
+}
+.amministrazione__link {
+  letter-spacing: 1px;
+}
