@@ -7,6 +7,7 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 
 from elasticsearch import Elasticsearch
+from elasticsearch.exceptions import NotFoundError
 from readthedocs.projects.models import Project
 
 from readthedocs.docsitalia.models import PublisherProject
@@ -35,8 +36,9 @@ class Command(BaseCommand):
             print(p_o.name)
             print(p_o.get_absolute_url())
             print(p_o.pk)
-            if e_s.exists(index='readthedocs', doc_type='project', id=p_o.pk):
+            try:
                 e_s.delete(index='readthedocs', doc_type='project', id=p_o.pk)
-            if p_o.publisherproject_set.count() == 0:
-                p_o.delete()
+            except NotFoundError:
+                print('Index not found')
             print('')
+        Project.objects.filter(publisherproject__isnull=True).delete()
