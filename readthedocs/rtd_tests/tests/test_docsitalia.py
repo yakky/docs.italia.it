@@ -8,6 +8,7 @@ from mock import patch
 import pytest
 
 from django import forms
+from django.core.management import call_command
 from django.conf import settings
 from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import reverse
@@ -1001,3 +1002,104 @@ class DocsItaliaTest(TestCase):
                 text=PROJECTS_METADATA)
             publisher = form.save()
         self.assertTrue(publisher.pk)
+
+    def test_clean_es_index_no_publisher_linked(self):
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            active=True
+        )
+        pub_project = PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            metadata={
+                'documents': [
+                    'https://github.com/testorg/myrepourl',
+                    'https://github.com/testorg/anotherrepourl',
+                ]
+            },
+            publisher=publisher,
+            active=True
+        )
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        second_project = Project.objects.create(
+            name='my second project',
+            slug='mysecondprojectslug',
+            repo='https://github.com/testorg/mysecondrepourl.git'
+        )
+        pub_project.projects.add(second_project)
+        with patch('elasticsearch.Elasticsearch.delete') as d:
+            d.return_value = True
+            call_command('clean_es_index')
+            self.assertNotIn(second_project.pk, [e[1]['id'] for e in d.call_args_list])
+            self.assertIn(project.pk, [e[1]['id'] for e in d.call_args_list])
+        self.assertEqual(Project.objects.all().count(), 1)
+        self.assertTrue(Project.objects.filter(slug='mysecondprojectslug').exists())
+
+    def test_clean_es_index_inactive_publisher_project(self):
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            active=False
+        )
+        pub_project = PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            metadata={
+                'documents': [
+                    'https://github.com/testorg/myrepourl',
+                    'https://github.com/testorg/anotherrepourl',
+                ]
+            },
+            publisher=publisher,
+            active=True
+        )
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        pub_project.projects.add(project)
+        with patch('elasticsearch.Elasticsearch.delete') as d:
+            d.return_value = True
+            call_command('clean_es_index')
+            self.assertIn(project.pk, [e[1]['id'] for e in d.call_args_list])
+
+    def test_clean_es_index_inactive_publisher(self):
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            active=True
+        )
+        pub_project = PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            metadata={
+                'documents': [
+                    'https://github.com/testorg/myrepourl',
+                    'https://github.com/testorg/anotherrepourl',
+                ]
+            },
+            publisher=publisher,
+            active=False
+        )
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        pub_project.projects.add(project)
+        with patch('elasticsearch.Elasticsearch.delete') as d:
+            d.return_value = True
+            call_command('clean_es_index')
+            self.assertIn(project.pk, [e[1]['id'] for e in d.call_args_list])
