@@ -6,6 +6,7 @@ from __future__ import absolute_import
 import logging
 
 from django.dispatch import receiver
+from django.db.models.signals import pre_delete
 
 from readthedocs.core.signals import webhook_github
 from readthedocs.doc_builder.signals import finalize_sphinx_context_data
@@ -102,3 +103,9 @@ def add_sphinx_context_data(sender, data, build_env, **kwargs):  # pylint: disab
     publisher_project = build_env.project.publisherproject_set.first()
     data['publisher_project'] = publisher_project
     data['publisher'] = publisher_project.publisher if publisher_project else None
+
+
+@receiver(pre_delete, sender=PublisherProject)
+def on_publisher_project_delete(sender, instance, **kwargs):  # noqa
+    """Remove all the projects associated at PublisherProject removal"""
+    instance.projects.all().delete()

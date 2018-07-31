@@ -1103,3 +1103,35 @@ class DocsItaliaTest(TestCase):
             d.return_value = True
             call_command('clean_es_index')
             self.assertIn(project.pk, [e[1]['id'] for e in d.call_args_list])
+
+    def test_when_i_remove_the_publisher_project_the_projects_get_removed(self):
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            active=True
+        )
+        pub_project = PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            metadata={
+                'documents': [
+                    'https://github.com/testorg/myrepourl',
+                    'https://github.com/testorg/anotherrepourl',
+                ]
+            },
+            publisher=publisher,
+            active=True
+        )
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        pub_project.projects.add(project)
+        publisher.delete()
+        pubproj = PublisherProject.objects.filter(pk=pub_project.pk)
+        self.assertFalse(pubproj.exists())
+        proj = Project.objects.filter(pk=project.pk)
+        self.assertFalse(proj.exists())
