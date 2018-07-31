@@ -36,7 +36,14 @@ class Command(BaseCommand):
             print(p_o.name, p_o.get_absolute_url(), p_o.pk)
             try:
                 e_s.delete(index='readthedocs', doc_type='project', id=p_o.pk)
-                e_s.delete_by_query(doc_type='page', body={'query': {'match': {'project': p_p.slug}}})
+
+            except NotFoundError:
+                print('Index not found')
+            try:
+                e_s.delete_by_query(
+                    index='readthedocs', doc_type='page',
+                    body={'query': {'match': {'project': p_o.slug}}}
+                )
             except NotFoundError:
                 print('Index not found')
             print('')

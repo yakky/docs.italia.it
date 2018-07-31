@@ -1034,7 +1034,7 @@ class DocsItaliaTest(TestCase):
             repo='https://github.com/testorg/mysecondrepourl.git'
         )
         pub_project.projects.add(second_project)
-        with patch('elasticsearch.Elasticsearch.delete') as d:
+        with patch('elasticsearch.Elasticsearch.delete') as d, patch('elasticsearch.Elasticsearch.delete_by_query') as f :
             d.return_value = True
             call_command('clean_es_index')
             self.assertNotIn(second_project.pk, [e[1]['id'] for e in d.call_args_list])
@@ -1068,7 +1068,7 @@ class DocsItaliaTest(TestCase):
             repo='https://github.com/testorg/myrepourl.git'
         )
         pub_project.projects.add(project)
-        with patch('elasticsearch.Elasticsearch.delete') as d:
+        with patch('elasticsearch.Elasticsearch.delete') as d, patch('elasticsearch.Elasticsearch.delete_by_query') as f :
             d.return_value = True
             call_command('clean_es_index')
             self.assertIn(project.pk, [e[1]['id'] for e in d.call_args_list])
@@ -1099,7 +1099,7 @@ class DocsItaliaTest(TestCase):
             repo='https://github.com/testorg/myrepourl.git'
         )
         pub_project.projects.add(project)
-        with patch('elasticsearch.Elasticsearch.delete') as d:
+        with patch('elasticsearch.Elasticsearch.delete') as d,  patch('elasticsearch.Elasticsearch.delete_by_query') as f :
             d.return_value = True
             call_command('clean_es_index')
             self.assertIn(project.pk, [e[1]['id'] for e in d.call_args_list])
