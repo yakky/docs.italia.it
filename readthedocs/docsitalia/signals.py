@@ -107,5 +107,8 @@ def add_sphinx_context_data(sender, data, build_env, **kwargs):  # pylint: disab
 
 @receiver(pre_delete, sender=PublisherProject)
 def on_publisher_project_delete(sender, instance, **kwargs):  # noqa
-    """Remove all the projects associated at PublisherProject removal"""
+    """Remove all the projects associated at PublisherProject removal from db and ES indexes"""
+    from readthedocs.docsitalia.tasks import clear_es_index
+    projects_pks = list(instance.projects.values_list('pk', flat=True))
     instance.projects.all().delete()
+    clear_es_index.delay(projects=projects_pks)

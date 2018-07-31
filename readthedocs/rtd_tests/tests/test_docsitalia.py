@@ -1104,7 +1104,8 @@ class DocsItaliaTest(TestCase):
             call_command('clean_es_index')
             self.assertIn(project.pk, [e[1]['id'] for e in d.call_args_list])
 
-    def test_when_i_remove_the_publisher_project_the_projects_get_removed(self):
+    @patch('readthedocs.docsitalia.tasks.clear_es_index')
+    def test_when_i_remove_the_publisher_project_the_projects_get_removed(self, clear_index):
         publisher = Publisher.objects.create(
             name='Test Org',
             slug='testorg',
@@ -1135,3 +1136,4 @@ class DocsItaliaTest(TestCase):
         self.assertFalse(pubproj.exists())
         proj = Project.objects.filter(pk=project.pk)
         self.assertFalse(proj.exists())
+        self.assertEqual(len(clear_index.mock_calls), 1)
