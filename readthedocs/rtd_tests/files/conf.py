@@ -17,7 +17,3 @@ pygments_style = 'sphinx'
 htmlhelp_basename = 'pip'
 html_theme = 'docs-italia-theme'
 file_insertion_enabled = False
-latex_documents = [
-  ('index', 'pip.tex', u'Pip',
-   u'', 'manual'),
-]
