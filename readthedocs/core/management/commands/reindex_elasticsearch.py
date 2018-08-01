@@ -5,7 +5,6 @@ from __future__ import (
     absolute_import, division, print_function, unicode_literals)
 
 import logging
-import socket
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
@@ -73,7 +72,6 @@ class Command(BaseCommand):
                         delete_non_commit_files=False
                     ),
                     priority=0,
-                    queue=socket.gethostname()
                 )
             except Exception:
                 log.exception(u'Reindexing failed for %s:%s' % (project_slug, version_slug))
