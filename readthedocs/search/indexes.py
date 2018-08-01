@@ -274,6 +274,7 @@ class PageIndex(Index):
                     'id': {'type': 'keyword'},
                     'sha': {'type': 'keyword'},
                     'project': {'type': 'keyword'},
+                    'project_id': {'type': 'keyword'},
                     'version': {'type': 'keyword'},
                     'path': {'type': 'keyword'},
                     'taxonomy': {'type': 'keyword'},
@@ -284,13 +285,6 @@ class PageIndex(Index):
                     'content': {'type': 'text', 'analyzer': 'default_icu'},
                     # Add a weight field to enhance relevancy scoring.
                     'weight': {'type': 'float'},
-                    # Associate a page with a project.
-                    self._parent: {
-                        'type': 'join',
-                        'relations': {
-                            self._parent: self._type
-                        }
-                    },
                     'progetto': {'type': 'keyword'},
                     'publisher': {'type': 'keyword'},
                 }
@@ -302,7 +296,7 @@ class PageIndex(Index):
     def extract_document(self, data):
         doc = {}
 
-        attrs = ('project', 'title', 'headers', 'version', 'path',
+        attrs = ('id', 'project_id', 'project', 'title', 'headers', 'version', 'path',
                  'content', 'taxonomy', 'commit', 'progetto', 'publisher')
         for attr in attrs:
             doc[attr] = data.get(attr, '')
@@ -349,13 +343,6 @@ class SectionIndex(Index):
                     },
                     # Add a weight field to enhance relevancy scoring.
                     'weight': {'type': 'float'},
-                    # Associate a section with a page.
-                    self._parent: {
-                        'type': 'join',
-                        'relations': {
-                            self._parent: self._type
-                        }
-                    },
                 }
             }
         }

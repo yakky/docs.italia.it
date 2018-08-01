@@ -5,13 +5,14 @@ from __future__ import (
     absolute_import, division, print_function, unicode_literals)
 
 import logging
-import socket
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 
 from readthedocs.builds.constants import LATEST
 from readthedocs.builds.models import Version
+from readthedocs.docsitalia.models import PublisherProject
+from readthedocs.projects.models import Project
 from readthedocs.projects.tasks import update_search
 
 log = logging.getLogger(__name__)
@@ -37,7 +38,18 @@ class Command(BaseCommand):
         project = options['project']
         only_latest = options['only_latest']
 
-        queryset = Version.objects.filter(active=True)
+        # index only projects with active publisher and publisher project
+        publisher_projects = PublisherProject.objects.filter(
+            active=True,
+            publisher__active=True
+        ).values_list('pk', flat=True)
+        projects = Project.objects.filter(
+            publisherproject__in=publisher_projects
+        ).values_list('pk', flat=True)
+        queryset = Version.objects.filter(
+            active=True,
+            project__in=projects,
+        )
 
         if project:
             queryset = queryset.filter(project__slug=project)
@@ -60,7 +72,6 @@ class Command(BaseCommand):
                         delete_non_commit_files=False
                     ),
                     priority=0,
-                    queue=socket.gethostname()
                 )
             except Exception:
                 log.exception(u'Reindexing failed for %s:%s' % (project_slug, version_slug))

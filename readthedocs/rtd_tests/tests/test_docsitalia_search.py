@@ -109,5 +109,5 @@ class TestSearch(TestCase):
               'commit': None, 'progetto': 'testproject', 'path': 'path',
               'weight': 2, 'version': 'verbose-name', 'headers': 'headers',
               'id': 'b3129830187e487e332bb2eab1b7a9c3', 'title': 'title',
-              'content': 'content'}], routing='pip'
+              'content': 'content', 'project_id': self.pip.pk}], routing='pip'
         )
