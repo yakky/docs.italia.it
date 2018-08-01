@@ -41,7 +41,7 @@ class Command(BaseCommand):
             try:
                 e_s.delete_by_query(
                     index='readthedocs', doc_type='page',
-                    body={'query': {'match': {'project': p_o.slug}}}
+                    body={'query': {'term': {'project_id': p_o.pk}}}
                 )
             except NotFoundError:
                 print('Index not found')
