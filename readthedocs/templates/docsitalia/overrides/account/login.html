@@ -17,12 +17,12 @@
       {%comment%}Better using a custom filter for detecting CheckboxInput here {% endcomment%}
       {% if field.name != 'remember' %}
       <div class="form-group">
-        <input type="{{ field.field.widget.input_type }}" class="form-control" id="id_{{ field.name }}">
+        <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" class="form-control" id="id_{{ field.name }}">
         <label for="id_{{ field.name }}">{{ field.label }}</label>
       </div>
       {% else %}
       <div class="form-check">
-        <input id="id_{{ field.name }}" type="checkbox">
+        <input id="id_{{ field.name }}" name="{{ field.name }}" type="checkbox">
         <label for="id_{{ field.name }}">{{ field.label }}</label>
       </div>
       {% endif %}
