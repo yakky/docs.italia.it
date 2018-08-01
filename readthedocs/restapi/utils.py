@@ -139,6 +139,7 @@ def index_search_request(
         index_list.append({
             'id': page_id,
             'project': project.slug,
+            'project_id': project.pk,
             'version': version.slug,
             'path': page['path'],
             'title': page['title'],

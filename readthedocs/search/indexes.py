@@ -274,6 +274,7 @@ class PageIndex(Index):
                     'id': {'type': 'keyword'},
                     'sha': {'type': 'keyword'},
                     'project': {'type': 'keyword'},
+                    'project_id': {'type': 'keyword'},
                     'version': {'type': 'keyword'},
                     'path': {'type': 'keyword'},
                     'taxonomy': {'type': 'keyword'},
@@ -295,7 +296,7 @@ class PageIndex(Index):
     def extract_document(self, data):
         doc = {}
 
-        attrs = ('id', 'project', 'title', 'headers', 'version', 'path',
+        attrs = ('id', 'project_id', 'project', 'title', 'headers', 'version', 'path',
                  'content', 'taxonomy', 'commit', 'progetto', 'publisher')
         for attr in attrs:
             doc[attr] = data.get(attr, '')
