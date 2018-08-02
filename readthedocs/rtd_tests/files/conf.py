@@ -15,5 +15,5 @@ release = '0.8.1'
 exclude_patterns = ['_build']
 pygments_style = 'sphinx'
 htmlhelp_basename = 'pip'
-html_theme = 'docs-italia-theme'
+html_theme = 'docs_italia_theme'
 file_insertion_enabled = False

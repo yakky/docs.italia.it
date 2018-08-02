@@ -17,6 +17,7 @@
 import sys
 import os.path
 import yaml
+import docs_italia_theme
 from six import string_types
 from sphinx import version_info
 
@@ -38,14 +39,13 @@ if os.path.exists('_static'):
     html_static_path.append('_static')
 html_static_path.append('{{ static_path }}')
 
-# Setting the theme to docs-italia-theme
-theme = __import__('docs-italia-theme')
-html_theme = 'docs-italia-theme'
+# Setting the theme to docs_italia_theme
+html_theme = 'docs_italia_theme'
 html_style = None
 html_theme_options = {}
-html_theme_path = [theme.get_html_theme_path()]
+html_theme_path = [docs_italia_theme.get_html_theme_path()]
 
-# docs-italia-theme default options
+# docs_italia_theme default options
 source_suffix = SUFFIX
 html_title = u'{{ project.name }}'
 html_use_index = False
@@ -148,5 +148,6 @@ else:
 # Add custom RTD extension
 if 'extensions' in globals():
     extensions.append("readthedocs_ext.readthedocs")
+    extensions.append("docs_italia_theme")
 else:
-    extensions = ["readthedocs_ext.readthedocs"]
+    extensions = ["readthedocs_ext.readthedocs", "docs_italia_theme"]
