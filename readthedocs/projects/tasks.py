@@ -265,6 +265,7 @@ class UpdateDocsTaskStep(SyncRepositoryMixin):
         if config is not None:
             self.config = config
         self.task = task
+        self.setup_env = None
 
     def _log(self, msg):
         log.info(LOG_TEMPLATE
@@ -327,12 +328,13 @@ class UpdateDocsTaskStep(SyncRepositoryMixin):
                 'An unhandled exception was raised during build setup',
                 extra={'tags': {'build': build_pk}}
             )
-            self.setup_env.failure = BuildEnvironmentError(
-                BuildEnvironmentError.GENERIC_WITH_BUILD_ID.format(
-                    build_id=build_pk,
+            if self.setup_env is not None:
+                self.setup_env.failure = BuildEnvironmentError(
+                    BuildEnvironmentError.GENERIC_WITH_BUILD_ID.format(
+                        build_id=build_pk,
+                    )
                 )
-            )
-            self.setup_env.update_build(BUILD_STATE_FINISHED)
+                self.setup_env.update_build(BUILD_STATE_FINISHED)
             return False
         else:
             # No exceptions in the setup step, catch unhandled errors in the
