@@ -1,0 +1,8 @@
+{% load i18n %}
+{% block salutation %}Ciao!{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block signature %}{% endblock %}
+--
+{% block footer %}Docs Italia{% endblock %}
