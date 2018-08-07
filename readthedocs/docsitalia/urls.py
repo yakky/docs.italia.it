@@ -39,6 +39,7 @@ docsitalia_urls = [
 
 urlpatterns = [
     url(r'^docsitalia/', include(docsitalia_urls)),
+    url(r'^api/v2/docsearch/$', api.DocSearch.as_view(), name='doc_search'),
     url(
         r'^$',
         DocsItaliaHomePage.as_view(),

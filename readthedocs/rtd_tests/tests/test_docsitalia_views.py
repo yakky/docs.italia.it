@@ -16,6 +16,7 @@ from readthedocs.docsitalia.views.core_views import (
     DocsItaliaHomePage, PublisherIndex, PublisherProjectIndex, PublisherList)
 from readthedocs.oauth.models import RemoteRepository
 from readthedocs.projects.models import Project
+from readthedocs.search.indexes import PageIndex
 
 
 DOCUMENT_METADATA = """document:
@@ -364,3 +365,30 @@ class DocsItaliaViewsTest(TestCase):
                 '/docsitalia/dashboard/import/', data=self.import_project_data)
             self.assertEqual(response.status_code, 200)
             self.assertTemplateUsed(response, 'docsitalia/import_error.html')
+
+    def test_docsitalia_api_returns_400_without_project(self):
+        response = self.client.get('/api/v2/docsearch/?q=query&project=projectslug&version=latest')
+        self.assertEqual(response.status_code, 400)
+
+    @mock.patch.object(PageIndex, 'search')
+    def test_docsitalia_api_returns_404_without_results(self, search):
+        search.return_value = None
+        project = Project.objects.create(
+            name='my project',
+            slug='projectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        response = self.client.get('/api/v2/docsearch/?q=query&project=projectslug&version=latest')
+        self.assertEqual(response.status_code, 404)
+
+    @mock.patch.object(PageIndex, 'search')
+    def test_docsitalia_api_returns_results(self, search):
+        search.return_value = {}
+        project = Project.objects.create(
+            name='my project',
+            slug='projectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        response = self.client.get('/api/v2/docsearch/?q=query&project=projectslug&version=latest')
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(response.content.decode('utf-8'), {'results': {}})
