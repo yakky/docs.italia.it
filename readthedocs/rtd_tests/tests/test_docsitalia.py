@@ -22,7 +22,6 @@ from readthedocs.core.signals import webhook_github
 from readthedocs.docsitalia.resolver import ItaliaResolver
 from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
 from readthedocs.projects.models import Project
-from readthedocs.projects.signals import project_import
 
 from readthedocs.docsitalia.forms import PublisherAdminForm
 from readthedocs.docsitalia.github import InvalidMetadata
@@ -230,95 +229,6 @@ class DocsItaliaTest(TestCase):
 
         remote_repos = RemoteRepository.objects.all()
         self.assertEqual(remote_repos.count(), 1)
-
-    @patch('django.contrib.messages.api.add_message')
-    def test_project_import_signal_works(self, add_message):
-        publisher = Publisher.objects.create(
-            name='Test Org',
-            slug='testorg',
-            metadata={},
-            projects_metadata={},
-            active=True
-        )
-
-        pub_project = PublisherProject.objects.create(
-            name='Test Project',
-            slug='testproject',
-            metadata={
-                'documents': [
-                    {
-                        'title': 'a title',
-                        'repository': 'myrepourl',
-                        'repo_url': 'https://github.com/testorg/myrepourl'
-                    }, {
-                        'title': 'another title',
-                        'repository': 'anotherrepourl',
-                        'repo_url': 'https://github.com/testorg/anotherrepourl'
-                    },
-                ]
-            },
-            publisher=publisher,
-            active=True
-        )
-
-        project = Project.objects.create(
-            name='my project',
-            slug='myprojectslug',
-            repo='https://github.com/testorg/myrepourl.git'
-        )
-        remote = RemoteRepository.objects.create(
-            full_name='remote repo name',
-            html_url='https://github.com/testorg/myrepourl',
-            project=project,
-        )
-        request = self.factory.get('/')
-        request.user = self.user
-        with requests_mock.Mocker() as rm:
-            rm.get(
-                'https://raw.githubusercontent.com/testorg/'
-                'myrepourl/master/document_settings.yml',
-                text='')
-            project_import.send(sender=project, request=request)
-
-        project_for_pub_project = pub_project.projects.filter(pk=project.pk)
-        self.assertTrue(project_for_pub_project.exists())
-        self.assertEqual(pub_project.projects.count(), 1)
-
-        other_project = Project.objects.create(
-            name='my other project',
-            slug='myotherprojectslug',
-            repo='https://github.com/testorg/myotherproject.git'
-        )
-        with requests_mock.Mocker() as rm:
-            rm.get(
-                'https://raw.githubusercontent.com/testorg/'
-                'myotherproject/master/document_settings.yml',
-                text='')
-        project_import.send(sender=other_project, request=request)
-
-        self.assertEqual(pub_project.projects.count(), 1)
-
-    @patch('django.contrib.messages.api.add_message')
-    def test_project_import_parse_document_metadata_correctly(self, add_message):
-        project = Project.objects.create(
-            name='my project',
-            slug='myprojectslug',
-            description='mydescription',
-            repo='https://github.com/testorg/myrepourl.git'
-        )
-        request = self.factory.get('/')
-        request.user = self.user
-        with requests_mock.Mocker() as rm:
-            rm.get(
-                'https://raw.githubusercontent.com/testorg/'
-                'myrepourl/master/document_settings.yml',
-                text=DOCUMENT_METADATA)
-            project_import.send(sender=project, request=request)
-        project.refresh_from_db()
-        self.assertEqual(project.name, 'Documento Documentato Pubblicamente')
-        self.assertEqual(project.description, 'Lorem ipsum dolor sit amet, consectetur\n')
-        self.assertEqual(project.tags.count(), 1)
-        self.assertIn('amazing-document', project.tags.slugs())
 
     @patch('django.contrib.messages.api.add_message')
     @override_settings(PUBLIC_PROTO='http', PUBLIC_DOMAIN='readthedocs.org')
@@ -964,7 +874,7 @@ class DocsItaliaTest(TestCase):
                 exc=IOError)
             self.assertFalse(form.is_valid())
 
-    def test_publisher_admin_form_errors_without_projects_settings(self):
+    def test_publisher_admin_form_errors_with_invalid_metadata(self):
         data = {
             'name': 'testorg',
             'slug': 'testorg',

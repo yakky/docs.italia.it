@@ -34,7 +34,7 @@ class DocsItaliaViewsTest(TestCase):
         eric = User.objects.get(username='eric')
         remote = RemoteRepository.objects.create(
             full_name='remote repo name',
-            html_url='https://github.com/testorg/myrepourl',
+            html_url='https://github.com/org-docs-italia/altro-progetto',
             ssh_url='https://github.com/org-docs-italia/altro-progetto.git',
         )
         remote.users.add(eric)
@@ -347,7 +347,7 @@ class DocsItaliaViewsTest(TestCase):
         self.assertFalse(project.exists())
 
     @mock.patch('readthedocs.docsitalia.views.core_views.trigger_build')
-    def test_docsitalia_redirect_to_project_detail_with_valid_metadata(self, trigger_build):
+    def test_docsitalia_import_redirect_to_project_detail_with_valid_metadata(self, trigger_build):
         self.client.login(username='eric', password='test')
         with requests_mock.Mocker() as rm:
             rm.get(self.document_settings_url, text=DOCUMENT_METADATA)
@@ -358,6 +358,48 @@ class DocsItaliaViewsTest(TestCase):
         self.assertEqual(repo.project, project)
         redirect_url = reverse('projects_detail', kwargs={'project_slug': 'altro-progetto'})
         self.assertRedirects(response, redirect_url)
+
+    @mock.patch('readthedocs.docsitalia.views.core_views.trigger_build')
+    def test_docsitalia_import_update_project_with_valid_metadata(self, trigger_build):
+        self.client.login(username='eric', password='test')
+        with requests_mock.Mocker() as rm:
+            rm.get(self.document_settings_url, text=DOCUMENT_METADATA)
+            response = self.client.post(
+                '/docsitalia/dashboard/import/', data=self.import_project_data)
+        project = Project.objects.get(repo=self.import_project_data['repo'])
+        self.assertEqual(project.name, 'Documento Documentato Pubblicamente')
+        self.assertEqual(project.description, 'Lorem ipsum dolor sit amet, consectetur\n')
+        project_tags = list(project.tags.slugs())
+        self.assertEqual(project_tags, ['amazing-document'])
+        self.assertEqual(project.language, 'it')
+
+    @mock.patch('readthedocs.docsitalia.views.core_views.trigger_build')
+    def test_docsitalia_import_connect_project_with_publisher_project(self, trigger_build):
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            active=True
+        )
+        pub_project = PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            metadata={
+                'documents': [{
+                    'repo_url': 'https://github.com/org-docs-italia/altro-progetto'
+                }]
+            },
+            publisher=publisher,
+            active=True
+        )
+
+        self.client.login(username='eric', password='test')
+        with requests_mock.Mocker() as rm:
+            rm.get(self.document_settings_url, text=DOCUMENT_METADATA)
+            response = self.client.post(
+                '/docsitalia/dashboard/import/', data=self.import_project_data)
+        self.assertEqual(pub_project.projects.count(), 1)
 
     @mock.patch('readthedocs.docsitalia.views.core_views.trigger_build')
     def test_docsitalia_import_render_error_for_invalid_fields(self, trigger_build):
