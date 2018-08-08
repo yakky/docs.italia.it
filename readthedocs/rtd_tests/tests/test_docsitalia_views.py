@@ -331,6 +331,9 @@ class DocsItaliaViewsTest(TestCase):
             response = self.client.post(
                 '/docsitalia/dashboard/import/', data=self.import_project_data)
         self.assertTemplateUsed(response, 'docsitalia/import_error.html')
+        project_name = self.import_project_data['name']
+        project = Project.objects.filter(name=project_name)
+        self.assertFalse(project.exists())
 
     def test_docsitalia_import_render_error_with_invalid_metadata(self):
         self.client.login(username='eric', password='test')
@@ -339,6 +342,9 @@ class DocsItaliaViewsTest(TestCase):
             response = self.client.post(
                 '/docsitalia/dashboard/import/', data=self.import_project_data)
         self.assertTemplateUsed(response, 'docsitalia/import_error.html')
+        project_name = self.import_project_data['name']
+        project = Project.objects.filter(name=project_name)
+        self.assertFalse(project.exists())
 
     @mock.patch('readthedocs.docsitalia.views.core_views.trigger_build')
     def test_docsitalia_redirect_to_project_detail_with_valid_metadata(self, trigger_build):

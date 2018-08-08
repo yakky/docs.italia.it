@@ -124,11 +124,13 @@ class DocsItaliaImport(ImportView):  # pylint: disable=too-many-ancestors
         except InvalidMetadata as exception:
             log.error('Failed to import document invalid metadata %s', exception)
             msg = _('Invalid document_settings.yml found in the repository')
+            project.delete()
             return render(request, 'docsitalia/import_error.html', {'error_msg': msg})
         except Exception as e: # noqa
             log.error(
                 'Failed to import document metadata: %s', e)
             msg = _('Failed to download document_settings.yml from the repository')
+            project.delete()
             return render(request, 'docsitalia/import_error.html', {'error_msg': msg})
 
         extra_fields = ProjectExtraForm.Meta.fields
