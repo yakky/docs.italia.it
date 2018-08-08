@@ -874,7 +874,7 @@ class DocsItaliaTest(TestCase):
                 exc=IOError)
             self.assertFalse(form.is_valid())
 
-    def test_publisher_admin_form_errors_without_projects_settings(self):
+    def test_publisher_admin_form_errors_with_invalid_metadata(self):
         data = {
             'name': 'testorg',
             'slug': 'testorg',
