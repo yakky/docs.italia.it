@@ -11,13 +11,14 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, ListView
 
 from readthedocs.core.utils import trigger_build
+from readthedocs.oauth.models import RemoteRepository
 from readthedocs.projects.forms import ProjectBasicsForm, ProjectExtraForm
 from readthedocs.projects.models import Project
 from readthedocs.projects.signals import project_import
 from readthedocs.projects.views.private import ImportView
 
 from ..github import get_metadata_for_document, InvalidMetadata
-from ..models import PublisherProject, Publisher
+from ..models import PublisherProject, Publisher, update_project_from_metadata
 from ..utils import get_projects_with_builds
 
 log = logging.getLogger(__name__)  # noqa
@@ -111,16 +112,27 @@ class DocsItaliaImport(ImportView):  # pylint: disable=too-many-ancestors
 
     """Simplified ImportView for Docs Italia"""
 
-    def post(self, request, *args, **kwargs):
-        """Validate metadata before importing the project"""
+    def post(self, request, *args, **kwargs):  # noqa
+
+        """
+        Handler for Project import
+
+        We import the Project only after validating the mandatory metadata.
+        We then connect a Project to its PublisherProject.
+        Finally we need to update the Project model with the data we have in the
+        document_settings.yml. We don't care much about what it's in the model
+        and we consider the config file as source of truth.
+        """
         form = ProjectBasicsForm(request.POST, user=request.user)
 
         if not form.is_valid():
             return render(request, 'docsitalia/import_error.html', {'error_list': form.errors})
 
         project = form.save()
+
+        # try to get the document metadata from github
         try:
-            get_metadata_for_document(project)
+            metadata = get_metadata_for_document(project)
         except InvalidMetadata as exception:
             log.error('Failed to import document invalid metadata %s', exception)
             msg = _('Invalid document_settings.yml found in the repository')
@@ -138,7 +150,21 @@ class DocsItaliaImport(ImportView):  # pylint: disable=too-many-ancestors
         project.save()
         project.users.add(request.user)
 
-        # FIXME: move what we are doing in our signal handler here
+        # link the document to the project
+        try:
+            remote = RemoteRepository.objects.get(project=project)
+        except RemoteRepository.DoesNotExist:
+            log.error('Missing RemoteRepository for project {}'.format(project))
+        else:
+            pub_projects = PublisherProject.objects.filter(
+                metadata__documents__contains=[{'repo_url': remote.html_url}]
+            )
+            for pub_proj in pub_projects:
+                pub_proj.projects.add(project)
+
+        # and finally update the Project model with the metadata
+        update_project_from_metadata(project, metadata)
+
         project_import.send(sender=project, request=self.request)
         trigger_build(project, basic=True)
         return redirect('projects_detail', project_slug=project.slug)
