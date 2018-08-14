@@ -10,6 +10,7 @@ import pytest
 from django import forms
 from django.core.management import call_command
 from django.conf import settings
+from django.db import IntegrityError
 from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -325,6 +326,52 @@ class DocsItaliaTest(TestCase):
             'publisher_project': pub_project,
             'publisher': publisher
         })
+
+    def test_publisher_create_projects_from_metadata_let_use_same_slug_for_other_publisher(self):
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+        )
+
+        PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            publisher=publisher,
+        )
+
+        new_publisher = Publisher.objects.create(
+            name='New Test Org',
+            slug='newtestorg',
+        )
+        metadata = {
+            'projects': [{
+                'name': 'Test Project',
+                'slug': 'testproject'
+            }]
+        }
+        new_publisher.create_projects_from_metadata(metadata)
+        pub_proj = PublisherProject.objects.filter(publisher=new_publisher, slug='testproject')
+        self.assertTrue(pub_proj.exists())
+        testprojects = PublisherProject.objects.filter(slug='testproject')
+        self.assertEqual(testprojects.count(), 2)
+
+    def test_we_cannot_create_publisherproject_with_same_slug_inside_the_same_org(self):
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+        )
+
+        PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            publisher=publisher,
+        )
+        with self.assertRaises(IntegrityError):
+            PublisherProject.objects.create(
+                name='Test Project',
+                slug='testproject',
+                publisher=publisher,
+            )
 
     def test_publisher_metadata_validation_parse_well_formed_metadata(self):
         data = validate_publisher_metadata(None, PUBLISHER_METADATA)

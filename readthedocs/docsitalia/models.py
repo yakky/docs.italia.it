@@ -159,11 +159,17 @@ class Publisher(models.Model):
         """Create PublisherProjects from metadata"""
         slugs = []
         for project in settings['projects']:
-            proj, _ = PublisherProject.objects.get_or_create(
+            # since the slug is used for filtering we use it as key
+            # for not duplicating renamed instances
+            proj, created = PublisherProject.objects.get_or_create(
                 publisher=self,
-                name=project['name'],
                 slug=project['slug'],
+                defaults={
+                    'name': project['name'],
+                }
             )
+            if not created:
+                proj.name = project['name']
             proj.metadata = project
             proj.active = True
             proj.save()
@@ -220,9 +226,8 @@ class PublisherProject(models.Model):
     pub_date = models.DateTimeField(_('Publication date'), auto_now_add=True)
     modified_date = models.DateTimeField(_('Modified date'), auto_now=True)
 
-    # we need something unique
-    name = models.CharField(_('Name'), max_length=255, unique=True)
-    slug = models.SlugField(_('slug'), max_length=255, unique=True)
+    name = models.CharField(_('Name'), max_length=255)
+    slug = models.SlugField(_('slug'), max_length=255)
 
     # this holds the metadata for the single project
     metadata = JSONField(_('Metadata'), blank=True, default=dict)
@@ -234,6 +239,10 @@ class PublisherProject(models.Model):
 
     featured = models.BooleanField(_('Featured'), default=False)
     active = models.BooleanField(_('Active'), default=False)
+
+    class Meta:
+        # we want slug uniqueness only inside the same publisher
+        unique_together = [('publisher', 'slug')]
 
     def __str__(self):
         return self.name
