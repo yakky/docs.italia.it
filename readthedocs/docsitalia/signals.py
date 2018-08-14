@@ -70,6 +70,13 @@ def add_sphinx_context_data(sender, data, build_env, **kwargs):  # pylint: disab
 def on_publisher_project_delete(sender, instance, **kwargs):  # noqa
     """Remove all the projects associated at PublisherProject removal from db and ES indexes"""
     from readthedocs.docsitalia.tasks import clear_es_index
+    reused_projects_pks = set(PublisherProject.objects.exclude(
+        pk=instance.pk
+    ).values_list(
+        'projects', flat=True
+    ))
     projects_pks = list(instance.projects.values_list('pk', flat=True))
-    instance.projects.all().delete()
-    clear_es_index.delay(projects=projects_pks)
+    projects_pks = [p for p in projects_pks if p not in reused_projects_pks]
+    if projects_pks:
+        instance.projects.filter(pk__in=projects_pks).delete()
+        clear_es_index.delay(projects=projects_pks)

@@ -1082,15 +1082,31 @@ class DocsItaliaTest(TestCase):
             publisher=publisher,
             active=True
         )
+        other_pub_project = PublisherProject.objects.create(
+            name='Other Project',
+            slug='otherproject',
+            metadata={},
+            publisher=publisher,
+            active=True
+        )
         project = Project.objects.create(
             name='my project',
             slug='myprojectslug',
             repo='https://github.com/testorg/myrepourl.git'
         )
         pub_project.projects.add(project)
+        project2 = Project.objects.create(
+            name='my project2',
+            slug='myprojectslug2',
+            repo='https://github.com/testorg/myrepourl2.git'
+        )
+        pub_project.projects.add(project2)
+        other_pub_project.projects.add(project2)
         publisher.delete()
         pubproj = PublisherProject.objects.filter(pk=pub_project.pk)
         self.assertFalse(pubproj.exists())
         proj = Project.objects.filter(pk=project.pk)
         self.assertFalse(proj.exists())
         self.assertEqual(len(clear_index.mock_calls), 1)
+        proj2 = Project.objects.filter(pk=project2.pk)
+        self.assertTrue(proj2.exists())
