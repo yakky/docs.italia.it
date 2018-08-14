@@ -387,7 +387,7 @@ class DocsItaliaTest(TestCase):
 
     def test_publisher_metadata_raise_value_error_without_name(self):
         invalid_metadata = """publisher:
-  short-name: Min. Doc. Pub.
+  short_name: Min. Doc. Pub.
   description: |
     Lorem ipsum dolor sit amet, consectetur
   website: https://www.ministerodocumentazione.gov.it"""
@@ -397,7 +397,7 @@ class DocsItaliaTest(TestCase):
     def test_publisher_metadata_raise_value_error_without_description(self):
         invalid_metadata = """publisher:
   name: Ministero della Documentazione Pubblica
-  short-name: Min. Doc. Pub.
+  short_name: Min. Doc. Pub.
   website: https://www.ministerodocumentazione.gov.it"""
         with self.assertRaises(ValueError):
             validate_publisher_metadata(None, invalid_metadata)
@@ -422,8 +422,8 @@ class DocsItaliaTest(TestCase):
 
     def test_projects_metadata_raise_value_error_without_documents(self):
         invalid_metadata = """projects:
-- title: Progetto Documentato Pubblicamente
-  short-name: PDP
+- name: Progetto Documentato Pubblicamente
+  short_name: PDP
   description: |
     Lorem ipsum dolor sit amet, consectetur
   website: https://progetto.ministerodocumentazione.gov.it
@@ -432,15 +432,14 @@ class DocsItaliaTest(TestCase):
         with self.assertRaises(ValueError):
             validate_projects_metadata(None, invalid_metadata)
 
-    def test_projects_metadata_raise_value_error_without_title(self):
+    def test_projects_metadata_raise_value_error_without_name(self):
         invalid_metadata = """projects:
-- short-name: PDP
+- short_name: PDP
   description: |
     Lorem ipsum dolor sit amet, consectetur
   website: https://progetto.ministerodocumentazione.gov.it
   documents:
-     - title: hi
-       repository: there
+    - doc
   tags:
     - amazing project"""
         with self.assertRaises(ValueError):
@@ -448,26 +447,11 @@ class DocsItaliaTest(TestCase):
 
     def test_projects_metadata_raise_value_error_without_description(self):
         invalid_metadata = """projects:
-- title: Progetto Documentato Pubblicamente
-  short-name: PDP
+- name: Progetto Documentato Pubblicamente
+  short_name: PDP
   website: https://progetto.ministerodocumentazione.gov.it
   documents:
-     - title: hi
-       repository: there
-  tags:
-    - amazing project"""
-        with self.assertRaises(ValueError):
-            validate_projects_metadata(None, invalid_metadata)
-
-    def test_projects_metadata_raise_value_error_without_website(self):
-        invalid_metadata = """projects:
-- title: Progetto Documentato Pubblicamente
-  short-name: PDP
-  description: |
-    Lorem ipsum dolor sit amet, consectetur
-  documents:
-     - title: hi
-       repository: there
+    - doc
   tags:
     - amazing project"""
         with self.assertRaises(ValueError):
