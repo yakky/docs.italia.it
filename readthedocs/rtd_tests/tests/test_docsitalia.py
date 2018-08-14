@@ -457,6 +457,27 @@ class DocsItaliaTest(TestCase):
         with self.assertRaises(ValueError):
             validate_projects_metadata(None, invalid_metadata)
 
+    def test_projects_metadata_slugifies_short_name_if_available_otherwise_name(self):
+        org = RemoteOrganization(url='https://github.com/myorg')
+        valid_metadata = """projects:
+- name: Progetto Documentato Pubblicamente
+  short_name: PDP
+  description: |
+    Lorem ipsum dolor sit amet, consectetur
+  documents:
+    - doc"""
+        validated = validate_projects_metadata(org, valid_metadata)
+        self.assertEqual(validated['projects'][0]['slug'], 'pdp')
+
+        valid_metadata = """projects:
+- name: Progetto Documentato Pubblicamente
+  description: |
+    Lorem ipsum dolor sit amet, consectetur
+  documents:
+    - doc"""
+        validated = validate_projects_metadata(org, valid_metadata)
+        self.assertEqual(validated['projects'][0]['slug'], 'progetto-documentato-pubblicamente')
+
     def test_document_metadata_validation_parse_well_formed_metadata(self):
         data = validate_document_metadata(None, DOCUMENT_METADATA)
         self.assertTrue(data)

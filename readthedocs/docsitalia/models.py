@@ -60,7 +60,8 @@ def validate_projects_metadata(org, settings):
                     'repository':  document,
                     'repo_url': '{}/{}'.format(org.url, document)
                 }
-            project['slug'] = slugify(project['name'])
+            name_for_slug = project.get('short_name', project['name'])
+            project['slug'] = slugify(name_for_slug)
     except (KeyError, TypeError):
         raise ValueError('General error in parsing projects metadata %s' % data)
     return data
