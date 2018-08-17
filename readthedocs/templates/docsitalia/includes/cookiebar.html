@@ -1,0 +1,17 @@
+<div class="cookiebar bg-dark p-4 hide" aria-hidden="true">
+    <p class="text-white">Questo sito utilizza cookie tecnici, analytics e di terze parti.
+        <br>Proseguendo nella navigazione accetti l’utilizzo dei cookie.<br>
+    </p>
+    <p>
+        <button data-accept="cookiebar" class="btn btn-info mr-2">Accetto</button>
+        <a href="{% url 'privacy_policy' %}" class="btn btn-outline-info">Privacy policy</a>
+    </p>
+</div>
+{% block extra_scripts %}
+<script type="text/javascript">
+// Disabilita tracciamento se il cookie cookies_consent non esiste
+if (document.cookie.indexOf('cookies_consent=true') === -1) {
+  window['ga-disable-{{ GLOBAL_ANALYTICS_CODE }}'] = true;
+}
+</script>
+{% endblock %}
