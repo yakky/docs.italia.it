@@ -245,6 +245,34 @@ select:hover {
   text-shadow: none;
   box-shadow: none;
 }
+.document-list {
+  min-height: 240px;
+}
+.search-main {
+  background: #d1e7ff left center no-repeat;
+}
+@media (min-width: 768px) {
+  .search-main {
+    background-image: url(../images/book-bg.png), url(../images/documents-bg.png);
+    background-position: left center, right bottom;
+    background-repeat: no-repeat, no-repeat;
+    background-size: 193px 357px, 192px 372px;
+  }
+}
+.search-main .bg-dark {
+  background-color: #d1e7ff !important;
+}
+.search-main .search-main-icon {
+  font-size: 1.4rem;
+}
+.search-main input[type=text].search-main-input {
+  height: 4.2rem;
+  line-height: 4.2rem;
+  font-size: 1.6rem;
+  font-weight: normal;
+  border-bottom: 0;
+  box-shadow: 0 10px 40px 0 rgba(102, 165, 227, 0.4);
+}
 .blue-to-transparent-up {
   background: #0066cc;
   background: linear-gradient(178deg, #0066cc 0%, #0066cc 74.9%, rgba(255, 255, 255, 0) 75%);

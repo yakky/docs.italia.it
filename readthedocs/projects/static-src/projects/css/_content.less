@@ -280,3 +280,34 @@ select {
         box-shadow: none;
     }
 }
+
+
+.document-list {
+  min-height: 240px;
+}
+
+.search-main {
+  background: #d1e7ff  left center no-repeat;
+  @media (min-width: 768px) {
+    background-image: url(../images/book-bg.png), url(../images/documents-bg.png);
+    background-position: left center, right bottom;
+    background-repeat: no-repeat, no-repeat;
+    background-size: 386/2px 714/2px, 384/2px 744/2px;
+  }
+  .bg-dark {
+    background-color: #d1e7ff !important;
+  }
+
+  .search-main-icon {
+    font-size: 1.4rem;
+  }
+
+  input[type=text].search-main-input {
+    height: 4.2rem;
+    line-height: 4.2rem;
+    font-size: 1.6rem;
+    font-weight: normal;
+    border-bottom: 0;
+    box-shadow: 0 10px 40px 0 rgba(102,165,227,0.4);
+  }
+}
