@@ -14,9 +14,6 @@
 
 {% block project_edit_content %}
   <form method="post" action=".">{% csrf_token %}
-    <p class="empty">
-      You can change how your project is built in your <a href="../advanced/">Advanced Settings</a>.
-    </p>
     <div class="form-container">
       {{ form.as_p }}
     </div>
