@@ -163,6 +163,8 @@ class DocsItaliaImport(ImportView):  # pylint: disable=too-many-ancestors
             )
             for pub_proj in pub_projects:
                 pub_proj.projects.add(project)
+            if not pub_projects:
+                log.error('No PublisherProject found for repo {}'.format(remote.html_url))
 
         # and finally update the Project model with the metadata
         update_project_from_metadata(project, metadata)
