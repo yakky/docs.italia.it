@@ -6,15 +6,27 @@
 Home page di docs italia, al momento contiene la lista dei documenti (Project di RTD) più recenti
 {% endcomment %}
 
-<div class="blue-to-transparent-up py-5">
+<div class="search-main py-5 py-sm-2">
   <section class="container">
-    <h2 class="text-white">Documenti disponibili</h2>
+    <div class="row justify-content-center py-5">
+      <div class="col col-lg-10 align-self-center">
+        <h2 class="text-center">Il luogo per la divulgazione e la consultazione della documentazione pubblica digitale.</h2>
+      </div>
+    </div>
+    <div class="pb-5 row justify-content-center">
+      <div class="col col-lg-8 align-self-center">
+        {% include 'docsitalia/includes/searchbar.html' %}
+      </div>
+    </div>
   </section>
 </div>
 
-<div class="transparent-to-blue-down" style="margin-top: -50px">
+<div class="transparent-to-blue-down">
   <section class="container">
-    <div class="row" style="min-height: 200px;">
+    <h1 class="my-4">Documenti disponibili</h1>
+  </section>
+  <section class="container document-list">
+    <div class="row">
       {% for project in object_list %}
       {% include 'docsitalia/includes/document_card.html' %}
       {% endfor %}
@@ -24,10 +36,7 @@ Home page di docs italia, al momento contiene la lista dei documenti (Project di
 
 <div class="blue-to-transparent-up pt-5">
   <div class="container">
-    <div class="py-5">
-      {% include 'docsitalia/includes/searchbar.html' %}
-    </div>
-    <div class="row justify-content-center">
+    <div class="pt-5 row justify-content-center">
       <div class="col-6 col-lg-4 docs-book">
         {% include 'docsitalia/includes/docbook.svg' %}
       </div>
@@ -35,7 +44,7 @@ Home page di docs italia, al momento contiene la lista dei documenti (Project di
   </div>
 </div>
 
-<div class="pt-5">
+<div class="py-5">
   <div class="container">
     <h1>Cos'è Docs Italia?</h1>
     <div>
@@ -61,11 +70,6 @@ Home page di docs italia, al momento contiene la lista dei documenti (Project di
           Pubblica Amministrazione</em>
         </li>
       </ul>
-      <p>
-        <a href="" class="u-textClean u-text-xxs">Per approfondire
-          <span class="Icon Icon-arrow-right u-margin-left-xs u-alignMiddle"></span>
-        </a>
-      </p>
     </div>
   </div>
 </div>

@@ -1,17 +1,16 @@
 {% load i18n %}
 
 <!-- BEGIN wide search bar -->
-<h2 class="text-white">Cerca</h2>
 
-
-<form action="{% url "search" %}" method="GET">
-  <div class="form-row align-items-center">
-    <div class="col-auto">
-      <label class="sr-only" for="id_site_search">Cerca</label>
-      <input type="text" class="form-control bg-white" name="q" value="{{ term }}" id="id_site_search" placeholder="{% trans 'Search Read the Docs' %}">
-    </div>
-    <div class="col-auto">
-      <button type="submit" class="btn btn-primary">{% trans "Let's do this." %}</button>
+<form action="{% url 'search' %}" method="GET">
+  <div class="form-group d-flex align-items-center">
+    <i class="ico-prefix it-search ml-1 primary-color search-main-icon"></i>
+    <input type="text" class="form-control search-main-input" id="id_site_search" name="q" value="{{ term }}" placeholder="{% trans 'Search all the docs' %}">
+    <label class="sr-only" for="id_site_search">{% trans 'Search all the docs' %}</label>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-6 bg-dark">
+      <button type="submit" class="btn btn-primary w-100">{% trans 'Search' %}</button>
     </div>
   </div>
 </form>

@@ -8,11 +8,11 @@
       <h1 class="neutral-1-color">Amministrazioni</h1>
     </div>
     <div class="col-md-6">
-      <p class="h2" style="font-weight: normal">Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Qui ipsorum lingua Celtae, nostra Galli appellantur.</p>
+      <h2 class="mb-4 font-weight-normal">Tutti gli enti che hanno pubblicato documenti su Docs Italia.</>
     </div>
     <div class="col-md-5 offset-md-1">
       <h2 class="h4">Sei un'amministrazione?</h2>
-      <p>Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Qui ipsorum lingua Celtae, nostra Galli appellantur.</p>
+      <p>Il progetto è aperto a tutte le Pubbliche Amministrazioni, collabora con noi!</p>
       <a href="/che-cos-e-docs-italia/" class="btn btn-sm btn-primary">come partecipo</a>
     </div>
   </div>
@@ -20,11 +20,8 @@
     {% for publisher in object_list %}
     <div class="amministrazione col-sm-6 col-md-4 my-2">
       {% with metadata=publisher.metadata.publisher %}
-      {% if metadata.logo %}
-      <img class="d-block amministrazione__logo" alt="logo amministrazione" src="{{ metadata.logo }}"/>
-      {% else %}
-      <img class="d-block amministrazione__logo" alt="logo amministrazione" src="{{ MEDIA_URL }}docsitalia/docsitalia/icons/icon-type-administrations.svg"/>
-      {% endif %}
+      {% comment %}<img class="d-block amministrazione__logo" alt="logo amministrazione" src="{{ metadata.logo }}"/>{% endcomment %}
+      <img class="d-block amministrazione__logo" alt="logo amministrazione" src="{{ MEDIA_URL }}docsitalia/icons/icon-type-administrations.svg"/>
       <p class="d-block amministrazione__nome m-0 font-weight-bold">{{ metadata.name }}</p>
       <a class="d-block amministrazione__link text-uppercase font-weight-bold x-small" href="{% url 'publisher_detail' publisher.slug %}">Vai al dettaglio →</a>
       {% endwith %}
