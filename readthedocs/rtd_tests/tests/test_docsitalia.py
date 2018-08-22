@@ -10,6 +10,7 @@ import pytest
 from django import forms
 from django.core.management import call_command
 from django.conf import settings
+from django.db import IntegrityError
 from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -326,6 +327,52 @@ class DocsItaliaTest(TestCase):
             'publisher': publisher
         })
 
+    def test_publisher_create_projects_from_metadata_let_use_same_slug_for_other_publisher(self):
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+        )
+
+        PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            publisher=publisher,
+        )
+
+        new_publisher = Publisher.objects.create(
+            name='New Test Org',
+            slug='newtestorg',
+        )
+        metadata = {
+            'projects': [{
+                'name': 'Test Project',
+                'slug': 'testproject'
+            }]
+        }
+        new_publisher.create_projects_from_metadata(metadata)
+        pub_proj = PublisherProject.objects.filter(publisher=new_publisher, slug='testproject')
+        self.assertTrue(pub_proj.exists())
+        testprojects = PublisherProject.objects.filter(slug='testproject')
+        self.assertEqual(testprojects.count(), 2)
+
+    def test_we_cannot_create_publisherproject_with_same_slug_inside_the_same_org(self):
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+        )
+
+        PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            publisher=publisher,
+        )
+        with self.assertRaises(IntegrityError):
+            PublisherProject.objects.create(
+                name='Test Project',
+                slug='testproject',
+                publisher=publisher,
+            )
+
     def test_publisher_metadata_validation_parse_well_formed_metadata(self):
         data = validate_publisher_metadata(None, PUBLISHER_METADATA)
         self.assertTrue(data)
@@ -340,7 +387,7 @@ class DocsItaliaTest(TestCase):
 
     def test_publisher_metadata_raise_value_error_without_name(self):
         invalid_metadata = """publisher:
-  short-name: Min. Doc. Pub.
+  short_name: Min. Doc. Pub.
   description: |
     Lorem ipsum dolor sit amet, consectetur
   website: https://www.ministerodocumentazione.gov.it"""
@@ -350,7 +397,7 @@ class DocsItaliaTest(TestCase):
     def test_publisher_metadata_raise_value_error_without_description(self):
         invalid_metadata = """publisher:
   name: Ministero della Documentazione Pubblica
-  short-name: Min. Doc. Pub.
+  short_name: Min. Doc. Pub.
   website: https://www.ministerodocumentazione.gov.it"""
         with self.assertRaises(ValueError):
             validate_publisher_metadata(None, invalid_metadata)
@@ -375,8 +422,8 @@ class DocsItaliaTest(TestCase):
 
     def test_projects_metadata_raise_value_error_without_documents(self):
         invalid_metadata = """projects:
-- title: Progetto Documentato Pubblicamente
-  short-name: PDP
+- name: Progetto Documentato Pubblicamente
+  short_name: PDP
   description: |
     Lorem ipsum dolor sit amet, consectetur
   website: https://progetto.ministerodocumentazione.gov.it
@@ -385,15 +432,14 @@ class DocsItaliaTest(TestCase):
         with self.assertRaises(ValueError):
             validate_projects_metadata(None, invalid_metadata)
 
-    def test_projects_metadata_raise_value_error_without_title(self):
+    def test_projects_metadata_raise_value_error_without_name(self):
         invalid_metadata = """projects:
-- short-name: PDP
+- short_name: PDP
   description: |
     Lorem ipsum dolor sit amet, consectetur
   website: https://progetto.ministerodocumentazione.gov.it
   documents:
-     - title: hi
-       repository: there
+    - doc
   tags:
     - amazing project"""
         with self.assertRaises(ValueError):
@@ -401,30 +447,36 @@ class DocsItaliaTest(TestCase):
 
     def test_projects_metadata_raise_value_error_without_description(self):
         invalid_metadata = """projects:
-- title: Progetto Documentato Pubblicamente
-  short-name: PDP
+- name: Progetto Documentato Pubblicamente
+  short_name: PDP
   website: https://progetto.ministerodocumentazione.gov.it
   documents:
-     - title: hi
-       repository: there
+    - doc
   tags:
     - amazing project"""
         with self.assertRaises(ValueError):
             validate_projects_metadata(None, invalid_metadata)
 
-    def test_projects_metadata_raise_value_error_without_website(self):
-        invalid_metadata = """projects:
-- title: Progetto Documentato Pubblicamente
-  short-name: PDP
+    def test_projects_metadata_slugifies_short_name_if_available_otherwise_name(self):
+        org = RemoteOrganization(url='https://github.com/myorg')
+        valid_metadata = """projects:
+- name: Progetto Documentato Pubblicamente
+  short_name: PDP
   description: |
     Lorem ipsum dolor sit amet, consectetur
   documents:
-     - title: hi
-       repository: there
-  tags:
-    - amazing project"""
-        with self.assertRaises(ValueError):
-            validate_projects_metadata(None, invalid_metadata)
+    - doc"""
+        validated = validate_projects_metadata(org, valid_metadata)
+        self.assertEqual(validated['projects'][0]['slug'], 'pdp')
+
+        valid_metadata = """projects:
+- name: Progetto Documentato Pubblicamente
+  description: |
+    Lorem ipsum dolor sit amet, consectetur
+  documents:
+    - doc"""
+        validated = validate_projects_metadata(org, valid_metadata)
+        self.assertEqual(validated['projects'][0]['slug'], 'progetto-documentato-pubblicamente')
 
     def test_document_metadata_validation_parse_well_formed_metadata(self):
         data = validate_document_metadata(None, DOCUMENT_METADATA)
@@ -1035,15 +1087,31 @@ class DocsItaliaTest(TestCase):
             publisher=publisher,
             active=True
         )
+        other_pub_project = PublisherProject.objects.create(
+            name='Other Project',
+            slug='otherproject',
+            metadata={},
+            publisher=publisher,
+            active=True
+        )
         project = Project.objects.create(
             name='my project',
             slug='myprojectslug',
             repo='https://github.com/testorg/myrepourl.git'
         )
         pub_project.projects.add(project)
+        project2 = Project.objects.create(
+            name='my project2',
+            slug='myprojectslug2',
+            repo='https://github.com/testorg/myrepourl2.git'
+        )
+        pub_project.projects.add(project2)
+        other_pub_project.projects.add(project2)
         publisher.delete()
         pubproj = PublisherProject.objects.filter(pk=pub_project.pk)
         self.assertFalse(pubproj.exists())
         proj = Project.objects.filter(pk=project.pk)
         self.assertFalse(proj.exists())
         self.assertEqual(len(clear_index.mock_calls), 1)
+        proj2 = Project.objects.filter(pk=project2.pk)
+        self.assertTrue(proj2.exists())
