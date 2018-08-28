@@ -32,7 +32,7 @@ def parse_metadata(data, org, model, settings):
 
     validator = SETTINGS_VALIDATORS[settings]
     try:
-        metadata = validator(org, data)
+        metadata = validator(org=org, settings=data, model=model)
     except ValueError as error:
         msg = 'invalid {} metadata for {} - {}'.format(
             settings, model, force_text(error))

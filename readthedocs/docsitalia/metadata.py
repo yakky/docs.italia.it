@@ -21,7 +21,7 @@ class InvalidMetadata(Exception):
     pass
 
 
-def validate_publisher_metadata(org, settings): # noqa
+def validate_publisher_metadata(org, settings, **kwargs): # noqa
     """Validate the publisher metadata"""
     data = load_yaml(settings)
     try:
@@ -34,7 +34,7 @@ def validate_publisher_metadata(org, settings): # noqa
     return data
 
 
-def validate_projects_metadata(org, settings):
+def validate_projects_metadata(org, settings, **kwargs): # noqa
     """Validate the projects metadata"""
     data = load_yaml(settings)
     try:
@@ -60,7 +60,7 @@ def validate_projects_metadata(org, settings):
     return data
 
 
-def validate_document_metadata(org, settings): # noqa
+def validate_document_metadata(org, settings, **kwargs): # noqa
     """Validate the document metadata"""
     data = load_yaml(settings)
     try:
