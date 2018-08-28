@@ -7,8 +7,9 @@ from builtins import str # noqa
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from .github import InvalidMetadata, get_metadata_for_publisher
-from .models import Publisher, PUBLISHER_SETTINGS, PROJECTS_SETTINGS
+from .github import get_metadata_for_publisher
+from .metadata import PUBLISHER_SETTINGS, PROJECTS_SETTINGS, InvalidMetadata
+from .models import Publisher
 
 
 log = logging.getLogger(__name__) # noqa

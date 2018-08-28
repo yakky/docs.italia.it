@@ -6,20 +6,14 @@ import requests
 from django.utils.encoding import force_text
 from future.backports.urllib.parse import urlparse
 
-from readthedocs.docsitalia.models import (
-    SETTINGS_VALIDATORS, DOCUMENT_SETTINGS)
+from readthedocs.docsitalia.metadata import (
+    SETTINGS_VALIDATORS, DOCUMENT_SETTINGS, InvalidMetadata
+)
 
 
 RAW_GITHUB_BASE_URL = (
     'https://raw.githubusercontent.com/{org}/{repo}/master/{path}'
 )
-
-
-class InvalidMetadata(Exception):
-
-    """Invalid metadata generic exception"""
-
-    pass
 
 
 def get_metadata_from_url(url, session=None):

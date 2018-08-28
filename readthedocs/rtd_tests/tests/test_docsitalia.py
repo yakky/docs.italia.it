@@ -25,12 +25,13 @@ from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
 from readthedocs.projects.models import Project
 
 from readthedocs.docsitalia.forms import PublisherAdminForm
-from readthedocs.docsitalia.github import InvalidMetadata
 from readthedocs.docsitalia.oauth.services.github import DocsItaliaGithubService
+from readthedocs.docsitalia.metadata import (
+    validate_publisher_metadata, validate_projects_metadata,
+    validate_document_metadata, InvalidMetadata)
 from readthedocs.docsitalia.models import (
     Publisher, PublisherProject, PublisherIntegration,
-    validate_publisher_metadata, validate_projects_metadata,
-    validate_document_metadata, update_project_from_metadata)
+    update_project_from_metadata)
 from readthedocs.docsitalia.serializers import (
     DocsItaliaProjectSerializer, DocsItaliaProjectAdminSerializer)
 
