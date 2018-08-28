@@ -13,7 +13,7 @@ from django.core.urlresolvers import reverse
 
 from readthedocs.builds.models import Version
 from readthedocs.projects.models import Project
-from readthedocs.oauth.models import RemoteOrganization
+from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
 
 from readthedocs.core.resolver import resolver
 from .utils import load_yaml
@@ -156,9 +156,10 @@ class Publisher(models.Model):
     def __str__(self):
         return self.name
 
-    def create_projects_from_metadata(self, settings):
+    def create_projects_from_metadata(self, settings):  # pylint: disable=too-many-locals
         """Create PublisherProjects from metadata"""
         slugs = []
+        repo_urls_cache = {}
         for project in settings['projects']:
             # since the slug is used for filtering we use it as key
             # for not duplicating renamed instances
@@ -177,14 +178,49 @@ class Publisher(models.Model):
 
             slugs.append(project['slug'])
 
-        # TODO: double check this is something we want
-        PublisherProject.objects.filter(
+            # we cache the repository of each document for the
+            # project so we can filter already uploaded documents easily
+            for doc in project['documents']:
+                repo_urls_cache[doc['repo_url']] = proj
+
+        # we disable PublisherProjects that does not have
+        # a slug in the metadata
+        old_pub_projects = PublisherProject.objects.filter(
             publisher=self
         ).exclude(
             slug__in=slugs
-        ).update(
+        )
+        old_pub_projects.update(
             active=False
         )
+
+        # we need to port to the new PublisherProject any
+        # already uploaded document connected to the disabled
+        # PublisherProjects
+        projects_to_move_pks = old_pub_projects.values_list(
+            'projects',
+            flat=True
+        )
+        repos_to_move = RemoteRepository.objects.filter(
+            project__in=projects_to_move_pks,
+            html_url__in=repo_urls_cache.keys()
+        ).select_related('project')
+
+        # we can now remove the documents from the old projects
+        # and add them to the new one
+        old_pub_projects_pks = list(old_pub_projects.values_list('pk', flat=True))
+        for repo in repos_to_move:
+            project = repo.project
+
+            old_pub_projects = project.publisherproject_set.filter(
+                pk__in=old_pub_projects_pks
+            )
+            for old_pub_proj in old_pub_projects:
+                old_pub_proj.projects.remove(project)
+
+            repo_url = repo.html_url
+            new_pub_proj = repo_urls_cache[repo_url]
+            new_pub_proj.projects.add(project)
 
     def active_publisher_projects(self):
         """Active publisher projects with active documents"""

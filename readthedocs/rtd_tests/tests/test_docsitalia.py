@@ -346,7 +346,8 @@ class DocsItaliaTest(TestCase):
         metadata = {
             'projects': [{
                 'name': 'Test Project',
-                'slug': 'testproject'
+                'slug': 'testproject',
+                'documents': []
             }]
         }
         new_publisher.create_projects_from_metadata(metadata)
@@ -372,6 +373,46 @@ class DocsItaliaTest(TestCase):
                 slug='testproject',
                 publisher=publisher,
             )
+
+    def test_publisher_create_projects_from_metadata_move_projects_to_new_publisher(self):
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+        )
+
+        pub_project = PublisherProject.objects.create(
+            name='Test Project',
+            slug='testproject',
+            publisher=publisher,
+            active=True
+        )
+        project = Project.objects.create(
+            name='my project',
+            slug='myprojectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        pub_project.projects.add(project)
+        remote = RemoteRepository.objects.create(
+            full_name='remote repo name',
+            html_url='https://github.com/testorg/myrepourl',
+            project=project,
+        )
+        metadata = {
+            'projects': [{
+                'name': 'Test Project',
+                'slug': 'newtestproject',
+                'documents': [{
+                    'repo_url': 'https://github.com/testorg/myrepourl'
+                }]
+            }]
+        }
+        publisher.create_projects_from_metadata(metadata)
+        pub_project.refresh_from_db()
+        self.assertFalse(pub_project.active)
+        self.assertFalse(pub_project.projects.exists())
+        new_pub_proj = PublisherProject.objects.get(slug='newtestproject')
+        self.assertTrue(new_pub_proj.active)
+        self.assertTrue(new_pub_proj.projects.filter(pk=project.pk).exists())
 
     def test_publisher_metadata_validation_parse_well_formed_metadata(self):
         data = validate_publisher_metadata(None, PUBLISHER_METADATA)
