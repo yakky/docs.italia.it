@@ -14,6 +14,11 @@ PROJECT_REQUIRED_FIELDS = 'name', 'description', 'documents'
 DOCUMENT_REQUIRED_FIELDS = 'name', 'description', 'tags'
 
 
+RAW_GITHUB_BASE_URL = (
+    'https://raw.githubusercontent.com/{org}/{repo}/master/{path}'
+)
+
+
 class InvalidMetadata(Exception):
 
     """Invalid metadata generic exception"""
@@ -29,6 +34,16 @@ def validate_publisher_metadata(org, settings, **kwargs): # noqa
         for field in PUBLISHER_REQUIRED_FIELDS:
             if not publisher[field]:
                 raise ValueError('Missing required field "%s" in %s' % (field, publisher))
+        # expand the logo url and store it in the metadata
+        model = kwargs.get('model')
+        logo = publisher.get('logo')
+        if model and logo:
+            # TODO: will need some refactoring when going multi platform
+            publisher['logo_url'] = RAW_GITHUB_BASE_URL.format(
+                org=model.slug,
+                repo=model.config_repo_name,
+                path=logo.lstrip('/')
+            )
     except (KeyError, TypeError):
         raise ValueError('General error in parsing publisher metadata %s' % data)
     return data

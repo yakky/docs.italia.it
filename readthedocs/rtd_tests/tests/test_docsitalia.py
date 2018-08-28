@@ -403,6 +403,17 @@ class DocsItaliaTest(TestCase):
         with self.assertRaises(ValueError):
             validate_publisher_metadata(None, invalid_metadata)
 
+    def test_validate_publisher_metadata_expand_the_logo_url(self):
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+        )
+        data = validate_publisher_metadata(None, PUBLISHER_METADATA, model=publisher)
+        self.assertEqual(
+            data['publisher']['logo_url'],
+            'https://raw.githubusercontent.com/testorg/italia-conf/master/assets/images/logo.svg'
+        )
+
     def test_projects_metadata_validation_parse_well_formed_metadata(self):
         org = RemoteOrganization(url='https://github.com/myorg')
         data = validate_projects_metadata(org, PROJECTS_METADATA)
