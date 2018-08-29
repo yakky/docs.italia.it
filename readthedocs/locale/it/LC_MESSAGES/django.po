@@ -1795,8 +1795,8 @@ msgid ""
 "If you did not sign up for an account with Read the Docs, you can disregard "
 "this email."
 msgstr ""
-"Se non ti sei registrato per un account su Read the Docs, puoi non "
-"considerare questa email."
+"Se non ti sei registrato per un account su Docs Italia, puoi non considerare"
+" questa email."
 
 #: templates/account/email/email_confirmation_subject.txt:3
 msgid "Verify your email address"
@@ -1808,8 +1808,8 @@ msgid ""
 "A request has been made to reset your Read the Docs password. To confirm "
 "this reset request, please go to:"
 msgstr ""
-"È stata effettuata una richiesta per resettare la tua password di Read the "
-"Docs. Per confermare la richiesta, per favore vai a:"
+"È stata effettuata una richiesta per resettare la tua password di Docs "
+"Italia. Per confermare la richiesta, per favore vai a:"
 
 #: templates/account/email/password_reset_key_message.html:15
 #: templates/account/email/password_reset_key_message.txt:10
@@ -2401,7 +2401,7 @@ msgstr "Cerca in tutti i documenti"
 #: templates/core/widesearchbar.html:12
 #: templates/docsitalia/includes/searchbar.html:11
 msgid "Search Read the Docs"
-msgstr "Cerca in Read the Docs"
+msgstr "Cerca in Docs Italia"
 
 #. Translators: This is about starting a search
 #: templates/core/widesearchbar.html:16
