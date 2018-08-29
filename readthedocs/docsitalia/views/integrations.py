@@ -17,9 +17,12 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from readthedocs.docsitalia.metadata import (
+    PUBLISHER_SETTINGS, PROJECTS_SETTINGS, InvalidMetadata)
 from readthedocs.docsitalia.models import (
-    Publisher, PublisherIntegration, PUBLISHER_SETTINGS, PROJECTS_SETTINGS)
-from readthedocs.docsitalia.github import get_metadata_for_publisher, InvalidMetadata
+    Publisher, PublisherIntegration)
+
+from readthedocs.docsitalia.github import get_metadata_for_publisher
 from readthedocs.integrations.models import HttpExchange
 from readthedocs.integrations.utils import normalize_request_payload
 

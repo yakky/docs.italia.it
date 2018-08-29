@@ -17,7 +17,8 @@ from readthedocs.projects.models import Project
 from readthedocs.projects.signals import project_import
 from readthedocs.projects.views.private import ImportView
 
-from ..github import get_metadata_for_document, InvalidMetadata
+from ..github import get_metadata_for_document
+from ..metadata import InvalidMetadata
 from ..models import PublisherProject, Publisher, update_project_from_metadata
 from ..utils import get_projects_with_builds
 

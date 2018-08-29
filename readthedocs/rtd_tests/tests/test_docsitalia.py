@@ -25,12 +25,13 @@ from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
 from readthedocs.projects.models import Project
 
 from readthedocs.docsitalia.forms import PublisherAdminForm
-from readthedocs.docsitalia.github import InvalidMetadata
 from readthedocs.docsitalia.oauth.services.github import DocsItaliaGithubService
+from readthedocs.docsitalia.metadata import (
+    validate_publisher_metadata, validate_projects_metadata,
+    validate_document_metadata, InvalidMetadata)
 from readthedocs.docsitalia.models import (
     Publisher, PublisherProject, PublisherIntegration,
-    validate_publisher_metadata, validate_projects_metadata,
-    validate_document_metadata, update_project_from_metadata)
+    update_project_from_metadata)
 from readthedocs.docsitalia.serializers import (
     DocsItaliaProjectSerializer, DocsItaliaProjectAdminSerializer)
 
@@ -442,6 +443,17 @@ class DocsItaliaTest(TestCase):
   website: https://www.ministerodocumentazione.gov.it"""
         with self.assertRaises(ValueError):
             validate_publisher_metadata(None, invalid_metadata)
+
+    def test_validate_publisher_metadata_expand_the_logo_url(self):
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+        )
+        data = validate_publisher_metadata(None, PUBLISHER_METADATA, model=publisher)
+        self.assertEqual(
+            data['publisher']['logo_url'],
+            'https://raw.githubusercontent.com/testorg/italia-conf/master/assets/images/logo.svg'
+        )
 
     def test_projects_metadata_validation_parse_well_formed_metadata(self):
         org = RemoteOrganization(url='https://github.com/myorg')

@@ -11,11 +11,11 @@ from readthedocs.integrations.models import Integration
 from readthedocs.oauth.services.github import GitHubService
 from readthedocs.oauth.models import RemoteOrganization
 
-from readthedocs.docsitalia.github import (
-    get_metadata_for_publisher, InvalidMetadata)
+from readthedocs.docsitalia.github import get_metadata_for_publisher
+from readthedocs.docsitalia.metadata import (
+    PUBLISHER_SETTINGS, PROJECTS_SETTINGS, InvalidMetadata)
 from readthedocs.docsitalia.models import (
-    Publisher, PublisherIntegration,
-    PUBLISHER_SETTINGS, PROJECTS_SETTINGS)
+    Publisher, PublisherIntegration)
 
 log = logging.getLogger(__name__)
 
