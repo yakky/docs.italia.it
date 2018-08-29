@@ -31,8 +31,9 @@ class DocsItaliaProjectSerializer(ProjectSerializer):
         """gets the publisher"""
         p_p = obj.publisherproject_set.first()
         if p_p:
+            metadata = p_p.publisher.metadata.get('publisher', {})
             return {
-                'name': p_p.publisher.metadata.get('name', ''),
+                'name': metadata.get('name', obj.name),
                 'canonical_url': p_p.publisher.get_canonical_url()
             }
 
@@ -42,7 +43,7 @@ class DocsItaliaProjectSerializer(ProjectSerializer):
         p_p = obj.publisherproject_set.first()
         if p_p:
             return {
-                'name': p_p.metadata.get('name', ''),
+                'name': p_p.name,
                 'canonical_url': p_p.get_canonical_url()
             }
 

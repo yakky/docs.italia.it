@@ -689,7 +689,7 @@ class DocsItaliaTest(TestCase):
         publisher = Publisher.objects.create(
             name='Test Org',
             slug='testorg',
-            metadata={},
+            metadata={'publisher': {'name': 'publisher'}},
             projects_metadata={},
             active=True
         )
@@ -730,11 +730,11 @@ class DocsItaliaTest(TestCase):
                   "canonical_url": "http://readthedocs.org/testorg/testproject/myprojectslug/en/latest/",
                   "publisher": {
                     "canonical_url": "http://readthedocs.org/testorg",
-                    "name": ""
+                    "name": "publisher"
                   },
                   "publisher_project": {
                     "canonical_url": "http://readthedocs.org/testorg/testproject",
-                    "name": ""
+                    "name": "Test Project"
                   },
                   "tags": ["ipsum", "lorem"]
                 }
