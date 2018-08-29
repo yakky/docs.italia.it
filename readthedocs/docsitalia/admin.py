@@ -38,6 +38,7 @@ class PublisherProjectAdmin(admin.ModelAdmin):
 
     list_filter = ('featured', 'active',)
     list_display = ('name', 'publisher', 'documents', 'pub_date',)
+    filter_horizontal = ('projects',)
 
     # pylint: disable=R0201
     def documents(self, obj):
