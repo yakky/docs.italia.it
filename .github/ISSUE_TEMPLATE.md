@@ -1,13 +1,13 @@
-## Details
+## Dettagli
 
-* Read the Docs project URL:
-* Build URL (if applicable):
-* Read the Docs username (if applicable):
+* Pagina web del progetto su Docs Italia: ...
+* Pagina del build (se è il caso): ...
+* Nome utente su Docs Italia (se è il caso): ...
 
-## Expected Result
+## Risultato che ci si aspettava
 
-*A description of what you wanted to happen*
+*Qui si può descrivere cosa si voleva fare*
 
-## Actual Result
+## Risultato effettivo
 
-*A description of what actually happened*
+*Una descrizione di cosa è successo*
