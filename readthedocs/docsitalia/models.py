@@ -16,6 +16,8 @@ from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
 
 from readthedocs.core.resolver import resolver
 
+from .utils import get_projects_with_builds
+
 
 def update_project_from_metadata(project, metadata):
     """Update a project instance with the validated  project metadata"""
@@ -216,16 +218,10 @@ class PublisherProject(models.Model):
 
     def active_documents(self):
         """Active documents"""
-        with_public_version = Version.objects.filter(
-            privacy_level='public',
-            active=True,
-        ).values_list(
-            'project',
-            flat=True
+        builded_projects = get_projects_with_builds().filter(
+            publisherproject=self
         )
-        return self.projects.filter(
-            pk__in=with_public_version
-        ).order_by(
+        return builded_projects.order_by(
             '-modified_date', '-pub_date'
         )
 

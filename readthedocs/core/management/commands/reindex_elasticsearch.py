@@ -12,8 +12,10 @@ from django.core.management.base import BaseCommand, CommandError
 from readthedocs.builds.constants import LATEST
 from readthedocs.builds.models import Version
 from readthedocs.docsitalia.models import PublisherProject
+from readthedocs.docsitalia.utils import get_projects_with_builds
 from readthedocs.projects.models import Project
 from readthedocs.projects.tasks import update_search
+
 
 log = logging.getLogger(__name__)
 
@@ -43,7 +45,7 @@ class Command(BaseCommand):
             active=True,
             publisher__active=True
         ).values_list('pk', flat=True)
-        projects = Project.objects.filter(
+        projects = get_projects_with_builds().filter(
             publisherproject__in=publisher_projects
         ).values_list('pk', flat=True)
         queryset = Version.objects.filter(
