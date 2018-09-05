@@ -57,10 +57,10 @@
         <div class="menu-wrapper">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'about_docs_italia' %}" aria-label="Che cos'è Docs Italia" title="Che cos'è Docs Italia"><b>Che cos'è?</b></a>
+              <a class="nav-link" href="{% url 'about_docs_italia' %}" aria-label="Che cos'è Docs Italia" title="Che cos'è Docs Italia"><span>Che cos'è?</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'amministrazioni' %}" aria-label="Amministrazioni" title="Amministrazioni"><b>Amministrazioni</b></a>
+              <a class="nav-link" href="{% url 'amministrazioni' %}" aria-label="Amministrazioni" title="Amministrazioni"><span>Amministrazioni</span></a>
             </li>
             {% if request.user.is_authenticated %}
             {% include 'docsitalia/includes/user_menu.html' %}
@@ -69,6 +69,10 @@
               <a class="nav-link" href="{% url 'account_login' %}"><span>{% trans "Log In" %}</span></a>
             </li>
             {% endif %}
+            <li class="nav-item">
+              {% url 'docs_italia_convertitore_web:docs-italia-converter-view' as converti_url %}
+              <a class="nav-link btn btn-sm btn-outline-primary btn-outline-primary-white m-3 m-lg-0" href="{{ converti_url }}" aria-label="Converti" title="Converti"><span class="text-uppercase small">Carica un documento<i class="it-upload pl-2"></i></span></a>
+            </li>
           </ul>
         </div>
       </div>

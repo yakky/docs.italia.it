@@ -1,45 +1,57 @@
 .footer {
-    background-color: #00264D;
-    color: #FFF;
-    padding: 3em 0; }
-@media screen and (min-width: 576px) {
-    .footer {
-        text-align: left; } }
-.footer .social {
+  background-color: #00264D;
+  color: #FFF;
+  padding: 3em 0;
+  @media screen and (min-width: 576px) {
+    text-align: left;
+  }
+  .social {
     font-size: 1.2em;
-    color: #fff; }
-.footer .social > span {
-    margin-right: 1em; }
-.footer .social .small-prints {
-    font-size: 0; }
-.footer .social .icon {
-    color: #00264D;
-    background-color: #fff;
-    padding: 0.2em 0.4em;
-    border-radius: 100%;
-    font-size: initial;
-    margin-right: 0.4em; }
-@media screen and (max-width: 768px) {
-    .footer .social {
-        text-align: left !important;
-        margin-top: 1em; } }
-.footer .agid-logo {
+    color: #fff;
+    & > span {
+      margin-right: 1em;
+    }
+    .small-prints {
+      font-size: 0;
+    }
+    .icon {
+      color: #00264D;
+      background-color: #fff;
+      padding: 0.2em 0.4em;
+      border-radius: 100%;
+      font-size: initial;
+      margin-right: 0.4em;
+    }
+    @media screen and (max-width: 768px) {
+      text-align: left !important;
+      margin-top: 1em;
+    }
+  }
+  .agid-logo {
     height: 56px;
-    max-width: 100%; }
-.footer .agid-collab {
-    margin-top: 1em; }
-.footer .team-logo--icon {
-    width: 72px; }
-.footer .team-logo--text {
+    max-width: 100%;
+  }
+  .agid-collab {
+    margin-top: 1em;
+  }
+  .team-logo--icon {
+    width: 72px;
+  }
+  .team-logo--text {
     font-size: 16px;
     line-height: 18px;
     max-width: 160px;
-    text-transform: uppercase; }
-.footer .small-prints {
+    text-transform: uppercase;
+  }
+  .small-prints {
     color: #00FFF8;
-    font-weight: 600; }
-.footer .colophon {
+    font-weight: 600;
+  }
+  .colophon {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: 2em; }
-.footer .colophon .list-inline-item:not(:last-child) {
-    margin-right: 1.5em; }
+    margin-top: 2em;
+    .list-inline-item:not(:last-child) {
+      margin-right: 1.5em;
+    }
+  }
+}
