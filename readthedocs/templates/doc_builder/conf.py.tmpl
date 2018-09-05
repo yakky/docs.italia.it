@@ -47,12 +47,21 @@ html_theme_path = [docs_italia_theme.get_html_theme_path()]
 
 # docs_italia_theme default options
 source_suffix = SUFFIX
-html_title = u'{{ project.name }}'
+{% autoescape off %}
+html_title = u"""{{ project.name }}"""
+{% endautoescape %}
 html_use_index = False
 numfig = True
 latex_documents = [
-  ('index', '{{ project.slug }}.tex', u'{{ project.name }}',
-   u'{{ publisher.name }}', 'manual'),
+  (
+    'index',
+    '{{ project.slug }}.tex',
+    {% autoescape off %}
+    u"""{{ project.name }}""",
+    u"""{{ publisher.name }}""",
+    {% endautoescape %}
+    'manual'
+  ),
 ]
 latex_show_urls = 'footnote'
 latex_show_pagerefs = True
