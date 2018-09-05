@@ -13,7 +13,7 @@ associati
     <h1 class="mb-4">{{ object }}</h1>
     <h2 class="mb-4 font-weight-normal">Tutti i documenti che fanno parte del progetto {{ object }}</h2>
     <div class="row">
-      {% for project in object.projects.all %}
+      {% for project in object.active_documents %}
       {% include 'docsitalia/includes/document_card.html' %}
       {% endfor %}
     </div>
