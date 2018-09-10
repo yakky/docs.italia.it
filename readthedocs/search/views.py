@@ -35,7 +35,7 @@ def elastic_search(request):
     """Use Elasticsearch for global search."""
     user_input = UserInput(
         query=request.GET.get('q'),
-        type=request.GET.get('type', 'project'),
+        type=request.GET.get('type', 'file'),
         project=request.GET.get('project'),
         version=request.GET.get('version', LATEST),
         taxonomy=request.GET.get('taxonomy'),
@@ -68,7 +68,12 @@ def elastic_search(request):
             del hit['_source']
 
         if 'aggregations' in results:
-            for facet_type in ['project', 'version', 'taxonomy', 'language', 'publisher', 'progetto']:
+            facet_types = [
+                'project', 'version',
+                'taxonomy', 'language',
+                'publisher', 'progetto'
+            ]
+            for facet_type in facet_types:
                 if facet_type in results['aggregations']:
                     facets[facet_type] = collections.OrderedDict()
                     for term in results['aggregations'][facet_type]['buckets']:

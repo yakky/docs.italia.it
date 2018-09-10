@@ -6,6 +6,7 @@
   <div class="form-group d-flex align-items-center">
     <i class="ico-prefix it-search ml-1 primary-color search-main-icon"></i>
     <input type="text" class="form-control search-main-input" id="id_site_search" name="q" value="{{ term }}" placeholder="{% trans 'Search all the docs' %}">
+    <input type="hidden" name="type" value="file">
     <label class="sr-only" for="id_site_search">{% trans 'Search all the docs' %}</label>
   </div>
   <div class="row justify-content-center">
