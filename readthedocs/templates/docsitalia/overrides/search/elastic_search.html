@@ -56,7 +56,7 @@
           {% for name, count in facets.publisher.items %}
           <li class="{% if publisher == name %}active{% endif %}">
             {% if publisher == name %}
-              <a href="?{% url_replace request 'publisher' ''  %}">{{ name }}
+              <a href="?{% url_replace request 'publisher' ''  %}">{{ name }}</a>
             {% else %}
               <a href="?{% url_replace request 'publisher' name  %}">{{ name }}
                 ({{ count }})
@@ -71,7 +71,7 @@
           {% for name, count in facets.progetto.items %}
           <li class="{% if progetto == name %}active{% endif %}">
             {% if progetto == name %}
-              <a href="?{% url_replace request 'progetto' ''  %}">{{ name }}
+              <a href="?{% url_replace request 'progetto' ''  %}">{{ name }}</a>
             {% else %}
               <a href="?{% url_replace request 'progetto' name  %}">{{ name }}
                 ({{ count }})

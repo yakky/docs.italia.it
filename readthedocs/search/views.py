@@ -55,7 +55,8 @@ def elastic_search(request):
         elif user_input.type == 'file':
             results = search_lib.search_file(
                 request, user_input.query, project_slug=user_input.project,
-                version_slug=user_input.version, taxonomy=user_input.taxonomy)
+                version_slug=user_input.version, taxonomy=user_input.taxonomy,
+                progetto=user_input.progetto, publisher=user_input.publisher)
 
     if results:
         # pre and post 1.0 compat
