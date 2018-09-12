@@ -28,13 +28,13 @@ def search_project(request, query, language=None, publisher=None, progetto=None)
         },
         "aggs": {
             "language": {
-                "terms": {"field": "lang.keyword"},
+                "terms": {"field": "lang"},
             },
             "publisher": {
-                "terms": {"field": "publisher.keyword"},
+                "terms": {"field": "publisher"},
             },
             "progetto": {
-                "terms": {"field": "progetto.keyword"},
+                "terms": {"field": "progetto"},
             },
         },
         "highlight": {
@@ -106,19 +106,19 @@ def search_file(request, query, project_slug=None, version_slug=LATEST, taxonomy
         },
         "aggs": {
             "taxonomy": {
-                "terms": {"field": "taxonomy.keyword"},
+                "terms": {"field": "taxonomy"},
             },
             "project": {
-                "terms": {"field": "project.keyword"},
+                "terms": {"field": "project"},
             },
             "version": {
-                "terms": {"field": "version.keyword"},
+                "terms": {"field": "version"},
             },
             "publisher": {
-                "terms": {"field": "publisher.keyword"},
+                "terms": {"field": "publisher"},
             },
             "progetto": {
-                "terms": {"field": "progetto.keyword"},
+                "terms": {"field": "progetto"},
             },
         },
         "highlight": {
@@ -222,7 +222,13 @@ def search_section(request, query, project_slug=None, version_slug=LATEST,
         },
         "aggs": {
             "project": {
-                "terms": {"field": "project.keyword"},
+                "terms": {"field": "project"},
+            },
+            "publisher": {
+                "terms": {"field": "publisher"},
+            },
+            "progetto": {
+                "terms": {"field": "progetto"},
             },
         },
         "highlight": {

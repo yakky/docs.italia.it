@@ -25,6 +25,8 @@ UserInput = collections.namedtuple(
         'version',
         'taxonomy',
         'language',
+        'publisher',
+        'progetto',
     ),
 )
 
@@ -33,11 +35,13 @@ def elastic_search(request):
     """Use Elasticsearch for global search."""
     user_input = UserInput(
         query=request.GET.get('q'),
-        type=request.GET.get('type', 'project'),
+        type=request.GET.get('type', 'file'),
         project=request.GET.get('project'),
         version=request.GET.get('version', LATEST),
         taxonomy=request.GET.get('taxonomy'),
         language=request.GET.get('language'),
+        publisher=request.GET.get('publisher'),
+        progetto=request.GET.get('progetto'),
     )
     results = ''
 
@@ -46,11 +50,13 @@ def elastic_search(request):
     if user_input.query:
         if user_input.type == 'project':
             results = search_lib.search_project(
-                request, user_input.query, language=user_input.language)
+                request, user_input.query, language=user_input.language,
+                publisher=user_input.publisher, progetto=user_input.progetto)
         elif user_input.type == 'file':
             results = search_lib.search_file(
                 request, user_input.query, project_slug=user_input.project,
-                version_slug=user_input.version, taxonomy=user_input.taxonomy)
+                version_slug=user_input.version, taxonomy=user_input.taxonomy,
+                progetto=user_input.progetto, publisher=user_input.publisher)
 
     if results:
         # pre and post 1.0 compat
@@ -63,7 +69,12 @@ def elastic_search(request):
             del hit['_source']
 
         if 'aggregations' in results:
-            for facet_type in ['project', 'version', 'taxonomy', 'language']:
+            facet_types = [
+                'project', 'version',
+                'taxonomy', 'language',
+                'publisher', 'progetto'
+            ]
+            for facet_type in facet_types:
                 if facet_type in results['aggregations']:
                     facets[facet_type] = collections.OrderedDict()
                     for term in results['aggregations'][facet_type]['buckets']:
