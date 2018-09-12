@@ -11,7 +11,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 
 from readthedocs.builds.models import Version
+from readthedocs.core.utils import broadcast
 from readthedocs.projects.models import Project
+from readthedocs.projects import tasks
 from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
 
 from readthedocs.core.resolver import resolver
@@ -178,6 +180,12 @@ class Publisher(models.Model):
         """Get canonical url for publisher"""
         return resolver.resolve_docsitalia(self.slug)
 
+    def delete(self, *args, **kwargs):  # pylint: disable=arguments-differ
+        """Delete Publisher and its organization"""
+        if self.remote_organization:
+            self.remote_organization.delete()
+        super(Publisher, self).delete(*args, **kwargs)
+
 
 @python_2_unicode_compatible
 class PublisherProject(models.Model):
@@ -236,6 +244,13 @@ class PublisherProject(models.Model):
     def get_canonical_url(self):
         """get canonical url for publisher project"""
         return resolver.resolve_docsitalia(self.publisher.slug, self.slug)
+
+    def delete(self, *args, **kwargs):  # pylint: disable=arguments-differ
+        """delete pb and all its projects and builds"""
+        projects = Project.objects.filter(publisherproject=self)
+        broadcast(type='app', task=tasks.remove_dir, args=[proj.doc_path for proj in projects])
+        projects.delete()
+        super(PublisherProject, self).delete(*args, **kwargs)
 
 
 @python_2_unicode_compatible

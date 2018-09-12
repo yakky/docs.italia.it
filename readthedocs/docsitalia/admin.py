@@ -30,6 +30,9 @@ class PublisherAdmin(admin.ModelAdmin):
     )
     list_display = ('name', 'remote_organization', 'pub_date',)
     list_filter = ('active',)
+    delete_confirmation_template = 'docsitalia/admin/publisher_delete_confirmation.html'
+    delete_selected_confirmation_template = 'docsitalia/admin/' \
+        'publisher_delete_selected_confirmation_template.html'
 
 
 class PublisherProjectAdmin(admin.ModelAdmin):
@@ -39,6 +42,9 @@ class PublisherProjectAdmin(admin.ModelAdmin):
     list_filter = ('featured', 'active',)
     list_display = ('name', 'publisher', 'documents', 'pub_date',)
     filter_horizontal = ('projects',)
+    delete_confirmation_template = 'docsitalia/admin/publisher_project_delete_confirmation.html'
+    delete_selected_confirmation_template = 'docsitalia/admin/' \
+        'publisher_project_delete_selected_confirmation_template.html'
 
     # pylint: disable=R0201
     def documents(self, obj):
