@@ -304,6 +304,8 @@ class DocsItaliaTest(TestCase):
             slug='myprojectslug',
             repo='https://github.com/testorg/myrepourl.git'
         )
+        project.tags.add('lorem', 'ipsum')
+        tags = project.tags.names()
         pub_project.projects.add(project)
         remote = RemoteRepository.objects.create(
             full_name='remote repo name',
@@ -327,6 +329,7 @@ class DocsItaliaTest(TestCase):
             'publisher_project': pub_project,
             'publisher': publisher,
             'publisher_logo': 'logo_url.jpg',
+            'tags': list(tags)
         })
 
     def test_publisher_create_projects_from_metadata_let_use_same_slug_for_other_publisher(self):

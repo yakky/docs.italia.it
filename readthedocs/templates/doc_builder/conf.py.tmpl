@@ -91,6 +91,9 @@ context = {
     'subprojects': [ {% for slug, url in project.get_subproject_urls %}
         ("{{ slug }}", "{{ url }}"),{% endfor %}
     ],
+    'tags': [{% for tag in tags %}
+    ("{{ tag }}", "/projects/tags/{{ tag|slugify }}/"),{% endfor %}
+    ],
     'slug': '{{ project.slug }}',
     'name': u'{{ project.name }}',
     'publisher_project': u'{{ publisher_project.name }}',
