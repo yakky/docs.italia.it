@@ -18,5 +18,30 @@
         $("#language").on("change", function() {
             this.form.submit();
         });
+
+        var scrollOffset = $(".publish-how-to-description").data("offset");
+        // Smooth scroll
+        $('.list-group-item[href*="#"]:not([href="#"])').click(function(e) {
+            e.preventDefault();
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html, body').animate({
+                        scrollTop: (target.offset().top - scrollOffset)
+                    }, 1000);
+                    return false;
+                }
+            }
+        });
+
+        // Scrollspy
+        if ($('#publish-howto-list').length) {
+            $('body').scrollspy({
+                target: '#publish-howto-list',
+                offset: scrollOffset
+            });
+        }
+
     });
 </script>

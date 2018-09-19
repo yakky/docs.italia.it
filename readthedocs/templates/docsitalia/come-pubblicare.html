@@ -1,0 +1,84 @@
+{% extends "docsitalia/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="blue-to-transparent-up py-5">
+  <section class="container">
+    <h1 class="text-white mb-4">Come pubblicare</h1>
+  </section>
+</div>
+<div class="my-5">
+  <section class="container d-flex justify-content-left publish">
+    <article class="col-sm-10 simplelayout-main-text">
+
+      <h2 id="a-chi-e-dedicato">A chi è dedicato</h2>
+      <div class="simplelayout-main-content my-2 my-md-5">
+        <p>Su Docs Italia puoi pubblicare qualsiasi tipo di documento della Pubblica Amministrazione. Docs Italia mette inoltre a disposizione un <strong>team di technical writer</strong> per aiutare le Pubbliche Amministrazioni e favorire il processo di pubblicazione</p>
+        <ul>
+          <li>se lavori in una PA e vuoi saperne di più o iniziare a pubblicare qualche documento;</li>
+          <li>se lavori in qualità di fornitore della PA e, in accordo con il committente, vuoi provare a utilizzare Docs Italia per pubblicare documentazione tecnica;</li>
+          <li>se, come cittadino, vuoi suggerire che un documento pubblico venga pubblicato in Docs Italia.</li>
+        </ul>
+      </div>
+
+      <h2 id="i-passi-da-seguire">I passi da seguire</h2>
+      <div class="simplelayout-main-content my-2 my-md-5">
+        <p>Per pubblicare i tuoi documenti puoi seguire questi cinque passi:</p>
+
+        <div id="publish-howto-list" class="list-group">
+          <ol class="row">
+            <li class="col"><a class="list-group-item list-group-item-action active" href="#lista-articolo-1">Scarica lo Starter Kit</a></li>
+            <li class="col"><a class="list-group-item list-group-item-action" href="#lista-articolo-2">Crea un account su GitHub</a></li>
+            <li class="col"><a class="list-group-item list-group-item-action" href="#lista-articolo-3">Abilita il tuo account</a></li>
+            <li class="col"><a class="list-group-item list-group-item-action" href="#lista-articolo-4">Converti il tuo documento</a></li>
+            <li class="col"><a class="list-group-item list-group-item-action" href="#lista-articolo-5">Pubblica il tuo documento</a></li>
+          </ol>
+        </div>
+        <div class="publish-how-to-description" data-spy="scroll" data-target="#publish-howto-list" data-offset="225">
+          <article class="publish-article">
+            <h3 class="mt-5 pt-4" id="lista-articolo-1">1. Scarica lo Starter Kit</h3>
+            <p>
+              All’interno della <a href="https://guida-docs-italia.readthedocs.io/it/latest/index.html">Guida a Docs Italia</a> puoi trovare uno <a href="https://guida-docs-italia.readthedocs.io/it/latest/index/starter-kit.html#starter-kit">Starter Kit</a>, che ti permette di iniziare più rapidamente a pubblicare i tuoi documenti su Docs Italia. Nel kit trovi:
+            <ul>
+              <li>Un'esempio di <b>repository di configurazione</b>;</li>
+              <li>Un'esempio di <b>repository di un documento</b>;</li>
+              <li>Le istruzioni per l’uso e la modifica dei file.</li>
+            </ul>
+            </p>
+          </article>
+          <article class="publish-article">
+            <h3 class="mt-5 pt-4" id="lista-articolo-2">2. Crea un account su GitHub</h3>
+            <p>
+              La registrazione è gratuita e può essere completata seguendo le <a href="https://help.github.com/articles/signing-up-for-a-new-github-account/">istruzioni nella pagina ufficiale</a> di GitHub (in inglese).
+            </p>
+            <p>
+              Come ente pubblico puoi scegliere se usare un account personale oppure crearne uno a nome del tuo ente.
+              Se è la prima volta che pubblichi su Docs Italia per il tuo ente, è anche necessario <a href="https://help.github.com/articles/creating-a-new-organization-from-scratch/">creare un'organizzazione</a> dedicata su GitHub e un <a href="https://guida-docs-italia.readthedocs.io/it/latest/index/pubblicare-un-documento.html">repository</a> al suo interno che la identifica.
+            </p>
+            <p>Per approfondire, fai sempre riferimento alla <a href="https://guida-docs-italia.readthedocs.io/it/latest/index.html">Guida a Docs Italia</a>.</p>
+            <p>Se ti trovi in difficoltà, <a href="mailto:contatti@docs.italia.it">scrivici</a>!</p>
+          </article>
+          <article class="publish-article">
+            <h3 class="mt-5 pt-4" id="lista-articolo-3">3. Abilita il tuo account</h3>
+            <p>Una volta creato l'utente e l'organizzazione su GitHub, e aggiunto il repository necessario, l'unico passo da fare è chiedere l'autorizzazione alla pubblicazione su Docs Italia.</p>
+            <p>Puoi farlo <a href="mailto:contatti@docs.italia.it">mandandoci una email</a> o contattandoci su tramite il canale <a href="https://slack.developers.italia.it/">Slack</a> di Docs Italia (scopri di più nel <a href="https://guida-docs-italia.readthedocs.io/it/latest/index/come-partecipare.html#procedure-di-autorizzazione-e-di-inizializzazione">capitolo dedicato</a> nella Guida a Docs Italia). !</p>
+          </article>
+          <article class="publish-article">
+            <h3 class="mt-5 pt-4" id="lista-articolo-4">4. Converti il tuo documento</h3>
+            <p>I documenti su Docs Italia sono pubblicati in formato RST.</p>
+            <p>Puoi scrivere i documenti RST a mano, oppure se il tuo documento utilizza un altro formato o linguaggio (es. ODT, DOCX, o Markdown) puoi utilizzare questo convertitore:</p>
+            <div class="my-3 text-center">
+              {% url 'docs_italia_convertitore_web:docs-italia-converter-view' as converti_url %}
+              <a class="btn btn-sm btn-outline-primary btn-outline-primary-white m-3 m-lg-0" href="{{ converti_url }}" aria-label="Converti" title="Converti"><span class="text-uppercase small">Converti un documento<i class="it-upload pl-2"></i></span></a>
+            </div>
+          </article>
+          <article class="publish-article">
+            <h3 class="mt-5 pt-4" id="lista-articolo-5">5. Pubblica il tuo documento</h3>
+            <p>A questo punto puoi iniziare a creare il tuo repository di documento, utilizzando lo starter kit (scopri di più nel <a href="https://guida-docs-italia.readthedocs.io/it/latest/index/pubblicare-un-documento.html#repository-del-documento">capitolo dedicato</a> nella Guida a Docs Italia), e <a href="https://guida-docs-italia.readthedocs.io/it/latest/index/pubblicare-un-documento.html#repository-del-documento">pubblicare i tuoi documenti</a>!</p>
+          </article>
+        </div>
+      </div>
+    </article>
+  </section>
+</div>
+{% endblock %}

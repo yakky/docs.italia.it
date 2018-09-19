@@ -56,6 +56,11 @@ urlpatterns = [
         name='about_docs_italia'
     ),
     url(
+        r'^come-pubblicare/$',
+        TemplateView.as_view(template_name='docsitalia/come-pubblicare.html'),
+        name='come_pubblicare'
+    ),
+    url(
         r'^privacy-policy/$',
         TemplateView.as_view(template_name='docsitalia/privacy-policy.html'),
         name='privacy_policy'

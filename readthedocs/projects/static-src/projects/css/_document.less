@@ -1,0 +1,114 @@
+@documentCardHeight: 20rem;
+@documentTitleLineHeight: 26px;
+@documentTitleLineClamp: 4;
+@documentDescriptionLineHeight: 20px;
+@documentDescriptionLineClamp: 7;
+
+@borderColor: #D8D8D8;
+
+.document-card {
+  overflow: hidden;
+  padding-bottom: 4rem;
+  @media screen and (min-width: 768px) {
+    min-height: @documentCardHeight;
+    height: @documentCardHeight;
+  }
+  &:after {
+    content: ' ';
+    box-sizing: border-box;
+    height: 2px;
+    line-height: 2px;
+    position: absolute;
+    bottom: 0px;
+    width: 6rem;
+    border-bottom: 1px solid @borderColor;
+    opacity: 0.5;
+  }
+  // inheriting breakpoints from Bootstrap Italia https://italia.github.io/bootstrap-italia/docs/utilities/introduzione/#responsive-breakpoints
+  @media screen and (min-width: 768px) {
+    &:before {
+      content: ' ';
+      background: @borderColor;
+      bottom: 0;
+      right: 0;
+      position: absolute;
+      width: 1px;
+      top: 0;
+    }
+  }
+  @media screen and (min-width: 768px) and (max-width: 991.98px) {
+    &:nth-child(3n):before {
+      display: none;
+    }
+  }
+  @media screen and (min-width: 992px) {
+    &:nth-child(4n):before {
+      display: none;
+    }
+  }
+  &-header {
+    color: #455B71;
+    font-size: 0.8rem;
+    vertical-align: middle;
+    line-height: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    a, a:hover {
+      color: #455B71;
+    }
+  }
+  &-title,
+  &-description {
+    position: relative;
+    overflow: hidden;
+    &:after {
+      content: '';
+      text-align: right;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 2rem;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+    }
+  }
+  &-title {
+    font-size: 18px;
+    line-height: @documentTitleLineHeight;
+    @media screen and (min-width: 768px) {
+      height: @documentTitleLineHeight * @documentTitleLineClamp;
+      &:after {
+        height: @documentTitleLineHeight;
+      }
+    }
+  }
+  &-description {
+    font-family: "Lora", "Georgia", Serif;
+    color: #455B71;
+    font-size: 14px;
+    line-height: @documentDescriptionLineHeight;
+    @media screen and (min-width: 768px) {
+      height: @documentDescriptionLineHeight * @documentDescriptionLineClamp;
+      &:after {
+        height: @documentDescriptionLineHeight;
+      }
+    }
+  }
+  @supports (-webkit-line-clamp: 1) {
+    &-title,
+    &-description {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      height: auto;
+      &:after {
+        display: none;
+      }
+    }
+    &-title {
+      -webkit-line-clamp: @documentTitleLineClamp;
+    }
+    &-description {
+      -webkit-line-clamp: @documentDescriptionLineClamp;
+    }
+  }
+}
+

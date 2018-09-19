@@ -9,8 +9,8 @@ Home page di docs italia, al momento contiene la lista dei documenti (Project di
 <div class="search-main py-5 py-sm-2">
   <section class="container">
     <div class="row justify-content-center py-5">
-      <div class="col col-lg-10 align-self-center">
-        <h2 class="text-center">Il luogo per la divulgazione e la consultazione della documentazione pubblica digitale.</h2>
+      <div class="col col-lg-8 align-self-center">
+        <h2 class="text-center">Il luogo per la divulgazione e la consultazione dei documenti pubblici digitali.</h2>
       </div>
     </div>
     <div class="pb-5 row justify-content-center">
@@ -21,56 +21,57 @@ Home page di docs italia, al momento contiene la lista dei documenti (Project di
   </section>
 </div>
 
-<div class="transparent-to-blue-down">
-  <section class="container">
-    <h1 class="my-4">Documenti disponibili</h1>
-  </section>
-  <section class="container document-list">
+
+<div class="container">
+  <h1 class="main-title py-2 neutral-1-color">Documenti in evidenza</h1>
+
+  <div class="document-list list-documents">
     <div class="row">
       {% for project in object_list %}
       {% include 'docsitalia/includes/document_card.html' %}
       {% endfor %}
     </div>
-  </section>
+  </div>
 </div>
 
-<div class="blue-to-transparent-up pt-5">
-  <div class="container">
-    <div class="pt-5 row justify-content-center">
-      <div class="col-6 col-lg-4 docs-book">
-        {% include 'docsitalia/includes/docbook.svg' %}
-      </div>
+
+<div class="container pt-5">
+  <div class="pt-5 row justify-content-center">
+    <div class="separator-book col-4 col-lg-2 mb-3">
+      {% include 'docsitalia/includes/docbook.svg' %}
     </div>
   </div>
 </div>
 
 <div class="py-5">
-  <div class="container">
-    <h1>Cos'è Docs Italia?</h1>
-    <div>
-      <p>Docs Italia è un servizio a disposizione delle Pubbliche
-        Amministrazioni per pubblicare documenti tecnici e amministrativi, e
-        offre ai cittadini la possibilità di leggere e commentare documenti
-        pubblici ed essere informati sull’andamento dei progetti.</p>
-      <p>Su Docs Italia trovi:</p>
-      <ul>
-        <li>
-          documentazione tecnica relativa ai progetti pubblici
-          <br><em>Per esempio, su Docs Italia è possibile accedere alla
-          documentazione relativa al progetto per costruire l’<a
-                  href="https://anpr.readthedocs.io/en/latest/">Anagrafe
-            nazionale della popolazione residente in Italia</a></em>
-        </li>
-        <li>
-          documenti amministrativi, circolari, linee guida, regole tecniche,
-          direttive
-          <br><em>Per esempio, su Docs Italia è disponibile il <a
-                href="https://cad.readthedocs.io">Codice dell’Amministrazione
-          Digitale</a>, la legge che definisce il ruolo del digitale nella
-          Pubblica Amministrazione</em>
-        </li>
-      </ul>
-    </div>
+  <div class="container d-flex justify-content-center">
+    <article class="col-sm-10 simplelayout-main-text">
+      <h1>Che cos'è Docs Italia</h1>
+      <div class="simplelayout-main-content my-2 my-md-5">
+        <p>Docs Italia è un servizio a disposizione delle Pubbliche
+          Amministrazioni per pubblicare documenti tecnici e amministrativi, e
+          offre ai cittadini la possibilità di leggere e commentare documenti
+          pubblici ed essere informati sull’andamento dei progetti.</p>
+        <p>Su Docs Italia puoi trovare:</p>
+        <ul>
+          <li>
+            documentazione tecnica relativa ai progetti pubblici
+            <br><em>Per esempio, su Docs Italia è possibile accedere alla
+            documentazione relativa al progetto per costruire l’<a
+                    href="https://anpr.readthedocs.io/en/latest/">Anagrafe
+              nazionale della popolazione residente in Italia</a></em>
+          </li>
+          <li>
+            documenti amministrativi, circolari, linee guida, regole tecniche,
+            direttive
+            <br><em>Per esempio, su Docs Italia è disponibile il <a
+                  href="https://cad.readthedocs.io">Codice dell’Amministrazione
+            Digitale</a>, la legge che definisce il ruolo del digitale nella
+            Pubblica Amministrazione</em>
+          </li>
+        </ul>
+      </div>
+    </article>
   </div>
 </div>
 

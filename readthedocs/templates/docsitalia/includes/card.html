@@ -1,28 +1,16 @@
-<div class="col-12 col-sm-6 col-md-4 col-xl-3 my-2">
-  <div class="docs-card rounded shadow bg-white d-flex flex-column">
-    <div class="docs-card-header d-flex align-self-start w-100">
-      <div class="px-3 w-75 border-bottom">
-        <h3 class="h6">
-        {% block card_header %}
-          {% with project.publisher as publisher %}
-          <a href="{{ publisher.get_absolute_url }}">
-            {{ publisher }}
-          </a>
-          {% endwith %}
-        {% endblock %}
-        </h3>
-      </div>
-      {% block card_version %}{% endblock %}
-    </div>
-    <div class="docs-card-content u-color-grey-50 d-flex u-sizeFillAlt flex-fill">
-      <div class="p-3 align-self-end">
-        <div class="docs-card-content-title">
-          <h4>
-            <a href="{% block card_url %}{{ project.get_absolute_url }}{% endblock %}">{{ project }}</a>
-          </h4>
-        </div>
-        <div class="docs-card-content-text">{{ project.description|safe }}</div>
-      </div>
-    </div>
-  </div>
+<div class="document-card col-12 col-md-4 col-lg-3 item p-2 p-md-3">
+  <p class="document-card-header icon icon-type-document neutral-1-color-a8">
+    {% block card_header %}
+    {% with project.publisher as publisher %}
+    <a href="{{ publisher.get_absolute_url }}">
+      {{ publisher }}
+    </a>
+    {% endwith %}
+    {% endblock %}
+    {% block card_version %}{% endblock %}
+  </p>
+  <h3 class="document-card-title color-inherit">
+    <a href="{% block card_url %}{{ project.get_absolute_url }}{% endblock %}">{{ project }}</a>
+  </h3>
+  <p class="document-card-description color-inherit">{{ project.description|safe }}</p>
 </div>
