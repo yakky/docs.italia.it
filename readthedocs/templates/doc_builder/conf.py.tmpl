@@ -145,12 +145,14 @@ context['subproject_data'] = [
     },
     {% endfor %}
 ]
-try:
-    with open('document_settings.yml') as rtd:
-        data = rtd.read()
-        data = yaml.safe_load(data)
-except:
-    data = {}
+{% comment %}
+We remove the try except if the document_settings.yml file is not
+found so that we have a more understandable exception during the build process.
+{% endcomment %}
+document_settings_path = os.path.join('{{ version.get_build_path }}', 'document_settings.yml')
+with open(document_settings_path) as rtd:
+    data = rtd.read()
+    data = yaml.safe_load(data)
 context['docsitalia_data'] = data
 
 if 'html_context' in globals():
