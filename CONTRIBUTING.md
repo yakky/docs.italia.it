@@ -3,6 +3,10 @@
 Prenditi un momento per leggere questo documento così da rendere il processo semplice e consistente con quello utilizzato
 dal resto della comunità degli sviluppatori.
 
+## Installazione dell'ambiente di sviluppo in locale
+
+I primi passi per l'installazione dell'ambiente di sviluppo in locale sono [gli stessi di ReadTheDocs](https://docs.readthedocs.io/en/latest/install.html?highlight=checkouts), da cui Docs Italia deriva.
+
 ## Creare una issue
 
 L'[issue tracker](https://github.com/italia/docs.italia.it/issues) è il posto giusto dove inserire segnalazioni di bug,
