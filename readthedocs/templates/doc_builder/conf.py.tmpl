@@ -82,8 +82,8 @@ context = {
     'version_slug': "{{ version.slug }}",
     'MEDIA_URL': "{{ settings.MEDIA_URL }}",
     'PRODUCTION_DOMAIN': "{{ settings.PRODUCTION_DOMAIN }}",
-    'versions': [{% for version in versions %}
-    ("{{ version.slug }}", "/{{ publisher.slug }}/{{ publisher_project.slug }}/{{ project.slug }}/{{ version.project.language }}/{{ version.slug}}/"),{% endfor %}
+    'versions': [{% for version in versions %}{% if version.built %}
+    ("{{ version.slug }}", "/{{ publisher.slug }}/{{ publisher_project.slug }}/{{ project.slug }}/{{ version.project.language }}/{{ version.slug}}/"),{%endif %}{% endfor %}
     ],
     'downloads': [ {% for key, val in downloads.items %}
     ("{{ key }}", "{{ val }}"),{% endfor %}
