@@ -248,7 +248,9 @@ class PublisherProject(models.Model):
     def delete(self, *args, **kwargs):  # pylint: disable=arguments-differ
         """delete pb and all its projects and builds"""
         projects = Project.objects.filter(publisherproject=self)
-        broadcast(type='app', task=tasks.remove_dir, args=[proj.doc_path for proj in projects])
+        versions = Version.objects.filter(project__in=projects)
+        for version in versions:
+            broadcast(type='app', task=tasks.clear_html_artifacts, args=[version.pk])
         projects.delete()
         super(PublisherProject, self).delete(*args, **kwargs)
 
