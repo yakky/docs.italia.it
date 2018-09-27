@@ -251,6 +251,7 @@ class PublisherProject(models.Model):
         versions = Version.objects.filter(project__in=projects)
         for version in versions:
             broadcast(type='app', task=tasks.clear_html_artifacts, args=[version.pk])
+        broadcast(type='app', task=tasks.symlink_project, args=[proj.pk for proj in projects])
         projects.delete()
         super(PublisherProject, self).delete(*args, **kwargs)
 
