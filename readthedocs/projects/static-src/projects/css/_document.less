@@ -42,7 +42,13 @@
     }
   }
   @media screen and (min-width: 992px) {
-    &:nth-child(4n):before {
+    &:nth-child(3n):before {
+      display: none;
+    }
+    &.col-lg-3:nth-child(3n):before {
+      display: block;
+    }
+    &.col-lg-3:nth-child(4n):before {
       display: none;
     }
   }
@@ -69,6 +75,12 @@
       right: 0;
       width: 2rem;
       background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+    }
+  }
+  &-description {
+    em {
+      background-color: #003366;
+      color: #FFF;
     }
   }
   &-title {

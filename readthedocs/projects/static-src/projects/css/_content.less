@@ -1,9 +1,22 @@
 // From https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7
-@keyframes onAutoFillStart {  from {/**/}  to {/**/}}
-@keyframes onAutoFillCancel {  from {/**/}  to {/**/}}
+@keyframes onAutoFillStart {
+  from { /**/
+  }
+  to { /**/
+  }
+}
+
+@keyframes onAutoFillCancel {
+  from { /**/
+  }
+  to { /**/
+  }
+}
+
 input:-webkit-autofill {
   animation-name: onAutoFillStart;
 }
+
 input:not(:-webkit-autofill) {
   animation-name: onAutoFillCancel;
 }
@@ -25,7 +38,10 @@ input:not(:-webkit-autofill) {
 }
 
 .bd-logo-subtitle {
-  font-size: 16px;
+  font-size: 0.8rem;
+  @media (min-width: 576px) {
+    font-size: 1rem;
+  }
   font-weight: 300;
   letter-spacing: unset
 }
@@ -72,6 +88,7 @@ input:not(:-webkit-autofill) {
   background-color: rgba(0, 102, 204, .15);
   border: 1px solid rgba(0, 102, 204, .15)
 }
+
 .projects-list {
   .module-item {
     display: flex;
@@ -172,66 +189,60 @@ select {
   }
 }
 
-.projects-filter {
-    &:before {
-        font-family: FontAwesome;
-        content: "\f07b";
-        padding-right: 8px;
-    }
-}
-
 .results-header {
-    dispay: block;
-    border-bottom: 2px solid rgba(0,0,0,.1);
+  dispay: block;
+  border-bottom: 2px solid rgba(0, 0, 0, .1);
 }
 
 .module-item.search-result {
-    border-right: 1px solid #bfbfbf;
-    border-bottom: 0;
+  border-right: 1px solid #bfbfbf;
+  border-bottom: 0;
 
-    &:nth-of-type(3n) {
-        border-right: 0;
-    }
+  &:nth-of-type(3n) {
+    border-right: 0;
+  }
 
-    hr {
-        margin: 0;
-        margin-top: 50px;
-        width: 50%;
-    }
+  hr {
+    margin: 0;
+    margin-top: 50px;
+    width: 50%;
+  }
 }
 
 .search-result-publisher {
-    text-transform: uppercase;
-    &:before {
-        font-family: FontAwesome;
-        content: "\f15c";
-        padding-right: 8px;
-        color: #0062ce;
-        font-size: 40px;
-        line-height: 1.3;
-        float: left;
-    }
+  text-transform: uppercase;
+  &:before {
+    font-family: FontAwesome;
+    content: "\f15c";
+    padding-right: 8px;
+    color: #0062ce;
+    font-size: 40px;
+    line-height: 1.3;
+    float: left;
+  }
 }
 
 .column-search-filters {
-    li {
-        list-style: none;
-    }
+  padding: 0;
+  li {
+    list-style: none;
+  }
 }
 
 .results-filter {
-    select {
-        border: 1px solid #E5E5E5;
-        background-color: #fff;
-        color: #1F62A5;
-        text-shadow: none;
-        box-shadow: none;
-    }
+  select {
+    border: 1px solid #E5E5E5;
+    background-color: #fff;
+    color: #1F62A5;
+    text-shadow: none;
+    box-shadow: none;
+  }
 }
 
 .document-list {
   min-height: 240px;
 }
+
 .separator-book {
   z-index: 100;
   svg {
@@ -241,7 +252,7 @@ select {
 }
 
 .search-main {
-  background: #d1e7ff  left center no-repeat;
+  background: #d1e7ff left center no-repeat;
   @media (min-width: 768px) {
     background-image: url(../images/book-bg.png), url(../images/documents-bg.png);
     background-position: left center, right bottom;
@@ -262,7 +273,7 @@ select {
     font-size: 1.6rem;
     font-weight: normal;
     border-bottom: 0;
-    box-shadow: 0 10px 40px 0 rgba(102,165,227,0.4);
+    box-shadow: 0 10px 40px 0 rgba(102, 165, 227, 0.4);
   }
 }
 
@@ -272,6 +283,7 @@ select {
   font-size: 1.1rem;
   color: #656566;
 }
+
 .simplelayout-main-text {
   position: relative;
   margin-top: -3rem;
@@ -302,6 +314,6 @@ select {
 }
 
 .main-title {
-  margin: 5rem 0 2rem;
+  margin: 4rem 0 2rem;
   border-bottom: 1px solid #D8D8D8;
 }
