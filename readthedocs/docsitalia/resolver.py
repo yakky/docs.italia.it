@@ -58,7 +58,7 @@ class ItaliaResolver(ResolverBase):
                 single_version=single_version, subproject_slug=subproject_slug,
             )
         if private:
-            url = u'/docsitalia/'
+            url = u'/docsitalia/{base_project_slug}/{project_slug}/'
         else:
             url = u'/{publisher_slug}/{base_project_slug}/{project_slug}/'
         if subproject_slug:
