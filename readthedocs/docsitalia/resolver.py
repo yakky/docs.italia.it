@@ -37,15 +37,30 @@ class ItaliaResolver(ResolverBase):
         base_project = project.publisherproject_set.all().first()
 
         if not base_project:
-            return super(ItaliaResolver, self).base_resolve_path(
-                project_slug, filename, version_slug,
-                language, private, single_version,
-                subproject_slug, subdomain, cname
-            )
-        url = u'/{publisher_slug}/{base_project_slug}/{project_slug}/'
-        if private:
-            url = u'docsitalia' + url
+            if subdomain or cname or (self._use_subdomain()):
+                url = u'/'
+            elif private:
+                url = u'/docsitalia/{project_slug}/'
+            else:
+                url = u'/docs/{project_slug}/'
 
+            if subproject_slug:
+                url += u'projects/{subproject_slug}/'
+
+            if single_version:
+                url += u'{filename}'
+            else:
+                url += u'{language}/{version_slug}/{filename}'
+
+            return url.format(
+                project_slug=project_slug, filename=filename,
+                version_slug=version_slug, language=language,
+                single_version=single_version, subproject_slug=subproject_slug,
+            )
+        if private:
+            url = u'/docsitalia/'
+        else:
+            url = u'/{publisher_slug}/{base_project_slug}/{project_slug}/'
         if subproject_slug:
             url += u'projects/{subproject_slug}/'
 
