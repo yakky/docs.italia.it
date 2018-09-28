@@ -6,6 +6,7 @@ from django.conf.urls import include, url
 from django.views.generic.base import RedirectView, TemplateView
 
 from readthedocs.constants import pattern_opts
+from readthedocs.core.views import serve
 from rest_framework import routers
 
 from .views.core_views import (
@@ -18,6 +19,12 @@ router = routers.DefaultRouter()
 router.register(r'document', api.DocsItaliaProjectViewSet, base_name='docsitalia-document')
 
 docsitalia_urls = [
+    url((r'^(?P<project_slug>{project_slug})/'
+         r'(?P<lang_slug>{lang_slug})/'
+         r'(?P<version_slug>{version_slug})/'
+         r'(?P<filename>{filename_slug})'.format(**pattern_opts)),
+        serve.serve_docs,
+        name='docs_italia_docs_detail'),
     url(r'^api/', include(router.urls)),
     url(r'webhook/github/(?P<publisher_slug>{project_slug})/$'.format(**pattern_opts),
         integrations.MetadataGitHubWebhookView.as_view(),

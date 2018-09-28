@@ -42,8 +42,9 @@ class ItaliaResolver(ResolverBase):
                 language, private, single_version,
                 subproject_slug, subdomain, cname
             )
-
         url = u'/{publisher_slug}/{base_project_slug}/{project_slug}/'
+        if private:
+            url = u'docsitalia' + url
 
         if subproject_slug:
             url += u'projects/{subproject_slug}/'
