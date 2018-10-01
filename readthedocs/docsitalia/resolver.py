@@ -39,7 +39,7 @@ class ItaliaResolver(ResolverBase):
         if not base_project:
             if subdomain or cname or (self._use_subdomain()):
                 url = u'/'
-            elif private:
+            elif private and not filename:
                 url = u'/docsitalia/{project_slug}/'
             else:
                 url = u'/docs/{project_slug}/'
@@ -51,14 +51,16 @@ class ItaliaResolver(ResolverBase):
                 url += u'{filename}'
             else:
                 url += u'{language}/{version_slug}/{filename}'
-
             return url.format(
                 project_slug=project_slug, filename=filename,
                 version_slug=version_slug, language=language,
                 single_version=single_version, subproject_slug=subproject_slug,
             )
         if private:
-            url = u'/docsitalia/{base_project_slug}/{project_slug}/'
+            if filename:
+                url = u''
+            else:
+                url = u'/docsitalia/{project_slug}/'
         else:
             url = u'/{publisher_slug}/{base_project_slug}/{project_slug}/'
         if subproject_slug:
