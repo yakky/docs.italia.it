@@ -917,7 +917,7 @@ class TestPythonEnvironment(TestCase):
         If a projects does not specify a requirements file,
         RTD will choose one automatically.
 
-        First by searching under the docs/ directory and then under the root.
+        The file will be searched under the root directory.
         The files can be named as:
 
         - ``pip_requirements.txt``
@@ -931,15 +931,13 @@ class TestPythonEnvironment(TestCase):
         )
 
         checkout_path = python_env.checkout_path
-        docs_requirements = os.path.join(
-            checkout_path, 'docs', 'requirements.txt'
-        )
+        # docs_requirements = os.path.join(
+        #     checkout_path, 'docs', 'requirements.txt'
+        # )
         root_requirements = os.path.join(
             checkout_path, 'requirements.txt'
         )
-        paths = {
-            os.path.join(checkout_path, 'docs'): True,
-        }
+        paths = {}
         args = [
             'python',
             mock.ANY,  # pip path
@@ -950,20 +948,8 @@ class TestPythonEnvironment(TestCase):
             'requirements_file'
         ]
 
-        # One requirements file on the docs/ dir
-        # should be installed
-        paths[docs_requirements] = True
-        paths[root_requirements] = False
-        with fake_paths_lookup(paths):
-            python_env.install_user_requirements()
-        args[-1] = '-r{}'.format(docs_requirements)
-        self.build_env_mock.run.assert_called_with(
-            *args, cwd=mock.ANY, bin_path=mock.ANY
-        )
-
         # One requirements file on the root dir
         # should be installed
-        paths[docs_requirements] = False
         paths[root_requirements] = True
         with fake_paths_lookup(paths):
             python_env.install_user_requirements()
@@ -972,21 +958,9 @@ class TestPythonEnvironment(TestCase):
             *args, cwd=mock.ANY, bin_path=mock.ANY
         )
 
-        # Two requirements files on the root and  docs/ dirs
-        # the one on docs/ should be installed
-        paths[docs_requirements] = True
-        paths[root_requirements] = True
-        with fake_paths_lookup(paths):
-            python_env.install_user_requirements()
-        args[-1] = '-r{}'.format(docs_requirements)
-        self.build_env_mock.run.assert_called_with(
-            *args, cwd=mock.ANY, bin_path=mock.ANY
-        )
-
         # No requirements file
         # no requirements should be installed
         self.build_env_mock.run.reset_mock()
-        paths[docs_requirements] = False
         paths[root_requirements] = False
         with fake_paths_lookup(paths):
             python_env.install_user_requirements()
