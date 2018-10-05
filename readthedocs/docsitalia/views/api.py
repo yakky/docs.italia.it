@@ -4,13 +4,16 @@ from __future__ import absolute_import
 
 from django.conf import settings
 from rest_framework import status
+from rest_framework.decorators import detail_route
 from rest_framework.exceptions import ParseError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from readthedocs.builds.models import Version
 from readthedocs.projects.models import Project
+from readthedocs.projects.constants import PUBLIC
 from readthedocs.restapi.views.model_views import ProjectViewSet
+from readthedocs.restapi.serializers import VersionSerializer
 from readthedocs.search.indexes import PageIndex
 
 from ..serializers import (
@@ -44,6 +47,16 @@ class DocsItaliaProjectViewSet(ProjectViewSet):  # pylint: disable=too-many-ance
         if project:
             qs = qs.filter(publisherproject__slug=project)
         return qs
+
+    @detail_route()
+    def active_versions(self, request, **kwargs):
+        """Returns active versions, non private, of a project"""
+        project = self.get_project_for_user_or_404(
+            kwargs[self.lookup_field])
+        versions = project.versions.filter(active=True, privacy_level=PUBLIC)
+        return Response({
+            'versions': VersionSerializer(versions, many=True).data,
+        })
 
 
 class DocSearch(APIView):

@@ -15,6 +15,7 @@ from readthedocs.docsitalia.models import Publisher, PublisherProject
 from readthedocs.docsitalia.views.core_views import (
     DocsItaliaHomePage, PublisherIndex, PublisherProjectIndex, PublisherList)
 from readthedocs.oauth.models import RemoteRepository
+from readthedocs.projects.constants import PRIVATE, PUBLIC
 from readthedocs.projects.models import Project
 from readthedocs.search.indexes import PageIndex
 
@@ -440,3 +441,17 @@ class DocsItaliaViewsTest(TestCase):
         response = self.client.get('/api/v2/docsearch/?q=query&project=projectslug&version=latest')
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(response.content.decode('utf-8'), {'results': {}})
+
+    def test_docsitalia_api_active_versions_do_not_return_private_documents(self):
+        project = Project.objects.create(
+            name='my project',
+            slug='projectslug',
+            repo='https://github.com/testorg/myrepourl.git'
+        )
+        response = self.client.get('/docsitalia/api/document/{}/active_versions/'.format(project.slug))
+        version = project.versions.first()
+        version.privacy_level = PRIVATE
+        version.save()
+        self.assertTrue(len(response.data['versions']) > 0)
+        response = self.client.get('/docsitalia/api/document/{}/active_versions/'.format(project.slug))
+        self.assertTrue(len(response.data['versions']) == 0)
