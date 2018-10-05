@@ -36,7 +36,7 @@ class ItaliaResolver(ResolverBase):
         project = Project.objects.get(slug=project_slug)
         base_project = project.publisherproject_set.all().first()
 
-        if not base_project:
+        if not base_project or private:
             return super(ItaliaResolver, self).base_resolve_path(
                 project_slug, filename, version_slug,
                 language, private, single_version,
