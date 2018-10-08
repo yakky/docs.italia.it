@@ -483,5 +483,13 @@ class TestTags(TestCase):
     def test_project_filtering_work_with_tags_with_space_in_name(self):
         pip = get(Project, slug='pip')
         pip.tags.add('tag with space')
+        version = pip.versions.last()
+        Build.objects.create(
+            project=pip,
+            version=version,
+            type='html',
+            state='finished',
+            success=True
+        )
         response = self.client.get('/projects/tags/tag-with-space/')
-        self.assertContains(response, '"/projects/pip/"')
+        self.assertContains(response, '"{}"'.format(pip.get_docs_url()))

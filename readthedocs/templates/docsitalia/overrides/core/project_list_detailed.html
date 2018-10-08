@@ -1,9 +1,10 @@
 {% load i18n %}
 
 {% for project in project_list %}
+  {% if project.has_good_build %}
   <li class="module-item">
     <span class="project-list--project-info">
-      <a class="module-item-title" href="{{ project.get_absolute_url }}">{{ project.name }}</a>
+      <a class="module-item-title" href="{{ project.get_docs_url }}">{{ project.name }}</a>
       {% if not omit_all_users %}
       {% with project.users.all as users %}
         {% if users|length > 1 %}
@@ -31,25 +32,9 @@
       {% else %}
         <span class="build-date">{% trans "No builds" %}</span>
       {% endif %}
-
-      {% if project.has_good_build %}
-        <span class="dropdown show-documents">
-          <span>
-              <a href="{{ project.get_docs_url }}">{% trans "View Docs" %}</a>
-            <a href="#">&#x25BC;</a>
-          </span>
-          <ul>
-              <li><input type="search" placeholder="{% trans "Search" %}&hellip;" /></li>
-              {% for version in project.ordered_active_versions reversed %}
-                  <li><a href="{{ version.get_absolute_url }}">{{ version.slug }}</a></li>
-              {% endfor %}
-          </ul>
-        </span>
-      {% else %}
-        <a href="{{ project.get_builds_url }}">{% trans "No Docs" %}</a>
-      {% endif %}
     </span>
   </li>
+  {% endif %}
 {% empty %}
   <li class="module-item quiet">{% trans "No projects found" %}</li>
 {% endfor %}

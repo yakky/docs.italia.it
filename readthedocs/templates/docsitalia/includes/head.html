@@ -55,7 +55,7 @@ Available Tracking IDs:
 <script>
     window['ga-disable-{{ GLOBAL_ANALYTICS_CODE }}'] = (document.cookie.indexOf('cookies_consent=true') === -1);
 </script>
-<script async src="https://www.googletagmanager.com/gtag/js?id={{ trackingID }}"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ GLOBAL_ANALYTICS_CODE }}"></script>
 <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}

@@ -22,19 +22,21 @@
 {% block nav-browse %}class="active"{% endblock %}
 
 {% block content-header %}
+<h1 class="main-title py-2 neutral-1-color">
 {% if person %}
     {% if tag %}
-        <h1>{% blocktrans with person.username as username and tag.name as tag %}Projects by {{ username }} tagged with {{ tag }}{% endblocktrans %}</h1>
+        {% blocktrans with person.username as username and tag.name as tag %}Projects by {{ username }} tagged with {{ tag }}{% endblocktrans %}
     {% else %}
-        <h1>{% blocktrans with person.username as username %}Projects by {{ username }}{% endblocktrans %}</h1>
+        {% blocktrans with person.username as username %}Projects by {{ username }}{% endblocktrans %}
     {% endif %}
 {% else %}
     {% if tag %}
-        <h1>{% blocktrans with tag.name as tag %}Projects tagged with {{ tag }}{% endblocktrans %}</h1>
+        {% blocktrans with tag.name as tag %}Projects tagged with {{ tag }}{% endblocktrans %}
     {% else %}
-        <h1>{% trans "Projects" %}</h1>
+        {% trans "Projects" %}
     {% endif %}
 {% endif %}
+</h1>
 {% endblock %}
 
 {% block content %}
