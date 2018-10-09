@@ -20,7 +20,7 @@
     {% for publisher in object_list %}
     <div class="amministrazione col-sm-6 col-md-4 my-2">
       {% with metadata=publisher.metadata.publisher %}
-      <img class="d-block amministrazione__logo" alt="logo amministrazione" src="{% if metadata.logo_url %}{{ metadata.logo_url }}{% else %}{{ MEDIA_URL }}docsitalia/icons/icon-type-administrations.svg{% endif %}"/>
+      <div class="d-block amministrazione__logo" style="background-image: url({% if metadata.logo_url %}{{ metadata.logo_url }}{% else %}{{ MEDIA_URL }}docsitalia/icons/icon-type-administrations.svg{% endif %})"></div>
       <p class="d-block amministrazione__nome m-0 font-weight-bold">{{ metadata.name }}</p>
       <a class="d-block amministrazione__link text-uppercase font-weight-bold x-small" href="{% url 'publisher_detail' publisher.slug %}">Vai al dettaglio →</a>
       {% endwith %}

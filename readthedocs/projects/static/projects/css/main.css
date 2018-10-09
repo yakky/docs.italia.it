@@ -455,6 +455,9 @@ select:hover {
 .amministrazione__logo {
   height: 64px;
   width: 64px;
+  background-size: 64px auto;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
 .amministrazione__nome {
   color: #1C2024;
