@@ -1,6 +1,6 @@
 {% extends "projects/base_project.html" %}
 
-{% load core_tags i18n %}
+{% load core_tags i18n  docs_italia %}
 
 {% block title %}{% blocktrans with query=query|default:"" %}Search: {{ query }} {% endblocktrans %}{% endblock %}
 
@@ -76,9 +76,9 @@
             {% for name, count in facets.progetto.items %}
             <li class="list-item large {% if progetto == name %}active{% endif %}">
               {% if progetto == name %}
-                <a href="?{% url_replace request 'progetto' ''  %}">{{ name }}</a>
+                <a href="?{% url_replace request 'progetto' ''  %}">{{ name|get_publisher_project }}</a>
               {% else %}
-                <a href="?{% url_replace request 'progetto' name  %}">{{ name }}
+                <a href="?{% url_replace request 'progetto' name  %}">{{ name|get_publisher_project }}
                   ({{ count }})
                 </a>
               {% endif %}
@@ -153,7 +153,7 @@
                     <a href="{% doc_url result.fields.slug|get_project %}">{{ result.fields.name }}</a>
                   </h3>
                   <div class="document-card-description color-inherit">
-                    {% for fragment in result.highlight.description|slice:":2" %}
+                    {% for fragment in result.highlight.description|slice:":1" %}
                     <p>
                       ...{{ fragment|safe }}...
                     </p>
@@ -163,10 +163,12 @@
                 {% elif result.fields.path %}
                   {# File #}
                   <h3 class="document-card-title color-inherit">
-                    <a href="{% doc_url result.fields.project|get_project result.fields.version result.fields.path %}?highlight={{ query }}">{{ result.fields.project }} - {{ result.fields.title|safe }}</a>
+                    {% with result.fields.project|get_project as proj %}
+                    <a href="{% doc_url proj result.fields.version result.fields.path %}?highlight={{ query }}">{{ proj }} - {{ result.fields.title|safe }}</a>
+                    {% endwith %}
                   </h3>
                   <div class="document-card-description color-inherit">
-                    {% for fragment in result.highlight.content|slice:":2" %}
+                    {% for fragment in result.highlight.content|slice:":1" %}
                     <p>
                       ...{{ fragment|safe }}...
                     </p>

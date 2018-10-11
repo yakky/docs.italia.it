@@ -541,8 +541,8 @@ select:hover {
   background: linear-gradient(to right, rgba(255, 255, 255, 0), #ffffff 50%);
 }
 .document-card-description em {
-  background-color: #003366;
-  color: #FFF;
+  background: #bffffd;
+  font-weight: 700;
 }
 .document-card-title {
   font-size: 18px;
