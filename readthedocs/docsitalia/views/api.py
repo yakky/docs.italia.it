@@ -139,10 +139,9 @@ class DocSearch(APIView):
         hits = results.get('hits', {}).get('hits', [])
         for (i, hit) in enumerate(hits):
             fields = hit.get('_source', {})
-            path = fields.get('path')[0]
             canonical_url = project.get_docs_url(version_slug=version_slug)
             results['hits']['hits'][i]['_source']['link'] = (
-                canonical_url + path
+                canonical_url + fields.get('path')
             )
             # we cannot render attributes starting with an underscore
             results['hits']['hits'][i]['fields'] = results['hits']['hits'][i]['_source']
