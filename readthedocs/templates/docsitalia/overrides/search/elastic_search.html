@@ -1,6 +1,6 @@
 {% extends "projects/base_project.html" %}
 
-{% load core_tags i18n  docs_italia %}
+{% load core_tags docs_italia i18n %}
 
 {% block title %}{% blocktrans with query=query|default:"" %}Search: {{ query }} {% endblocktrans %}{% endblock %}
 
@@ -150,7 +150,7 @@
                 {% if result.fields.name %}
                   {# Project #}
                   <h3 class="document-card-title color-inherit">
-                    <a href="{% doc_url result.fields.slug|get_project %}">{{ result.fields.name }}</a>
+                    <a href="{% doc_url_patched result.fields.slug|get_project %}">{{ result.fields.name }}</a>
                   </h3>
                   <div class="document-card-description color-inherit">
                     {% for fragment in result.highlight.description|slice:":1" %}
@@ -164,7 +164,7 @@
                   {# File #}
                   <h3 class="document-card-title color-inherit">
                     {% with result.fields.project|get_project as proj %}
-                    <a href="{% doc_url proj result.fields.version result.fields.path %}?highlight={{ query }}">{{ proj }} - {{ result.fields.title|safe }}</a>
+                    <a href="{% doc_url_patched proj result.fields.version result.fields.path %}?highlight={{ query }}">{{ proj }} - {{ result.fields.title|safe }}</a>
                     {% endwith %}
                   </h3>
                   <div class="document-card-description color-inherit">
