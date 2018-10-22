@@ -3,13 +3,14 @@ from builtins import str
 import logging
 import json
 
+from django.db.models import Q
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from requests.exceptions import RequestException
 
 from readthedocs.integrations.models import Integration
 from readthedocs.oauth.services.github import GitHubService
-from readthedocs.oauth.models import RemoteOrganization
+from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
 
 from readthedocs.docsitalia.github import get_metadata_for_publisher
 from readthedocs.docsitalia.metadata import (
@@ -75,6 +76,10 @@ class DocsItaliaGithubService(GitHubService):
                     if repo['name'] not in repo_whitelist:
                         continue
                     self.create_repository(repo, organization=org_obj)
+                RemoteRepository.objects.filter(
+                    Q(organization=org_obj),
+                    ~Q(name__in=list(repo_whitelist))
+                ).delete()
         except (TypeError, ValueError) as e:
             log.error('Error syncing GitHub organizations: %s',
                       str(e), exc_info=True)

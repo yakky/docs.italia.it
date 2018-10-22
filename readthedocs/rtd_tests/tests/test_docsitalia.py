@@ -232,6 +232,111 @@ class DocsItaliaTest(TestCase):
         remote_repos = RemoteRepository.objects.all()
         self.assertEqual(remote_repos.count(), 1)
 
+    def test_sync_organizations_when_repos_are_deleted(self):
+        PROJECTS_METADATA_WITH_2_DOCS = """projects:
+          - name: Progetto Documentato Pubblicamente
+            short-name: PDP
+            description:
+              Lorem ipsum dolor sit amet
+            website: https://progetto.ministerodocumentazione.gov.it
+            tags:
+              - digital
+              - citizenship
+              - amazing project
+            documents:
+              - project-document-doc
+              - testrepo"""
+        orgs_json = [
+            {'url': 'https://api.github.com/orgs/testorg'},
+        ]
+        org_json = {
+            'html_url': 'https://github.com/testorg',
+            'name': 'Test Org',
+            'email': 'test@testorg.org',
+            'login': 'testorg',
+            'avatar_url': 'https://images.github.com/foobar',
+        }
+        org_repos_json = [{
+            'name': 'testrepo',
+            'full_name': 'testorg/testrepo',
+            'description': 'Test Repo',
+            'git_url': 'git://github.com/testorg/testrepo.git',
+            'private': False,
+            'ssh_url': 'ssh://git@github.com:testorg/testrepo.git',
+            'html_url': 'https://github.com/testorg/testrepo',
+            'clone_url': 'https://github.com/testorg/testrepo.git',
+        }, {
+            'name': 'project-document-doc',
+            'full_name': 'testorg/project-document-doc',
+            'description': 'Project document doc',
+            'git_url': 'git://github.com/testorg/project-document-doc.git',
+            'private': False,
+            'ssh_url': 'ssh://git@github.com:testorg/project-document-doc.git',
+            'html_url': 'https://github.com/testorg/project-document-doc',
+            'clone_url': 'https://github.com/testorg/project-document-doc.git',
+        }]
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug=org_json['login'],
+            metadata={},
+            projects_metadata={},
+            active=True
+        )
+        session = requests.Session()
+        with patch(
+            'readthedocs.docsitalia.oauth.services.github.DocsItaliaGithubService.get_session') as m:
+            m.return_value = session
+            with requests_mock.Mocker() as rm:
+                rm.get('https://api.github.com/user/orgs', json=orgs_json)
+                rm.get('https://api.github.com/orgs/testorg', json=org_json)
+                rm.get(
+                    'https://raw.githubusercontent.com/testorg/'
+                    'italia-conf/master/publisher_settings.yml',
+                    text=PUBLISHER_METADATA)
+                rm.get(
+                    'https://raw.githubusercontent.com/testorg/'
+                    'italia-conf/master/projects_settings.yml',
+                    text=PROJECTS_METADATA_WITH_2_DOCS)
+                rm.get('https://api.github.com/orgs/testorg', json=org_json)
+                rm.get('https://api.github.com/orgs/testorg/repos', json=org_repos_json)
+                rm.post('https://api.github.com/repos/testorg/italia-conf/hooks', json={})
+                self.service.sync_organizations()
+
+        remote_repos = RemoteRepository.objects.all()
+        self.assertEqual(remote_repos.count(), 2)
+
+        org_repos_json_with_one_doc = [{
+            'name': 'testrepo',
+            'full_name': 'testorg/testrepo',
+            'description': 'Test Repo',
+            'git_url': 'git://github.com/testorg/testrepo.git',
+            'private': False,
+            'ssh_url': 'ssh://git@github.com:testorg/testrepo.git',
+            'html_url': 'https://github.com/testorg/testrepo',
+            'clone_url': 'https://github.com/testorg/testrepo.git',
+        }]
+        session = requests.Session()
+        with patch(
+            'readthedocs.docsitalia.oauth.services.github.DocsItaliaGithubService.get_session') as m:
+            m.return_value = session
+            with requests_mock.Mocker() as rm:
+                rm.get('https://api.github.com/user/orgs', json=orgs_json)
+                rm.get('https://api.github.com/orgs/testorg', json=org_json)
+                rm.get(
+                    'https://raw.githubusercontent.com/testorg/'
+                    'italia-conf/master/publisher_settings.yml',
+                    text=PUBLISHER_METADATA)
+                rm.get(
+                    'https://raw.githubusercontent.com/testorg/'
+                    'italia-conf/master/projects_settings.yml',
+                    text=PROJECTS_METADATA)
+                rm.get('https://api.github.com/orgs/testorg', json=org_json)
+                rm.get('https://api.github.com/orgs/testorg/repos', json=org_repos_json_with_one_doc)
+                rm.post('https://api.github.com/repos/testorg/italia-conf/hooks', json={})
+                self.service.sync_organizations()
+        remote_repos = RemoteRepository.objects.all()
+        self.assertEqual(remote_repos.count(), 1)
+
     @patch('django.contrib.messages.api.add_message')
     @override_settings(PUBLIC_PROTO='http', PUBLIC_DOMAIN='readthedocs.org')
     def test_project_custom_resolver(self, add_message):
