@@ -79,7 +79,7 @@ def wipe_version(request, project_slug, version_slug):
     )
     # We need to check by ``for_admin_user`` here to allow members of the
     # ``Admin`` team (which doesn't own the project) under the corporate site.
-    if version.project not in Project.objects.for_admin_user(user=request.user):
+    if version.project not in Project.objects.user_can_admin(user=request.user):
         raise Http404('You must own this project to wipe it.')
 
     if request.method == 'POST':
