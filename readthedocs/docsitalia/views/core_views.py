@@ -6,9 +6,10 @@ from __future__ import unicode_literals
 
 import logging
 
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, View
 
 from readthedocs.core.utils import trigger_build
 from readthedocs.oauth.models import RemoteRepository
@@ -109,6 +110,23 @@ class PublisherProjectIndex(DetailView):  # pylint: disable=too-many-ancestors
         )
 
 
+class DocumentRedirect(View):
+
+    """Redirect unversioned / unlanguaged urls to the canonical document URL"""
+
+    def get_queryset(self):
+        """Filter projects based on user permissions"""
+        return Project.objects.protected(self.request.user)
+
+    def get(self, request, *args, **kwargs):  # noqa
+        """Redirect to the canonical URL of the document"""
+        try:
+            document = self.get_queryset().get(slug=self.kwargs['slug'])
+            return HttpResponseRedirect(document.get_docs_url(lang_slug=self.kwargs.get('lang')))
+        except Project.DoesNotExist:
+            raise Http404()
+
+
 class DocsItaliaImport(ImportView):  # pylint: disable=too-many-ancestors
 
     """Simplified ImportView for Docs Italia"""
@@ -139,7 +157,7 @@ class DocsItaliaImport(ImportView):  # pylint: disable=too-many-ancestors
             msg = _('Invalid document_settings.yml found in the repository')
             project.delete()
             return render(request, 'docsitalia/import_error.html', {'error_msg': msg})
-        except Exception as e: # noqa
+        except Exception as e:  # noqa
             log.error(
                 'Failed to import document metadata: %s', e)
             msg = _('Failed to download document_settings.yml from the repository')

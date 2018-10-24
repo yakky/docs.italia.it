@@ -3,7 +3,9 @@ from __future__ import absolute_import, unicode_literals
 
 import mock
 import requests_mock
+from django.conf import settings
 from requests.exceptions import ConnectionError
+import pytest
 
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -26,6 +28,12 @@ DOCUMENT_METADATA = """document:
     Lorem ipsum dolor sit amet, consectetur
   tags:
     - amazing document"""
+
+
+IT_RESOLVER_IN_SETTINGS = (
+        'readthedocs.docsitalia.resolver.ItaliaResolver'
+        in getattr(settings, 'CLASS_OVERRIDES', {}).values()
+)
 
 
 class DocsItaliaViewsTest(TestCase):
@@ -414,6 +422,88 @@ class DocsItaliaViewsTest(TestCase):
                 '/docsitalia/dashboard/import/', data=self.import_project_data)
             self.assertEqual(response.status_code, 200)
             self.assertTemplateUsed(response, 'docsitalia/import_error.html')
+
+    @pytest.mark.skipif(not IT_RESOLVER_IN_SETTINGS, reason='Require CLASS_OVERRIEDS in the settings file to work')
+    @pytest.mark.itresolver
+    def test_docsitalia_redirect_to_canonical_if_no_version(self):
+        publisher = Publisher.objects.create(
+            name='Test Org',
+            slug='testorg',
+            metadata={},
+            projects_metadata={},
+            active=True
+        )
+
+        project = Project.objects.create(
+            name='my project',
+            slug='projectslug',
+            repo='https://github.com/testorg/myrepourl.git',
+            language='it'
+        )
+        private_project = Project.objects.create(
+            name='private',
+            slug='privateslug',
+            repo='https://github.com/testorg/myprivateurl.git',
+            language='it',
+            privacy_level='private'
+        )
+        pub_project = PublisherProject.objects.create(
+            name='Built Test Project',
+            slug='builttestproject',
+            metadata={
+                'documents': [
+                    'https://github.com/testorg/myrepourl',
+                    'https://github.com/testorg/anotherrepourl',
+                ]
+            },
+            publisher=publisher,
+            active=True
+        )
+        pub_project.projects.add(project)
+        pub_project.projects.add(private_project)
+
+        no_build_project = Project.objects.create(
+            name='no build project',
+            slug='nobuildprojectslug',
+            repo='https://github.com/testorg/myrepourl.git',
+            language='it'
+        )
+        no_build_project.versions.all().delete()
+        pub_project_no_build = PublisherProject.objects.create(
+            name='Test Project no build',
+            slug='nobuildtestproject',
+            metadata={
+                'documents': [
+                    'https://github.com/testorg/myrepourl',
+                    'https://github.com/testorg/anotherrepourl',
+                ]
+            },
+            publisher=publisher,
+            active=True
+        )
+        pub_project_no_build.projects.add(no_build_project)
+
+        naked_project_url = '/%s/' % '/'.join(project.get_canonical_url().split('/')[3:-3])
+        naked_privateproject_url = '/%s/' % '/'.join(private_project.get_canonical_url().split('/')[3:-3])
+        naked_no_build_project_url = '/%s/' % '/'.join(no_build_project.get_canonical_url().split('/')[3:-3])
+        naked_project_lang_url = '%sit/' % naked_project_url
+        naked_privateproject_lang_url = '%sit/' % naked_privateproject_url
+        naked_no_build_project_lang_url = '%sit/' % naked_no_build_project_url
+
+        response = self.client.get(naked_project_url)
+        self.assertRedirects(response, project.get_canonical_url(), fetch_redirect_response=False)
+        response = self.client.get(naked_project_lang_url)
+        self.assertRedirects(response, project.get_canonical_url(), fetch_redirect_response=False)
+
+        response = self.client.get(naked_no_build_project_url)
+        self.assertRedirects(response, no_build_project.get_canonical_url(), fetch_redirect_response=False)
+        response = self.client.get(naked_no_build_project_lang_url)
+        self.assertRedirects(response, no_build_project.get_canonical_url(), fetch_redirect_response=False)
+
+        response = self.client.get(naked_privateproject_url)
+        self.assertEqual(response.status_code, 404)
+        response = self.client.get(naked_privateproject_lang_url)
+        self.assertEqual(response.status_code, 404)
 
     def test_docsitalia_api_returns_400_without_project(self):
         response = self.client.get('/api/v2/docsearch/?q=query&project=projectslug&version=latest')

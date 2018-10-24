@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 
 from django.apps import apps
-from django.conf import settings
 from django.conf.urls import include, url
 from django.views.generic.base import RedirectView, TemplateView
 
@@ -9,8 +8,8 @@ from readthedocs.constants import pattern_opts
 from rest_framework import routers
 
 from .views.core_views import (
-    DocsItaliaHomePage, PublisherIndex, PublisherProjectIndex, DocsItaliaImport,
-    PublisherList,
+    PublisherList, DocsItaliaHomePage, PublisherIndex, PublisherProjectIndex, DocsItaliaImport,
+    DocumentRedirect
 )
 from .views import integrations, api
 
@@ -84,6 +83,16 @@ urlpatterns = [
         r'^(?P<publisherslug>[-\w]+)/(?P<slug>[-\w]+)/$',
         PublisherProjectIndex.as_view(),
         name='publisher_project_detail'
+    ),
+    url(
+        r'^(?P<publisherslug>[-\w]+)/(?P<projectslug>[-\w]+)/(?P<slug>[-\w]+)/$',
+        DocumentRedirect.as_view(),
+        name='document_redirect'
+    ),
+    url(
+        r'^(?P<publisherslug>[-\w]+)/(?P<projectslug>[-\w]+)/(?P<slug>[-\w]+)/(?P<lang>[\w]{2})/$',
+        DocumentRedirect.as_view(),
+        name='document_redirect'
     ),
 ]
 
