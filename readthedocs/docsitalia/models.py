@@ -80,6 +80,7 @@ class Publisher(models.Model):
     # the remote organization where we can find the configuration repository
     remote_organization = models.ForeignKey(RemoteOrganization,
                                             verbose_name=_('Remote organization'),
+                                            on_delete=models.SET_NULL,
                                             null=True,
                                             blank=True)
 
