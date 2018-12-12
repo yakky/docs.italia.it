@@ -18,8 +18,12 @@ import sys
 import os.path
 import yaml
 import docs_italia_theme
+import recommonmark
 from six import string_types
 from sphinx import version_info
+from recommonmark.parser import CommonMarkParser
+from recommonmark.transform import AutoStructify
+
 
 # Get suffix for proper linking to GitHub
 # This is deprecated in Sphinx 1.3+,
@@ -32,12 +36,22 @@ if globals().get('source_suffix', False):
 else:
     SUFFIX = '.rst'
 
+# Support markdown
+def setup(app):
+    app.add_source_parser('.md', CommonMarkParser)
+    app.add_config_value('recommonmark_config', {
+            'enable_eval_rst': True
+        }, True)
+    app.add_transform(AutoStructify)
+
+exclude_patterns = ['readme.md', 'README.md']
+
 # Add RTD Static Path. Add to the end because it overwrites previous files.
 if not 'html_static_path' in globals():
     html_static_path = []
 if os.path.exists('_static'):
     html_static_path.append('_static')
-html_static_path.append('{{ static_path }}')
+#html_static_path.append('{{ static_path }}')
 
 # Setting the theme to docs_italia_theme
 html_theme = 'docs_italia_theme'
