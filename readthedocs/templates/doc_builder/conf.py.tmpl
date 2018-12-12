@@ -44,7 +44,7 @@ def setup(app):
         }, True)
     app.add_transform(AutoStructify)
 
-exclude_patterns = ['readme.md', 'README.md']
+exclude_patterns = ['readme.md', 'README.md', 'license.md', 'LICENSE.md', 'authors.md', 'AUTHORS.md']
 
 # Add RTD Static Path. Add to the end because it overwrites previous files.
 if not 'html_static_path' in globals():
