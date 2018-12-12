@@ -6,7 +6,7 @@ from datetime import datetime
 
 extensions = []
 templates_path = ['/tmp/sphinx-template-dir', 'templates', '_templates', '.templates']
-source_suffix = ['.rst']
+source_suffix = ['.rst', '.md']
 master_doc = 'index'
 project = u'Pip'
 copyright = str(datetime.now().year)
