@@ -87,8 +87,10 @@ class BaseBuilder(object):
             docs_dir = checkout_path
         return docs_dir
 
-    def create_index(self, extensions=['rst', 'md'], **__):
+    def create_index(self, extensions=None, **__):
         """Create an index file if it needs it."""
+        if extensions is None:
+            extensions = []
         docs_dir = self.docs_dir()
 
         for ext in extensions:
