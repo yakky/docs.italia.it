@@ -90,7 +90,7 @@ class BaseBuilder(object):
     def create_index(self, extensions=None, **__):
         """Create an index file if it needs it."""
         if extensions is None:
-            extensions = []
+            extensions = ['rst']
         docs_dir = self.docs_dir()
 
         for ext in extensions:
