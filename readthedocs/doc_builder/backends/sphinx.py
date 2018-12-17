@@ -147,7 +147,7 @@ class BaseSphinx(BaseBuilder):
         try:
             self.version.get_conf_py_path()
         except ProjectConfigurationError:
-            master_doc = self.create_index(extension='rst')
+            master_doc = self.create_index(extensions=['rst', 'md'])
             self._write_config(master_doc=master_doc)
 
         try:

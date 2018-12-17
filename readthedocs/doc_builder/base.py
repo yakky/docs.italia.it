@@ -87,20 +87,22 @@ class BaseBuilder(object):
             docs_dir = checkout_path
         return docs_dir
 
-    def create_index(self, extension='md', **__):
+    def create_index(self, extensions=None, **__):
         """Create an index file if it needs it."""
+        if extensions is None:
+            extensions = ['rst']
         docs_dir = self.docs_dir()
 
-        index_filename = os.path.join(
-            docs_dir, 'index.{ext}'.format(ext=extension))
+        for ext in extensions:
+            index_filename = os.path.join(
+                docs_dir, 'index.{ext}'.format(ext=ext))
+            if os.path.exists(index_filename):
+                break
         if not os.path.exists(index_filename):
-            readme_filename = os.path.join(
-                docs_dir, 'README.{ext}'.format(ext=extension))
-            if os.path.exists(readme_filename):
-                return 'README'
-            else:
-                index_file = open(index_filename, 'w+')
-                index_text = """
+            index_filename = os.path.join(
+                docs_dir, 'index.{ext}'.format(ext=extensions[0]))
+            index_file = open(index_filename, 'w+')
+            index_text = """
 
 Welcome to Read the Docs
 ------------------------
@@ -116,8 +118,8 @@ Check out our `Getting Started Guide
 familiar with Read the Docs.
                 """
 
-                index_file.write(index_text.format(dir=docs_dir, ext=extension))
-                index_file.close()
+            index_file.write(index_text.format(dir=docs_dir, ext=extensions[0]))
+            index_file.close()
         return 'index'
 
     def run(self, *args, **kwargs):

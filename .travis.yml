@@ -25,7 +25,7 @@ install:
   - source ~/.nvm/nvm.sh
   - nvm install --lts
   - nvm use --lts
-  - npm install -g bower gulp
+  - npm install -g bower gulp@^3.x
   - npm install
   - bower install
 script:
