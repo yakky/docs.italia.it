@@ -6,6 +6,12 @@
 <head>
   <title>{% block title %}Documenti pubblici, digitali.{% endblock %}{% block head_title %}{% endblock %} - {% block branding %}Docs Italia {% endblock %}</title>
   {% include 'docsitalia/includes/head.html' %}
+  {% block robots %}
+    {% comment %}Hides Staging environment from robots{% endcomment %}
+    {% if PRODUCTION_DOMAIN != "docs.italia.it" %}
+    <meta name="robots" content="noindex, nofollow">
+    {% endif %}
+  {% endblock %}
   {% block extra_links %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">

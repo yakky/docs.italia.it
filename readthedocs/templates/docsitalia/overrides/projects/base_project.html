@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+{% block robots %}
+  {% comment %}Hides `/projects/` pages from robots{% endcomment %}
+  <meta name="robots" content="noindex, nofollow">
+{% endblock %}
