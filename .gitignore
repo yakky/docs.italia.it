@@ -10,7 +10,6 @@
 .vagrant
 .vscode
 .tox
-.env
 .sass-cache
 .rope_project/
 .ropeproject/
@@ -53,7 +52,6 @@ tags
 .pytest_cache/
 
 # Environments
-.env
 .venv
 env/
 venv/

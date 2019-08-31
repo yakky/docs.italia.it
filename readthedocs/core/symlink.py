@@ -307,9 +307,10 @@ class Symlink(object):
 
 
 class PublicSymlinkBase(Symlink):
-    CNAME_ROOT = os.path.join(settings.SITE_ROOT, 'public_cname_root')
-    WEB_ROOT = os.path.join(settings.SITE_ROOT, 'public_web_root')
-    PROJECT_CNAME_ROOT = os.path.join(settings.SITE_ROOT, 'public_cname_project')
+    public_base = getattr(settings, 'PUBLIC_BASE', None) or settings.SITE_ROOT
+    CNAME_ROOT = os.path.join(public_base, 'public_cname_root')
+    WEB_ROOT = os.path.join(public_base, 'public_web_root')
+    PROJECT_CNAME_ROOT = os.path.join(public_base, 'public_cname_project')
 
     def get_version_queryset(self):
         return (self.project.versions.protected(only_active=False).filter(built=True) |
@@ -323,9 +324,10 @@ class PublicSymlinkBase(Symlink):
 
 
 class PrivateSymlinkBase(Symlink):
-    CNAME_ROOT = os.path.join(settings.SITE_ROOT, 'private_cname_root')
-    WEB_ROOT = os.path.join(settings.SITE_ROOT, 'private_web_root')
-    PROJECT_CNAME_ROOT = os.path.join(settings.SITE_ROOT, 'private_cname_project')
+    private_base = getattr(settings, 'PRIVATE_BASE', None) or settings.SITE_ROOT
+    CNAME_ROOT = os.path.join(private_base, 'private_cname_root')
+    WEB_ROOT = os.path.join(private_base, 'private_web_root')
+    PROJECT_CNAME_ROOT = os.path.join(private_base, 'private_cname_project')
 
     def get_version_queryset(self):
         return (self.project.versions.private(only_active=False).filter(built=True) |
