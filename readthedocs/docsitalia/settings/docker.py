@@ -84,8 +84,8 @@ class CommunityProdSettings(CommunityBaseSettings):
     CELERY_RESULT_BACKEND = 'redis://%s' % os.environ['REDIS_CELERY_URL']
 
     # Docker
-    DOCKER_SOCKET = 'tcp://%s' % os.environ.get('DOCKER_HOST', None)
-    DOCKER_ENABLE = bool(os.environ.get('DOCKER_HOST', False))
+    DOCKER_SOCKET = os.environ.get('DOCKER_BUILD_HOST', None)
+    DOCKER_ENABLE = bool(os.environ.get('DOCKER_BUILD_HOST', False))
     DOCKER_IMAGE = os.environ.get('DOCKER_BUILD_IMAGE', '')
     DOCKER_VERSION = '1.33'
     DOCKER_LIMITS = {
@@ -178,7 +178,7 @@ class CommunityProdSettings(CommunityBaseSettings):
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'rtd',
             'USER': 'docs',
-            'PASSWORD': 'docs',
+            'PASSWORD': '',
             'HOST': 'db',
             'PORT': '5432',
         },
