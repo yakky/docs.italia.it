@@ -69,7 +69,7 @@ class PythonEnvironment(object):
                     extra_req_param = '[{0}]'.format(
                         ','.join(self.config.extra_requirements))
                 self.build_env.run(
-                    'python',
+                    self.venv_bin(filename='python'),
                     self.venv_bin(filename='pip'),
                     'install',
                     '--ignore-installed',
@@ -81,7 +81,7 @@ class PythonEnvironment(object):
                 )
             else:
                 self.build_env.run(
-                    'python',
+                    self.venv_bin(filename='python'),
                     'setup.py',
                     'install',
                     '--force',
@@ -251,7 +251,7 @@ class Virtualenv(PythonEnvironment):
             ])
 
         cmd = [
-            'python',
+            self.venv_bin(filename='python'),
             self.venv_bin(filename='pip'),
             'install',
             '--upgrade',

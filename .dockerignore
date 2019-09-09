@@ -9,5 +9,5 @@ media
 .pytest
 deploy
 docs
-Dockerfile
 docker-compose.yml
+docker/db_*.sh
