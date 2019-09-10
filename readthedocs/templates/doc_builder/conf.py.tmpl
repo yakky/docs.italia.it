@@ -38,6 +38,7 @@ else:
 
 # Support markdown
 def setup(app):
+    app.add_source_parser('.md', CommonMarkParser)
     app.add_config_value('recommonmark_config', {
             'enable_eval_rst': True
         }, True)
