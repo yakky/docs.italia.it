@@ -30,7 +30,7 @@ services:
       - ".:/app:rw"
       - "docs:/home/documents"
     env_file:
-      - .env
+      - .dockerenv
       - .secrets
 
   api:
@@ -45,7 +45,7 @@ services:
       - ".:/app:rw"
       - "docs:/home/documents"
     env_file:
-      - .env
+      - .dockerenv
       - .secrets
 
   celery-web:
@@ -58,7 +58,7 @@ services:
       - ".:/app:rw"
       - "docs:/home/documents"
     env_file:
-      - .env
+      - .dockerenv
       - .secrets
 
   celery-docs:
@@ -70,7 +70,7 @@ services:
     volumes:
       - docs:/home/documents
     env_file:
-      - .env
+      - .dockerenv
       - .secrets
 
   celery-build:
@@ -87,7 +87,7 @@ services:
       - "docs:/home/documents"
       -  "/var/run/docker.sock:/var/run/docker.sock"
     env_file:
-      - .env
+      - .dockerenv
       - .secrets
 
   db:
