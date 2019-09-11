@@ -1,0 +1,15 @@
+version: '3.4'
+services:
+
+  py36:
+    container_name: tests-py36
+    build:
+      context: .
+      dockerfile: docker/tests/Dockerfile-tests
+    depends_on:
+      - db
+    volumes:
+      - ".:/src"
+
+  db:
+    image: postgres:10
