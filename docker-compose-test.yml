@@ -1,15 +1,19 @@
 version: '3.4'
 services:
-
   py36:
-    container_name: tests-py36
+    container_name: italia_docs_italia_it_web
     build:
       context: .
-      dockerfile: docker/tests/Dockerfile-tests
+      target: docs_italia_it_test
+    image: italia/docs_italia_it_test:latest
     depends_on:
       - db
+    command: tox -e py36 -- --ds=readthedocs.settings.testdocsitalia_docker
     volumes:
-      - ".:/src"
-
+      - ".:/app:rw"
+      - "tox:/app/.tox"
   db:
     image: postgres:10
+
+volumes:
+  tox:

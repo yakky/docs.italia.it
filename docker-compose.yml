@@ -25,7 +25,7 @@ services:
       - redis
     ports:
       - "8001:8001"
-    command: docker/gunicorn.sh collect ${GUNICORN_WEB_OPS} -w ${GUNICORN_WEB_WORKERS} -b 0.0.0.0:8001
+    command: docker/gunicorn.sh collect --reload --log-level debug -w 1 -b 0.0.0.0:8001
     volumes:
       - ".:/app:rw"
       - "docs:/home/documents"
@@ -40,7 +40,7 @@ services:
       - web
     ports:
       - "8002:8002"
-    command: docker/gunicorn.sh ${GUNICORN_WEB_OPS} -w ${GUNICORN_WEB_WORKERS} -b 0.0.0.0:8002
+    command: docker/gunicorn.sh --reload --log-level debug -w 1 -b 0.0.0.0:8002
     volumes:
       - ".:/app:rw"
       - "docs:/home/documents"
@@ -53,7 +53,7 @@ services:
     image: italia/docs_italia_it:latest
     depends_on:
       - web
-    command: docker/celery.sh -A ${CELERY_APP} ${CELERY_WEB_OPTS} -l ${CELERY_LOGLEVEL}
+    command: docker/celery.sh -A readthedocs -Ofair -c 3 -Q web -l INFO
     volumes:
       - ".:/app:rw"
       - "docs:/home/documents"
@@ -66,9 +66,10 @@ services:
     image: italia/docs_italia_it:latest
     depends_on:
       - web
-    command: docker/celery.sh -A ${CELERY_APP} ${CELERY_DOCS_OPTS} -l ${CELERY_LOGLEVEL}
+    command: docker/celery.sh -A readthedocs -Ofair -c 2 -Q docs -l INFO
     volumes:
-      - docs:/home/documents
+      - ".:/app:rw"
+      - "docs:/home/documents"
     env_file:
       - .dockerenv
       - .secrets
@@ -81,7 +82,7 @@ services:
     image: italia/docs_italia_it_build:latest
     depends_on:
       - web
-    command: docker/celery.sh -A ${CELERY_APP} ${CELERY_BUILD_OPTS} -l ${CELERY_LOGLEVEL}
+    command: docker/celery.sh -A readthedocs -Ofair -c 6 -Q builder,build,default,celery -l INFO
     volumes:
       - ".:/app:rw"
       - "docs:/home/documents"

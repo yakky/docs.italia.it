@@ -254,7 +254,6 @@ class Virtualenv(PythonEnvironment):
             'python',
             self.venv_bin(filename='pip'),
             'install',
-            '--use-wheel',
             '--upgrade',
             '--cache-dir',
             self.project.pip_cache_path,
