@@ -15,6 +15,7 @@ _redis = {
 class CommunityProdSettings(CommunityBaseSettings):
 
     """Settings for local development"""
+
     SERVE_DOCS = ['private']
     PYTHON_MEDIA = True
     PRODUCTION_DOMAIN = os.environ['RTD_DOMAIN']
@@ -77,7 +78,7 @@ class CommunityProdSettings(CommunityBaseSettings):
         })
         for (cache_name, cache)
         in _redis.items()
-        if cache_name is not 'celery'
+        if cache_name != 'celery'
     )
 
     BROKER_URL = 'redis://%s' % os.environ['REDIS_CELERY_URL']
@@ -94,7 +95,7 @@ class CommunityProdSettings(CommunityBaseSettings):
     }
     if os.environ.get('SENTRY_DSN', False):
 
-        import raven
+        import raven  # NOQA
         RAVEN_CONFIG = {
             'dsn': os.environ['SENTRY_DSN'],
             'release': raven.fetch_git_sha(CommunityBaseSettings.SITE_ROOT)
@@ -123,7 +124,6 @@ class CommunityProdSettings(CommunityBaseSettings):
     SLUMBER_USERNAME = os.environ['SLUMBER_USERNAME']
     SLUMBER_PASSWORD = os.environ['SLUMBER_PASSWORD']
     SYNC_USER = os.environ['RTD_USER']
-    #DOCROOT = '/var/build'
 
     ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
     SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
@@ -135,7 +135,8 @@ class CommunityProdSettings(CommunityBaseSettings):
     CLASS_OVERRIDES = {
         'readthedocs.builds.syncers.Syncer': 'readthedocs.builds.syncers.LocalSyncer',
         'readthedocs.core.resolver.Resolver': 'readthedocs.docsitalia.resolver.ItaliaResolver',
-        'readthedocs.oauth.services.GitHubService': 'readthedocs.docsitalia.oauth.services.github.DocsItaliaGithubService',
+        'readthedocs.oauth.services.GitHubService':
+            'readthedocs.docsitalia.oauth.services.github.DocsItaliaGithubService',
     }
 
     # Email
@@ -171,7 +172,7 @@ class CommunityProdSettings(CommunityBaseSettings):
     if os.environ.get('CORS_HEADERS_HOSTS', False) == 'all':
         CORS_ORIGIN_ALLOW_ALL = True
 
-    WEBSOCKET_HOST = '%s:8088' % os.environ['RTD_DOMAIN'],
+    WEBSOCKET_HOST = '%s:8088' % os.environ['RTD_DOMAIN']
 
     DATABASES = {
         'default': {
@@ -206,7 +207,7 @@ class CommunityProdSettings(CommunityBaseSettings):
     DEFAULT_VERSION_PRIVACY_LEVEL = os.environ['DEFAULT_VERSION_PRIVACY_LEVEL']
 
     @property
-    def TEXTCLASSIFIER_DATA_FILE(self):
+    def TEXTCLASSIFIER_DATA_FILE(self): # NOQA
         return os.path.join(self.SITE_ROOT, 'textclassifier.json')
 
     # Banned" projects
@@ -218,7 +219,7 @@ class CommunityProdSettings(CommunityBaseSettings):
 
     # Add fancy sessions after the session middleware
     @property
-    def MIDDLEWARE_CLASSES(self):
+    def MIDDLEWARE_CLASSES(self): # NOQA
         classes = super(CommunityProdSettings, self).MIDDLEWARE_CLASSES
         classes = list(classes)
         index = classes.index(
@@ -234,10 +235,11 @@ class CommunityProdSettings(CommunityBaseSettings):
 
     # Logging
     @property
-    def LOGGING(self):
+    def LOGGING(self): # NOQA
         logging = super(CommunityProdSettings, self).LOGGING
         logging['formatters']['syslog'] = {
-            'format': 'readthedocs/%(name)s[%(process)d]: %(levelname)s %(message)s [%(name)s:%(lineno)s]',
+            'format': 'readthedocs/%(name)s[%(process)d]: '
+                      '%(levelname)s %(message)s [%(name)s:%(lineno)s]',
             'datefmt': '%d/%b/%Y %H:%M:%S'
         }
         logging['loggers'] = {

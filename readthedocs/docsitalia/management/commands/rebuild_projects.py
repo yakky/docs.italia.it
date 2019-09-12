@@ -38,9 +38,8 @@ class Command(BaseCommand):
         document = options['document']
         if publisher:
             try:
-                publisher_obj = Publisher.objects.get(slug=publisher)
                 projects = PublisherProject.objects.filter(
-                    publisher=publisher_obj
+                    publisher=Publisher.objects.get(slug=publisher)
                 ).values_list('projects', flat=True)
                 versions = versions.filter(project__in=projects)
             except Publisher.DoesNotExist:
