@@ -99,6 +99,9 @@ services:
   es:
     build:
       context: docker/elasticsearch
+    environment:
+      - cluster.name=docsitalia
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
       - esdata
 
