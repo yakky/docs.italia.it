@@ -94,7 +94,7 @@ services:
   db:
     image: postgres:10
     volumes:
-      - dbdata
+      - dbdata:/var/lib/postgresql/data
 
   es:
     build:
@@ -103,7 +103,7 @@ services:
       - cluster.name=docsitalia
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
-      - esdata
+      - esdata:/usr/share/elasticsearch/data
 
   redis:
     image: redis
