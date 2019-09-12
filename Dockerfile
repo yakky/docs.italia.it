@@ -1,31 +1,37 @@
+# Base
+
 FROM python:3.6-slim AS docs_italia_it_base
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt update && apt install --no-install-recommends -y \
-    build-essential \
-    libxml2-dev \
-    libxslt1-dev \
-    libpq-dev \
-    git && rm -rf /var/lib/apt/lists/* && apt clean
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        libpq-dev \
+        libxslt1-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV APPDIR /app
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 PYTHONUNBUFFERED=1 DEBUG=1 PYTHONDONTWRITEBYTECODE=1
 WORKDIR /app
 
+# Test
+
 FROM docs_italia_it_base AS docs_italia_it_test
 
-RUN pip install tox
+RUN pip install --no-cache-dir tox
 
 CMD ["/bin/bash"]
 
+# Web
+
 FROM docs_italia_it_base AS docs_italia_it_web
 
-RUN apt update && apt install --no-install-recommends -y \
-    libtiff5-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libjpeg-turbo-progs \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libfreetype6-dev \
+        libjpeg-dev \
+        libjpeg-turbo-progs \
+        libtiff5-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN python -mvenv /virtualenv
@@ -37,30 +43,47 @@ ENV DJANGO_SETTINGS_MODULE=readthedocs.docsitalia.settings.docker
 
 CMD ["/bin/bash"]
 
+# Build
+
 FROM docs_italia_it_web AS docs_italia_it_build
 
-RUN apt update && apt install --no-install-recommends -y \
-    python2.7 \
-    python2.7-dev \
-    python-pip \
-    python-virtualenv \
-    texlive-generic-recommended \
-    texlive-latex-recommended \
-    texlive-extra-utils \
-    libfreetype6 g++ sqlite libevent-dev libffi-dev \
-    libenchant1c2a curl python-m2crypto python-matplotlib \
-    libgraphviz-dev pandoc doxygen python3 python3-dev python3-pip \
-    texlive-latex-extra pkg-config libjpeg-dev \
-    libfreetype6-dev libtiff5-dev zlib1g-dev liblcms2-dev \
-    libwebp-dev libcairo2-dev texlive-fonts-recommended
-
-RUN apt autoremove -y && apt clean
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl \
+        doxygen \
+        libcairo2-dev \
+        libenchant1c2a \
+        libevent-dev \
+        libgraphviz-dev \
+        liblcms2-dev \
+        libwebp-dev \
+        pandoc \
+        pkg-config \
+        python-m2crypto \
+        python-matplotlib \
+        python-pip \
+        python-virtualenv \
+        python2.7 \
+        python2.7-dev \
+        python3 \
+        python3-dev \
+        python3-pip \
+        sqlite \
+        texlive-extra-utils \
+        texlive-fonts-recommended \
+        texlive-generic-recommended \
+        texlive-latex-extra \
+        texlive-latex-recommended \
+    && rm -rf /var/lib/apt/lists/*
 
 CMD ["/bin/bash"]
+
+# Web Prod
 
 FROM docs_italia_it_web AS docs_italia_it_web_prod
 
 COPY . /app
+
+# Build Prod
 
 FROM docs_italia_it_build AS docs_italia_it_build_prod
 

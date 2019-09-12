@@ -1,7 +1,0 @@
-FROM python:3.6.9-buster
-
-WORKDIR /src
-
-RUN pip install tox
-CMD find . -type f -iname "*.pyc" -delete \
-    && tox -e py36 -- --ds=readthedocs.settings.testdocsitalia_docker
