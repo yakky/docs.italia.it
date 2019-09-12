@@ -254,9 +254,9 @@ class Virtualenv(PythonEnvironment):
             'python',
             self.venv_bin(filename='pip'),
             'install',
-            # '--use-wheel', this will fail on docsitalia celery-build environment as installed pip
-            # (v18 vs 10 from rtd) is too new and does not support this option anymore as it's the default
-            # forcing the pip version in the docker image would be tricky
+            # '--use-wheel', this will fail on docsitalia celery-build environment as installed
+            # pip (v18 vs 10 from rtd) is too new and does not support this option anymore as
+            # it's the default forcing the pip version in the docker image would be tricky
             '--upgrade',
             '--cache-dir',
             self.project.pip_cache_path,
