@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   py36:
-    container_name: italia_docs_italia_it_web
+    container_name: italia_docs_italia_it_test
     build:
       context: .
       target: docs_italia_it_test
