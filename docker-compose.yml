@@ -37,7 +37,7 @@ services:
     container_name: italia_docs_italia_it_api
     image: italia/docs_italia_it:latest
     depends_on:
-      - web
+      - celery-build
     ports:
       - "8002:8002"
     command: docker/gunicorn.sh --reload --log-level debug -w 1 -b 0.0.0.0:8002
@@ -93,6 +93,8 @@ services:
 
   db:
     image: postgres:10
+    depends_on:
+      - es
     volumes:
       - dbdata:/var/lib/postgresql/data
 
@@ -107,6 +109,8 @@ services:
 
   redis:
     image: redis
+    depends_on:
+      - es
 
 volumes:
   docs:
