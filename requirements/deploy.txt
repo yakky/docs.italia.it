@@ -11,3 +11,5 @@ maxcdn==0.0.7
 
 #For resizing images
 pillow
+
+raven

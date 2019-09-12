@@ -38,7 +38,7 @@ class PublisherAdminForm(forms.ModelForm):
             log.debug(
                 'Cannot save publisher: %s', exception)
             raise forms.ValidationError(str(exception))
-        except Exception as exception:
+        except Exception:
             msg = msg.format(filename=PUBLISHER_SETTINGS)
             log.debug(
                 'Cannot save publisher: %s', msg)
@@ -51,7 +51,7 @@ class PublisherAdminForm(forms.ModelForm):
             log.debug(
                 'Cannot save publisher: %s', exception)
             raise forms.ValidationError(str(exception))
-        except Exception as exception:
+        except Exception:
             msg = msg.format(filename=PROJECTS_SETTINGS)
             log.debug(
                 'Cannot save publisher: %s', msg)

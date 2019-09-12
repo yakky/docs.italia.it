@@ -10,7 +10,6 @@
 .vagrant
 .vscode
 .tox
-.env
 .sass-cache
 .rope_project/
 .ropeproject/
@@ -60,6 +59,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.secrets
 
 readthedocs/settings/managed.py
 readthedocs/settings/admin.py

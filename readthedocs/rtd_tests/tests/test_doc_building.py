@@ -869,7 +869,7 @@ class TestPythonEnvironment(TestCase):
             'python',
             mock.ANY,  # pip path
             'install',
-            '--use-wheel',
+            # '--use-wheel', not usable in docsitalia
             '--upgrade',
             '--cache-dir',
             mock.ANY,  # cache path

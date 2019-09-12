@@ -1,0 +1,118 @@
+version: '3.4'
+services:
+  http:
+    image: nginx:1.16
+    depends_on:
+      - web
+      - api
+    ports:
+      - "80:80"
+    volumes:
+      - "docs:/home/documents"
+      - "./docker/nginx/conf.d/general-configuration.conf:/etc/nginx/conf.d/general-configuration.conf"
+      - "./docker/nginx/snippets/:/etc/nginx/snippets/"
+      - "./docker/nginx/sites-available/readthedocs-main.conf:/etc/nginx/conf.d/default.conf"
+
+  web:
+    container_name: italia_docs_italia_it_web
+    build:
+      context: .
+      target: docs_italia_it_web
+    image: italia/docs_italia_it:latest
+    depends_on:
+      - db
+      - es
+      - redis
+    ports:
+      - "8001:8001"
+    command: docker/gunicorn.sh collect --reload --log-level debug -w 1 -b 0.0.0.0:8001
+    volumes:
+      - ".:/app:rw"
+      - "docs:/home/documents"
+    env_file:
+      - .dockerenv
+      - .secrets
+
+  api:
+    container_name: italia_docs_italia_it_api
+    image: italia/docs_italia_it:latest
+    depends_on:
+      - celery-build
+    ports:
+      - "8002:8002"
+    command: docker/gunicorn.sh --reload --log-level debug -w 1 -b 0.0.0.0:8002
+    volumes:
+      - ".:/app:rw"
+      - "docs:/home/documents"
+    env_file:
+      - .dockerenv
+      - .secrets
+
+  celery-web:
+    container_name: italia_docs_italia_it_celery_web
+    image: italia/docs_italia_it:latest
+    depends_on:
+      - web
+    command: docker/celery.sh -A readthedocs -Ofair -c 3 -Q web -l INFO
+    volumes:
+      - ".:/app:rw"
+      - "docs:/home/documents"
+    env_file:
+      - .dockerenv
+      - .secrets
+
+  celery-docs:
+    container_name: italia_docs_italia_it_celery_docs
+    image: italia/docs_italia_it:latest
+    depends_on:
+      - web
+    command: docker/celery.sh -A readthedocs -Ofair -c 2 -Q docs -l INFO
+    volumes:
+      - ".:/app:rw"
+      - "docs:/home/documents"
+    env_file:
+      - .dockerenv
+      - .secrets
+
+  celery-build:
+    container_name: italia_docs_italia_it_celery_build
+    build:
+      context: .
+      target: docs_italia_it_build
+    image: italia/docs_italia_it_build:latest
+    depends_on:
+      - web
+    command: docker/celery.sh -A readthedocs -Ofair -c 6 -Q builder,build,default,celery -l INFO
+    volumes:
+      - ".:/app:rw"
+      - "docs:/home/documents"
+      -  "/var/run/docker.sock:/var/run/docker.sock"
+    env_file:
+      - .dockerenv
+      - .secrets
+
+  db:
+    image: postgres:10
+    depends_on:
+      - es
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+  es:
+    build:
+      context: docker/elasticsearch
+    environment:
+      - cluster.name=docsitalia
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+  redis:
+    image: redis
+    depends_on:
+      - es
+
+volumes:
+  docs:
+  dbdata:
+  esdata:
