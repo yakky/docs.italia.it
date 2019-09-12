@@ -61,6 +61,7 @@ CMD ["/bin/bash"]
 FROM docs_italia_it_web AS docs_italia_it_build
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
         curl \
         doxygen \
         libcairo2-dev \
@@ -85,7 +86,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         texlive-latex-recommended \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get purge build-essential -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && apt-get clean
+RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && apt-get clean
 
 CMD ["/bin/bash"]
 
