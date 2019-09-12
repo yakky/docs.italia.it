@@ -1,4 +1,5 @@
-# Base
+# Base image in the multi stage process - This is not really used by any
+# container, it's just a common base
 
 FROM python:3.6-slim AS docs_italia_it_base
 
@@ -11,11 +12,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libxslt1-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && apt-get clean
+
 ENV APPDIR /app
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 PYTHONUNBUFFERED=1 DEBUG=1 PYTHONDONTWRITEBYTECODE=1
 WORKDIR /app
 
-# Test
+# Test image - Used in `docker-compost-test`.
+# As all the test will run in a tox virtualenv we need development libraries here
+# We don't need code in this image as will be mounted the live one via the local
+# volume
 
 FROM docs_italia_it_base AS docs_italia_it_test
 
@@ -23,7 +29,10 @@ RUN pip install --no-cache-dir tox
 
 CMD ["/bin/bash"]
 
-# Web
+# Base image for all the application containers (web, api, celery-docs, celery-web)
+# We don't need to copy the RTD code in this image as will be mounted the live
+# one via the local volume. We only need to copy the files needed inside the
+# container (utility shell scripts and requirements)
 
 FROM docs_italia_it_base AS docs_italia_it_web
 
@@ -38,12 +47,14 @@ RUN python -mvenv /virtualenv
 COPY requirements/* /app/
 COPY docker /app
 RUN /virtualenv/bin/pip install -r /app/docsitalia.txt
-RUN apt purge -y build-essential && apt autoremove -y && apt clean
+RUN apt-get purge build-essential -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && apt-get clean
 ENV DJANGO_SETTINGS_MODULE=readthedocs.docsitalia.settings.docker
 
 CMD ["/bin/bash"]
 
-# Build
+# Build image for celery-build
+# We need additional packages to build documentation in LocalBuildEnvironment
+
 
 FROM docs_italia_it_web AS docs_italia_it_build
 
@@ -72,15 +83,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         texlive-latex-recommended \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get purge build-essential -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && apt-get clean
+
 CMD ["/bin/bash"]
 
-# Web Prod
+# Production image - To run in production we obviously need to copy the
+# application code inside the container
 
 FROM docs_italia_it_web AS docs_italia_it_web_prod
 
 COPY . /app
 
-# Build Prod
+# Production image - To run in production we obviously need to copy the
+# application code inside the container
 
 FROM docs_italia_it_build AS docs_italia_it_build_prod
 
