@@ -7,7 +7,7 @@ DB_NAME=rtd
 DB_USER=docs
 
 if [ $# != 1 ]; then
-  echo "Destination dump file required"
+  echo "Database dump file (.sql, .bz2, .gz) required"
   exit 1
 fi
 
@@ -18,4 +18,14 @@ docker-compose exec -T "${DB_CONTAINER}" dropdb -U postgres "${DB_NAME}" --if-ex
 docker-compose exec -T "${DB_CONTAINER}" dropuser -U postgres "${DB_USER}" --if-exists
 docker-compose exec -T "${DB_CONTAINER}" createuser -U postgres "${DB_USER}"
 docker-compose exec -T "${DB_CONTAINER}" createdb -U postgres -O "${DB_USER}" "${DB_NAME}"
-docker-compose exec -T "${DB_CONTAINER}"  psql -U "${DB_USER}" -d "${DB_NAME}" < "${1}"
+ext=${1##*\.}
+case "$ext" in
+sql) docker-compose exec -T "${DB_CONTAINER}" psql -U "${DB_USER}" -d "${DB_NAME}" < "${1}"
+;;
+bz2) bzip2 -cd $1 | docker-compose exec -T "${DB_CONTAINER}" psql -U "${DB_USER}" -d "${DB_NAME}"
+;;
+gz) gzip -cd $1 | docker-compose exec -T "${DB_CONTAINER}" psql -U "${DB_USER}" -d "${DB_NAME}"
+;;
+*) echo " $1 : Database dump file extension not valid. Valid extensions: .sql, .bz2, .gz"
+;;
+esac
