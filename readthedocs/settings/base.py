@@ -85,6 +85,8 @@ class CommunityBaseSettings(Settings):
             'django_extensions',
             'messages_extends',
             'tastypie',
+            'dal',
+            'dal_select2',
 
             # our apps
             'readthedocs.projects',

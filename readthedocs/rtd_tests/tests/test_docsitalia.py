@@ -30,7 +30,7 @@ from readthedocs.docsitalia.metadata import (
     validate_publisher_metadata, validate_projects_metadata,
     validate_document_metadata, InvalidMetadata)
 from readthedocs.docsitalia.models import (
-    Publisher, PublisherProject, PublisherIntegration,
+    AllowedTag, Publisher, PublisherProject, PublisherIntegration,
     update_project_from_metadata)
 from readthedocs.docsitalia.serializers import (
     DocsItaliaProjectSerializer, DocsItaliaProjectAdminSerializer)
@@ -652,6 +652,26 @@ class DocsItaliaTest(TestCase):
         with self.assertRaises(ValueError):
             validate_document_metadata(None, 'name: Documento')
 
+    def test_document_metadata_validation_allows_whitelisted_tags_only(self):
+        AllowedTag.objects.bulk_create(
+            [
+                AllowedTag(name='tag', enabled=True),
+                AllowedTag(name='disabled_tag', enabled=False),
+                AllowedTag(name='tag with spaces', enabled=True),
+            ]
+        )
+        document_metadata = """document:
+  name: Documento
+  description: Lorem ipsum dolor sit amet, consectetur
+  tags:
+    -   tag  # leading spaces
+    - disabled_tag
+    - invalid_tag
+    - TAG WITH SPACES"""
+
+        data = validate_document_metadata(None, document_metadata)
+        self.assertEqual(['tag', 'tag with spaces'], sorted(data['document']['tags']))
+
     def test_project_root_is_served_by_docsitalia(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
@@ -677,6 +697,7 @@ class DocsItaliaTest(TestCase):
           tags:
             - amazing document"""
 
+        AllowedTag.objects.create(name='amazing document', enabled=True)
         project = Project.objects.create(
             name='my project',
             slug='myprojectslug',
@@ -753,6 +774,7 @@ class DocsItaliaTest(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_on_webhook_github_signal_works(self):
+        AllowedTag.objects.create(name='amazing document', enabled=True)
         project = Project.objects.create(
             name='my project',
             slug='myprojectslug',

@@ -18,6 +18,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from readthedocs.builds.models import Build, Version
+from readthedocs.docsitalia.models import AllowedTag
 from readthedocs.integrations.models import Integration
 from readthedocs.oauth.models import RemoteOrganization, RemoteRepository
 from readthedocs.projects.models import Feature, Project
@@ -779,3 +780,24 @@ class TaskViewsTests(TestCase):
             'success': False,
             'error': 'Something bad happened',
         })
+
+
+class AllowedTagAutocompleteTests(TestCase):
+    def test_allowed_tags_listing(self):
+        AllowedTag.objects.all().delete()  # Clean tags created by data migration.
+        enabled_tag = AllowedTag.objects.create(name='tag', enabled=True)
+        AllowedTag.objects.create(name='disabled_tag', enabled=False)
+        response = self.client.get(reverse('allowedtag-autocomplete'))
+        expected = {
+            'results': [
+                {
+                    'id': str(enabled_tag.pk),
+                    'text': 'tag',
+                    'selected_text': 'tag',
+                },
+            ],
+            'pagination': {
+                'more': False,
+            },
+        }
+        self.assertEqual(expected, response.json())

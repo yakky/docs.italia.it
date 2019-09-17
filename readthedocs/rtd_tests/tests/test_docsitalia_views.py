@@ -13,7 +13,7 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from readthedocs.builds.models import Build, Version
 from readthedocs.docsitalia.github import InvalidMetadata
-from readthedocs.docsitalia.models import Publisher, PublisherProject
+from readthedocs.docsitalia.models import AllowedTag, Publisher, PublisherProject
 from readthedocs.docsitalia.views.core_views import (
     DocsItaliaHomePage, PublisherIndex, PublisherProjectIndex, PublisherList)
 from readthedocs.oauth.models import RemoteRepository
@@ -370,6 +370,7 @@ class DocsItaliaViewsTest(TestCase):
 
     @mock.patch('readthedocs.docsitalia.views.core_views.trigger_build')
     def test_docsitalia_import_update_project_with_valid_metadata(self, trigger_build):
+        AllowedTag.objects.create(name='amazing document', enabled=True)
         self.client.login(username='eric', password='test')
         with requests_mock.Mocker() as rm:
             rm.get(self.document_settings_url, text=DOCUMENT_METADATA)

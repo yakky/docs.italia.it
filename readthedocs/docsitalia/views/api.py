@@ -2,6 +2,7 @@
 """Docs italia api"""
 from __future__ import absolute_import
 
+from dal import autocomplete
 from django.conf import settings
 from rest_framework import status
 from rest_framework.decorators import detail_route
@@ -16,6 +17,7 @@ from readthedocs.restapi.views.model_views import ProjectViewSet
 from readthedocs.restapi.serializers import VersionSerializer
 from readthedocs.search.indexes import PageIndex
 
+from ..models import AllowedTag
 from ..serializers import (
     DocsItaliaProjectSerializer, DocsItaliaProjectAdminSerializer)
 
@@ -148,3 +150,16 @@ class DocSearch(APIView):
             del results['hits']['hits'][i]['_source']
 
         return Response({'results': results})
+
+
+# pylint: disable=too-many-ancestors
+class AllowedTagAutocomplete(autocomplete.Select2QuerySetView):
+
+    """Allowed tag listing for autocomplete purpose."""
+
+    def get_queryset(self):
+        """Filter and order allowed tags."""
+        qs = AllowedTag.objects.filter(enabled=True)
+        if self.q:
+            return qs.filter(name__istartswith=self.q)
+        return qs.order_by('name')

@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
 from .forms import PublisherAdminForm
-from .models import Publisher, PublisherProject
+from .models import AllowedTag, Publisher, PublisherProject
 
 
 class PublisherAdmin(admin.ModelAdmin):
@@ -53,5 +53,14 @@ class PublisherProjectAdmin(admin.ModelAdmin):
     documents.short_description = _('documents')
 
 
+class AllowedTagAdmin(admin.ModelAdmin):
+
+    """Admin view for :py:class:`AllowedTag`"""
+
+    list_display = ('name', 'enabled')
+    list_filter = ('enabled',)
+
+
 admin.site.register(Publisher, PublisherAdmin)
 admin.site.register(PublisherProject, PublisherProjectAdmin)
+admin.site.register(AllowedTag, AllowedTagAdmin)
