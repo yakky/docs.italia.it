@@ -1,5 +1,7 @@
 {% load i18n %}
 {% load core_tags %}
+{% load static %}
+
 {%comment%}
 <div class="u-background-95">
   <div class="u-layout-wide u-layoutCenter u-layout-r-withGutter u-hiddenPrint">
@@ -64,22 +66,37 @@
       <div class="col-sm-12 col-md-4 col-lg-6">
         <div class="text-right social">
           <span>Seguici su:</span>
-          <a href="https://github.com/italia/" class="small-prints px-1"><i class="icon it-github"></i>GitHub</a>
-          <a href="https://twitter.com/teamdigitaleIT" class="small-prints px-1"><i class="icon it-twitter"></i>Twitter</a>
-          <a href="https://www.linkedin.com/company/teamdigitale/" class="small-prints px-1"><i class="icon it-linkedin"></i>LinkedIn</a>
+          <a href="https://github.com/italia/" class="small-prints px-1">
+            <svg class="icon icon-dark">
+              <use xlink:href="{% static 'vendor/bootstrap-italia/svg/sprite.svg#it-github' %}"></use>
+            </svg>
+            GitHub
+          </a>
+          <a href="https://twitter.com/teamdigitaleIT" class="small-prints px-1">
+            <svg class="icon icon-dark">
+              <use xlink:href="{% static 'vendor/bootstrap-italia/svg/sprite.svg#it-twitter' %}"></use>
+            </svg>
+            Twitter
+          </a>
+          <a href="https://www.linkedin.com/company/teamdigitale/" class="small-prints px-1">
+            <svg class="icon icon-dark">
+              <use xlink:href="{% static 'vendor/bootstrap-italia/svg/sprite.svg#it-linkedin' %}"></use>
+            </svg>
+            LinkedIn
+          </a>
         </div>
       </div>
     </div><!--/row-->
-    <div class="row py-4 colophon">
-      <ul class="col list-inline small py-2">
-        <li class="list-inline-item">
-          <a href="{% url 'privacy_policy' %}" class="small-prints">Privacy Policy</a>
+    <div class="link-list-wrapper row py-4 colophon">
+      <ul class="link-list col list-inline small py-2">
+        <li class="d-inline-block">
+          <a class="list-item small-prints" href="{% url 'privacy_policy' %}">Privacy Policy</a>
         </li>
-        <li class="list-inline-item">
-          <a href="{% url 'cookies_policy' %}" class="small-prints">Cookies Policy</a>
+        <li class="d-inline-block">
+          <a class="list-item small-prints" href="{% url 'cookies_policy' %}">Cookies Policy</a>
         </li>
-        <li class="list-inline-item">
-          <a href="{% url 'note_legali' %}" class="small-prints">Note Legali</a>
+        <li class="d-inline-block">
+          <a class="list-item small-prints" href="{% url 'note_legali' %}">Note Legali</a>
         </li>
       </ul>
     </div>

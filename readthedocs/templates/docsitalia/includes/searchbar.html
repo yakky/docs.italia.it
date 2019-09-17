@@ -1,13 +1,22 @@
 {% load i18n %}
+{% load static %}
 
 <!-- BEGIN wide search bar -->
 
 <form action="{% url 'search' %}" method="GET">
   <div class="form-group d-flex align-items-center">
-    <i class="ico-prefix it-search ml-1 primary-color search-main-icon"></i>
-    <input type="text" class="form-control search-main-input" id="id_site_search" name="q" value="{{ term }}" placeholder="{% trans 'Search all the docs' %}">
-    <input type="hidden" name="type" value="file">
-    <label class="sr-only" for="id_site_search">{% trans 'Search all the docs' %}</label>
+    <div class="input-group">
+      <div class="input-group-prepend search-main-icon">
+        <div class="input-group-text border-0">
+          <svg class="icon icon-primary ml-1">
+            <use xlink:href="{% static 'vendor/bootstrap-italia/svg/sprite.svg#it-search' %}"></use>
+          </svg>
+        </div>
+      </div>
+      <input type="text" class="form-control search-main-input" id="id_site_search" name="q" value="{{ term }}" placeholder="{% trans 'Search all the docs' %}">
+      <input type="hidden" name="type" value="file">
+      <label class="sr-only" for="id_site_search">{% trans 'Search all the docs' %}</label>
+    </div>
   </div>
   <div class="row justify-content-center">
     <div class="col-6 bg-dark">

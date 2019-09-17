@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load i18n %}
+{% load static %}
 {% load core_tags %}
 {% load gravatar %}
 
@@ -22,13 +23,22 @@
     </div>
 
     <div class="options">
-
       <ul>
-        <li class="{% block profile-bar-profile %}{% endblock %}"><a href="{{ profile.get_absolute_url }}">{% trans "Profile" %}</a></li>
+        <li class="{% block profile-bar-profile %}{% endblock %}">
+          <a href="{{ profile.get_absolute_url }}">
+            {% trans "Profile" %}
+          </a>
+        </li>
         {% if profile.user == user %}
-          <li class="{% block profile-bar-admin %}{% endblock %}"><a href="{% url "profiles_profile_edit" %}"><i class="gear"></i>{% trans "Admin" %}</a></li>
+          <li class="{% block profile-bar-admin %}{% endblock %}">
+            <a href="{% url "profiles_profile_edit" %}">
+              <svg class="icon icon-white icon-xs">
+                <use xlink:href="{% static 'vendor/bootstrap-italia/svg/sprite.svg#it-settings' %}"></use>
+              </svg>
+              {% trans "Admin" %}
+            </a>
+          </li>
         {% endif %}
-
       </ul>
     </div>
 

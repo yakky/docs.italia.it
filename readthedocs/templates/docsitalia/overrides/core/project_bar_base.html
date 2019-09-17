@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static %}
 {% load core_tags %}
 {% load privacy_tags %}
 {% load gravatar %}
@@ -58,7 +59,14 @@
         <li class="{{ builds_active }}"><a href="{{ project.get_builds_url }}">{% trans "Builds" %}</a></li>
 
         {% if request.user|is_admin:project %}
-          <li class="{{ edit_active }} project-admin"><a href="{% url "projects_edit" project.slug %}"><i class="gear"></i>{% trans "Admin" %}</a></li>
+          <li class="{{ edit_active }} project-admin">
+            <a href="{% url "projects_edit" project.slug %}">
+              <svg class="icon icon-white icon-xs">
+                <use xlink:href="{% static 'vendor/bootstrap-italia/svg/sprite.svg#it-settings' %}"></use>
+              </svg>
+              {% trans "Admin" %}
+            </a>
+          </li>
         {% endif %}
       </ul>
     </div>

@@ -1,5 +1,7 @@
 {% extends "docsitalia/base.html" %}
+
 {% load i18n %}
+{% load static %}
 
 {% block content %}
 <div class="blue-to-transparent-up py-5">
@@ -70,7 +72,14 @@
             <p>Puoi scrivere i documenti direttamente in RST, oppure se il tuo documento è già in un altro formato (es. ODT, DOCX, o Markdown) puoi usare questo convertitore:</p>
             <div class="my-3 text-center">
               {% url 'docs_italia_convertitore_web:docs-italia-converter-view' as converti_url %}
-              <a class="btn btn-sm btn-outline-primary btn-outline-primary-white m-3 m-lg-0" href="{{ converti_url }}" aria-label="Converti" title="Converti"><span class="text-uppercase small">Converti un documento<i class="it-upload pl-2"></i></span></a>
+              <a class="btn btn-sm btn-icon btn-outline-primary btn-outline-primary-white m-3 m-lg-0" href="{{ converti_url }}" aria-label="Converti" title="Converti">
+                <span class="text-uppercase small">
+                  Converti un documento
+                  <svg class="icon icon-primary icon-sm">
+                    <use xlink:href="{% static 'vendor/bootstrap-italia/svg/sprite.svg#it-upload' %}"></use>
+                  </svg>
+                </span>
+              </a>
             </div>
           </article>
           <article class="publish-article">

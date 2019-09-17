@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load account %}
+{% load static %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
@@ -9,7 +10,7 @@
 
 {% block content %}
 <section class="container" style="max-width: 40em">
-  <h1>{% trans "Log In" %}</h1>
+  <h1 class="pb-5">{% trans "Log In" %}</h1>
 
   <form class="login" method="POST" action="{% url "account_login" %}">
     {% csrf_token %}
@@ -19,6 +20,12 @@
       <div class="form-group">
         <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" class="form-control" id="id_{{ field.name }}">
         <label for="id_{{ field.name }}">{{ field.label }}</label>
+        {% if field.name == 'password' %}
+        <span class="password-icon bg-transparent" aria-hidden="true">
+          <svg class="password-icon-visible icon icon-sm"><use xlink:href="{% static 'vendor/bootstrap-italia/svg/sprite.svg#it-password-visible' %}"></use></svg>
+          <svg class="password-icon-invisible icon icon-sm d-none"><use xlink:href="{% static 'vendor/bootstrap-italia/svg/sprite.svg#it-password-invisible' %}"></use></svg>
+        </span>
+        {% endif %}
       </div>
       {% else %}
       <div class="form-check">

@@ -2,7 +2,7 @@
 
 {% block card_header %}
 {% with project.publisherproject_set.all.first as publisher %}
-  <a href="{{ publisher.get_absolute_url }}">
+  <a class="text-decoration-none" href="{{ publisher.get_absolute_url }}">
     {{ publisher }}
   </a>
 {% endwith %}

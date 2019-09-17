@@ -1,3 +1,6 @@
+{% load static %}
+
+{% comment %}
 <div class="document-card col-12 col-md-4 col-lg-3 item p-2 p-md-3">
   <p class="document-card-header icon icon-type-document neutral-1-color-a8">
     {% block card_header %}
@@ -13,4 +16,33 @@
     <a href="{% block card_url %}{{ project.get_absolute_url }}{% endblock %}">{{ project }}</a>
   </h3>
   <p class="document-card-description color-inherit">{{ project.description|safe }}</p>
+</div>
+{% endcomment %}
+
+<div class="col-12 col-md-4 col-lg-3 item p-2 p-md-3">
+  <div class="card-wrapper">
+    <div class="card">
+      <div class="card-body">
+        <div class="categoryicon-top">
+          <svg class="icon icon-primary">
+            <use xlink:href="{% static 'vendor/bootstrap-italia/svg/sprite.svg#it-file' %}"></use>
+          </svg>
+          <span class="text">
+            {% block card_header %}
+            {% with project.publisher as publisher %}
+            <a class="text-decoration-none" href="{{ publisher.get_absolute_url }}">
+              {{ publisher }}
+            </a>
+            {% endwith %}
+            {% endblock %}
+          </span>
+          {% block card_version %}{% endblock %}
+        </div>
+        <a href="{% block card_url %}{{ project.get_absolute_url }}{% endblock %}">
+          <h5 class="card-title">{{ project }}</h5>
+        </a>
+        <p class="card-text">{{ project.description|safe }}</p>
+      </div>
+    </div>
+  </div>
 </div>

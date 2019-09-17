@@ -1,12 +1,19 @@
 {% load i18n %}
+{% load static %}
+
 <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false"><span>
-    {% if request.user.get_full_name %}
-      {{ request.user.get_full_name}}
-    {% else %}
-      {{ request.user }}
-    {% endif %}
-  </span></a>
+    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
+    <span>
+      {% if request.user.get_full_name %}
+        {{ request.user.get_full_name}}
+      {% else %}
+        {{ request.user }}
+      {% endif %}
+    </span>
+    <svg class="icon icon-xs">
+      <use xlink:href="{% static 'vendor/bootstrap-italia/svg/sprite.svg#it-expand' %}"></use>
+    </svg>
+  </a>
   <div class="dropdown-menu">
     <div class="link-list-wrapper">
       <ul class="link-list">
