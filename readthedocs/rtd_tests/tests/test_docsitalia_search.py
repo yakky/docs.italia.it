@@ -56,7 +56,8 @@ class TestSearch(TestCase):
             'url': u'/projects/pip/',
             'author': ['eric'],
             'progetto': None,
-            'description': ''
+            'description': '',
+            'private': False
         })
 
     @patch(
@@ -102,12 +103,14 @@ class TestSearch(TestCase):
             'url': u'/projects/pip/',
             'author': ['eric'],
             'progetto': 'testproject',
-            'description': ''
+            'description': '',
+            'private': False
         })
         bulk_mock.assert_called_with(
             [{'publisher': 'Test Org', 'taxonomy': None, 'project': 'pip',
               'commit': None, 'progetto': 'testproject', 'path': 'path',
               'weight': 2, 'version': 'verbose-name', 'headers': 'headers',
               'id': 'b3129830187e487e332bb2eab1b7a9c3', 'title': 'title',
-              'content': 'content', 'project_id': self.pip.pk}], routing='pip'
+              'content': 'content', 'project_id': self.pip.pk, 'private': False}],
+            routing='pip'
         )

@@ -161,6 +161,12 @@ def project_version_detail(request, project_slug, version_slug):
                     type='app', task=tasks.clear_artifacts, args=[version.pk])
                 version.built = False
                 version.save()
+            if 'privacy_level' in form.changed_data:
+                log.info('Version privacy_level has changed %s, update_search is called', version.slug)
+                broadcast(
+                    type='app', task=tasks.update_search, args=[version.pk, 'reindex', False]
+                )
+
         url = reverse('project_version_list', args=[project.slug])
         return HttpResponseRedirect(url)
 

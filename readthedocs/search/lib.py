@@ -171,6 +171,8 @@ def search_file(request, query, project_slug=None, version_slug=LATEST, taxonomy
         if progetto:
             final_filter.append({"term": {"progetto": progetto}})
 
+        final_filter.append({"term": {"private": False}})
+
         body['query']['bool']['filter'] = final_filter
 
     if settings.DEBUG:

@@ -248,7 +248,7 @@ class ProjectIndex(Index):
         doc = {}
 
         attrs = ('id', 'name', 'slug', 'description', 'lang', 'tags', 'author', 'url',
-                 'progetto', 'publisher',)
+                 'progetto', 'publisher', 'private')
         for attr in attrs:
             doc[attr] = data.get(attr, '')
 
@@ -297,7 +297,7 @@ class PageIndex(Index):
         doc = {}
 
         attrs = ('id', 'project_id', 'project', 'title', 'headers', 'version', 'path',
-                 'content', 'taxonomy', 'commit', 'progetto', 'publisher')
+                 'content', 'taxonomy', 'commit', 'progetto', 'publisher', 'private')
         for attr in attrs:
             doc[attr] = data.get(attr, '')
 

@@ -45,7 +45,7 @@ class Command(BaseCommand):
             active=True,
             publisher__active=True
         ).values_list('pk', flat=True)
-        projects = get_projects_with_builds().filter(
+        projects = get_projects_with_builds(only_public=False).filter(
             publisherproject__in=publisher_projects
         ).values_list('pk', flat=True)
         queryset = Version.objects.filter(

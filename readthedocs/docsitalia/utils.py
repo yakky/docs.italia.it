@@ -43,17 +43,20 @@ def get_subprojects(project_pk):
     )
 
 
-def get_projects_with_builds():
-    """Returns a queryset of Projects with active public builds"""
-    with_ok_build_and_pub_version = Build.objects.filter(
+def get_projects_with_builds(only_public=True):
+    """Returns a queryset of Projects with active only public by default builds"""
+    builds = Build.objects.filter(
         success=True,
         state='finished',
-        version__privacy_level='public',
         version__active=True
-    ).values_list(
+    )
+    if only_public:
+        builds = builds.filter(version__privacy_level='public',)
+
+    filtered_projects = builds.values_list(
         'project',
         flat=True
     )
     return Project.objects.filter(
-        pk__in=with_ok_build_and_pub_version
+        pk__in=filtered_projects
     )

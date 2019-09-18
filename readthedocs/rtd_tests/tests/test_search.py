@@ -101,7 +101,10 @@ class TestSearch(TestCase):
         self.assertIn('query', query_dict)
         self.assertDictEqual({
             'bool': {
-                'filter': [{'term': {'version': 'latest'}}],
+                'filter': [
+                    {'term': {'version': 'latest'}},
+                    {'term': {'private': False}}
+                ],
                 'should': [
                     {'match_phrase': {'title': {'query': 'capitolo', 'boost': 10, 'slop': 2}}},
                     {'match_phrase': {'headers': {'query': 'capitolo', 'boost': 5, 'slop': 3}}},

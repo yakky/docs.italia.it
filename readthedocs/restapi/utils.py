@@ -11,6 +11,7 @@ from rest_framework.pagination import PageNumberPagination
 
 from readthedocs.builds.constants import NON_REPOSITORY_VERSIONS
 from readthedocs.builds.models import Version
+from readthedocs.projects.constants import PRIVATE
 from readthedocs.search.indexes import PageIndex, ProjectIndex, SectionIndex
 
 log = logging.getLogger(__name__)
@@ -124,6 +125,7 @@ def index_search_request(
             'weight': project_scale,
             'progetto': publisher_project_slug,
             'publisher': publisher_name,
+            'private': version.privacy_level == PRIVATE
         })
 
     page_obj = PageIndex()
@@ -150,6 +152,7 @@ def index_search_request(
             'weight': page_scale + project_scale,
             'progetto': publisher_project_slug,
             'publisher': publisher_name,
+            'private': version.privacy_level == PRIVATE
         })
         if section:
             for sect in page['sections']:
