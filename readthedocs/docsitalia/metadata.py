@@ -86,15 +86,13 @@ def validate_document_metadata(org, settings, **kwargs): # noqa
                 raise ValueError('Missing required field "%s" in %s' % (field, document))
     except (KeyError, TypeError):
         raise ValueError('General error in parsing document metadata %s' % data)
-    data = _remove_invalid_tags(data)
-    return data
+    return _remove_invalid_tags(data)
 
 
 def _remove_invalid_tags(data):
     allowed_tags = set(AllowedTag.objects.filter(enabled=True).values_list('name', flat=True))
     original_tags = {tag.strip().lower() for tag in data['document']['tags']}
-    new_tags = list(original_tags & allowed_tags)
-    data['document']['tags'] = new_tags
+    data['document']['tags'] = list(original_tags & allowed_tags)
     return data
 
 
